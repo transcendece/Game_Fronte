@@ -13,6 +13,7 @@ import Matter, {
   World,
 } from "matter-js";
 import { GameDependency } from "../../game/game.dto";
+import { useRouter } from "next/navigation";
 
 interface RealTimeGameProps  {
   socket: Socket;
@@ -109,11 +110,18 @@ const RealTimeGame: React.FC<RealTimeGameProps> = ({ socket , clientId , gameId 
 			else
 				console.log("YOU LOSE");
 		})
+
+		// const router = useRouter()
 		
 		socket.on("GAMEOVER", res=>{
 			
 			Render.stop(render);	
 			console.log("GAMEOVER");
+			// TODO: set a variable true is one of the users is disconnected!
+
+			// var=== true
+
+			// router.back();
 		})
 	
 		if (gameDiv.current)
