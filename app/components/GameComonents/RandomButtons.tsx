@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import Button from 'rsuite';
+import { WebsocketContext } from "@/app/Contexts/WebSocketContext";
+import React, { useContext, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 
-interface RandomButtons  {
-    socket: Socket;
-    clientId: string;
-};
+// interface RandomButtons  {
+//     socket: Socket;
+//     clientId: string;
+// };
 
-const RandomButtons: React.FC<RandomButtons> = ({socket, clientId})=>{
+const RandomButtons = ()=>{
 	const [showModal, setShowModal] = useState(false);
     const [mode, setMod] = useState('DEFI');
     const [map, setMap] = useState('BEGINNER');
-
+	const socket :Socket = useContext(WebsocketContext);
     const handleMod = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setMod(event.target.value);
     };
@@ -21,12 +21,24 @@ const RandomButtons: React.FC<RandomButtons> = ({socket, clientId})=>{
     };
 
     const Submit = ()=>{
+		console.log("SUBMIT", socket.id);
+		
 		socket.emit("RANDOM", {
 			map: map,
 			mode: mode,			
 		})
 		setShowModal(false);
 	}
+
+	// useEffect(() => {
+	// 	if (socket){
+	// 		socket.connect();
+	// 		console.log();
+	// 		console.log("WEWE");
+			
+			
+	// 	}
+	// }, [socket])
 
 	return (
 		<>

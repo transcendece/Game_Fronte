@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Matter, {
   Engine,
@@ -14,13 +14,21 @@ import Matter, {
 } from "matter-js";
 import { GameDependency } from "../../game/game.dto";
 import { useRouter } from "next/navigation";
+import { WebsocketContext } from "@/app/Contexts/WebSocketContext";
 
 interface RealTimeGameProps  {
-  socket: Socket;
-  clientId: string;
+
   gameId: string;
   gameDependency: GameDependency;
 };
+
+interface Update{
+	ball	:Vector
+	p1		:Vector
+	p2		:Vector
+	score1	:number
+	score2	:number
+}
 
 let engine: Matter.Engine ;
 let width : number = 600;
@@ -39,14 +47,27 @@ let player2: Body;
 
 let ID: number;
 
-const RealTimeGame: React.FC<RealTimeGameProps> = ({ socket , clientId , gameId , gameDependency}) => {
+const RealTimeGame: React.FC<RealTimeGameProps> = ({ gameId , gameDependency}) => {
   // You can now use the socket object here
 
 	const gameDiv = useRef<HTMLDivElement>();
 	const [objectsInitialized, setObjectsInitialized] = useState(false);
-	console.log("i'm a realTime component: clientid : ", clientId);
+	const socket :Socket = useContext(WebsocketContext);
+	console.log("i'm a realTime component: clientid : ", socket.id);
 
+	const handleUpdate = useCallback ((res: Update) => {
+		Body.setPosition(ballBody,res.ball)
+		Body.setPosition(ballBody,res.ball)
+		Body.setPosition(player1,res.p1)
+		Body.setPosition(player2,res.p2)
+		Engine.update(engine);
+	}, [])
 	
+	const handleGameOver = useCallback(() =>{
+
+	}, [])
+	const handleStart = useCallback(() =>{}, [])
+
 	useEffect(() => {
 
 		engine = Engine.create({
@@ -91,17 +112,7 @@ const RealTimeGame: React.FC<RealTimeGameProps> = ({ socket , clientId , gameId 
 			setObjectsInitialized(true);
 	  });
 	  
-		socket.on("UPDATE", res=>{
-			// console.log("UPDATE ID: " , ID);
-			// console.log("p1 : ", res.p1);
-			// console.log("p2 : ", res.p2);
-			
-			Body.setPosition(ballBody,res.ball)
-			Body.setPosition(ballBody,res.ball)
-			Body.setPosition(player1,res.p1)
-			Body.setPosition(player2,res.p2)
-			Engine.update(engine);
-		});
+		socket.on("UPDATE", handleUpdate);
 	
 		socket.on("WinOrLose", res=>{
 			Render.stop(render);	
@@ -128,9 +139,9 @@ const RealTimeGame: React.FC<RealTimeGameProps> = ({ socket , clientId , gameId 
 			gameDiv.current.addEventListener('mousemove', (event: MouseEvent) => {
 				let mouseX = event.clientX - gameDiv.current!.offsetLeft;
 				let vecY = ID === 1 ? 780: 20;
-				if (clientId && render.options && render.options.width ){
+				if (render.options && render.options.width ){
 					const paddleX = Math.min(Math.max(mouseX - paddleWidth / 2, paddleWidth / 2), render.options.width - paddleWidth / 2)
-					console.log("UPDATE CLIENTID: ", clientId);
+					console.log("UPDATE CLIENTID: ");
 					socket.emit("UPDATE", {
 						gameId: gameId,
 						vec: { x: ID === 1 ? paddleX: width - paddleX, y: vecY },
@@ -147,7 +158,7 @@ const RealTimeGame: React.FC<RealTimeGameProps> = ({ socket , clientId , gameId 
 		return () =>{
 			render.canvas.remove();
 		}
-	}, [objectsInitialized])
+	}, [socket, objectsInitialized])
 
   return <div ref={gameDiv}></div>;
 };
