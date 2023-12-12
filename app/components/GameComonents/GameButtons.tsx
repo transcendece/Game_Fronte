@@ -58,7 +58,7 @@ const GameButtons = () => {
     };
       
     return (
-        <div className='flex justify-center items-center h-screen flex-col mt-5'>
+        <div className='flex justify-center items-center h-full flex-col '>
         {!showBotGame && !showRandomGame && ( 
           <>
                 <button className='w-[200px] h-[50px] bg-black text-[white] cursor-pointer text-base m-2.5 px-5 py-2.5 rounded-[5px] border-[none] hover:bg-[#AF6915]' onClick={handlePlayWithBot}>Play with Bo9a</button>
@@ -67,7 +67,7 @@ const GameButtons = () => {
             </>
     	)}
         {showBotGame && <GameBot/>}
-        {(showRandomGame && gameDependency) && <RealTimeGame socket={socket} clientId={clientId} gameId={gameId} gameDependency={gameDependency}/>}
+        {(showRandomGame && gameDependency) && <RealTimeGame gameId={gameId} gameDependency={gameDependency}/>}
     </div>
   );
 };

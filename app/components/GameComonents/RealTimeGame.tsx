@@ -15,6 +15,7 @@ import Matter, {
 import { GameDependency } from "../../game/game.dto";
 import { useRouter } from "next/navigation";
 import { WebsocketContext } from "@/app/Contexts/WebSocketContext";
+import router from "next/router";
 
 interface RealTimeGameProps  {
 
@@ -52,6 +53,10 @@ const RealTimeGame: React.FC<RealTimeGameProps> = ({ gameId , gameDependency}) =
 
 	const gameDiv = useRef<HTMLDivElement>();
 	const [objectsInitialized, setObjectsInitialized] = useState(false);
+	const [windowSize, setWindowSize] = useState({
+		width: window.innerWidth,
+		height: window.innerHeight,
+	});
 	const socket :Socket = useContext(WebsocketContext);
 	console.log("i'm a realTime component: clientid : ", socket.id);
 
@@ -157,6 +162,7 @@ const RealTimeGame: React.FC<RealTimeGameProps> = ({ gameId , gameDependency}) =
 		}
 		return () =>{
 			render.canvas.remove();
+			socket.off("UPDATE", handleUpdate);
 		}
 	}, [socket, objectsInitialized])
 
