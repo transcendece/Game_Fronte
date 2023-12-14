@@ -1,97 +1,152 @@
 "use client"
 
 import React, { useRef, useEffect, useState, useLayoutEffect } from "react";
-import { Engine, Render, Bodies, Composite, Runner, Body} from 'matter-js';
+import { Engine, Render, Bodies, Composite, Runner, Body, Composites, Vector} from 'matter-js';
 import Matter from "matter-js";
 import 'tailwindcss/tailwind.css';
 import Score from "./scoreComponent";
 
-let engine = Engine.create();
-let width = 600;
-let height = 800;
-let paddleWidth = 125;
-let paddleHeight = 20;
-const AdvancedObs            :Body[] = [Bodies.rectangle(width / 2, height / 2, width / 2, 10, { isStatic: true, chamfer: { radius: 10} , label: "ADV"})]
-const IntemidierObs            :Body[] = [Bodies.rectangle(width / 2, height / 2, 400, 10, { isStatic: true , label: "INTE"})]
-// let score1 = 0
-// let score2 = 0
 
 
-function GameBot(){
-    const gameDiv = useRef<HTMLDivElement>();
-    const [score1, setScore1] = useState(0);
-    const [score2, setScore2] = useState(0);
-    const aspectRatio = width / height;
-    let mode = "ADV";
+const globalWidth = 600;
+const globalHeight = 800;
+const aspectRatio = globalWidth / globalHeight;
+const paddleWidth = 125;
+const paddleHeight = 20;
+let wallOptions = {
+    isStatic: true,
+    render: {
+        fillStyle: '#FFF',
+        strokeStyle: '#000',
+        lineWidth: 1,
+    },
+};
 
-    function initGame(){
+function generateColor(map: string) : string{
+    if (map === "ADVANCED")
+        return '#000000'
+    else if (map === 'INTEMIDIER')
+        return '#1f1f1f'
+    return '#222222'
+}
 
-    }
-    const divRef = useRef<HTMLDivElement>(null);
-    const [divSize, setDivSize] = useState({ width: 0, height: 0 });
+class GameBot {
+    engine: Engine = Engine.create({gravity: {x: 0, y: 0, scale: 0},});
+    render: Render;
+    runner: Runner = Runner.create();
+    element :HTMLDivElement;
+    ball: Body = Bodies.circle(0, 0, 0);
+    p1: Body = Bodies.rectangle(0,0,0,0);
+    p2: Body =Bodies.rectangle(0,0,0,0);;
+    topWall: Body =Bodies.rectangle(0,0,0,0);;
+    downWall: Body =Bodies.rectangle(0,0,0,0);;
+    walls: Body[] = [
+        Bodies.rectangle(0,0,0,0),
+        Bodies.rectangle(0,0,0,0),
+        Bodies.rectangle(0,0,0,0),
+        Bodies.rectangle(0,0,0,0),
+    ];
+    obstacles: Body[] = [];
+    width: number;
+    height: number
+    map:string;
+    maxVelocity: number = 5;
+    public score1: number = 0;
+    public score2: number = 0;
+    private boundHandleMouseMove: (event: MouseEvent) => void;
 
-    // useEffect(() => {
-        //     console.log("USE Div Size: ", divSize);
-        
-        //    }, [divSize]);
-        
-        useEffect(() => {
-            if (divRef.current) {
-                setDivSize({
-                    width: divRef.current.offsetWidth,
-                    height: divRef.current.offsetHeight,
-                });
-                console.log("Div Size: ", divSize);
-                console.log("devref: ", divRef.current.offsetWidth, divRef.current.offsetHeight);
-                
+    constructor(element: HTMLDivElement, map: string, mod: string){
+        // window.addEventListener('resize', this.calculateSise);
+        this.boundHandleMouseMove = this.mouseEvents.bind(this);
+        this.map = map;
+        this.element = element;
+        [this.width, this.height] = this.calculateSise();
+        console.log("WIDTH: ", this.width, " HEIGHT: ", this.height);
+        if (map === "ADVANCED") this.maxVelocity += 6;
+        else if (map === "INTEMIDIER") this.maxVelocity += 3;
+        this.render = Render.create({
+            engine: this.engine,
+            element : this.element,
+            options: {
+                background: generateColor(map),
+                width: this.width,
+                height: this.height,
+                wireframes: false,
             }
-        }, [divSize]);
+        })
+        if (mod === "BOT"){
+            this.generateObs();
+            this.createWorld();
+            this.handleCollistion()
+            this.element.addEventListener('mousemove', this.boundHandleMouseMove);
+            Render.run(this.render);
+            Runner.run(this.runner, this.engine);
+            this.handleBotMovement()
+        }else if (mod === "RANDOM"){
 
-    useEffect(() => {
-        if (divRef.current){
-            const newWidth = divRef.current.offsetWidth * 0.6;
-            const newHeight = newWidth / aspectRatio;
+        }
+    }
+    
+    public updateState(p1: Vector, p2: Vector, ball: Vector){
+        Body.setPosition(this.p1, {x:this.normalise(p1.x, 0, globalWidth, 0, this.width),y:this.normalise(p1.y, 0, globalHeight, 0, this.height)})
+        Body.setPosition(this.p2, {x:this.normalise(p2.x, 0, globalWidth, 0, this.width),y:this.normalise(p2.y, 0, globalHeight, 0, this.height)})
+        Body.setPosition(this.ball, {x:this.normalise(ball.x, 0, globalWidth, 0, this.width),y:this.normalise(ball.y, 0, globalHeight, 0, this.height)})
+        Engine.update(this.engine);
+    }
 
+    public updateScore(s1: number, s2: number){
+        this.score1 = s1;
+        this.score2 = s2;
+    }
 
-            engine = Engine.create({
-                gravity: {x: 0, y: 0, scale: 0},
-                positionIterations: 10,
-                velocityIterations: 8,
-            });
-            
-            
-            //Create the renderer
-            let render = Render.create({
-                element: gameDiv.current || document.body,
-                engine: engine,
-                options:{
-                    background: '#000000',
-                    width: newWidth,
-                    height: newHeight,
-                    wireframes: false,
-                }
-            });;
-            
-            let wallOptions = {
+    private handleBotMovement(){
+        Matter.Events.on(this.engine, "beforeUpdate", () => {
+            if (this.map === "ADVANCED")
+                Body.setPosition(this.p1,  { x: this.ball.position.x, y : this.p1.position.y})
+            else if (this.map === "INTEMIDIER"){
+                if (this.ball.position.x < this.width / 2)
+                    Body.setPosition(this.p1,  { x: this.ball.position.x, y : this.p1.position.y})
+                else
+                    Body.setPosition(this.p1,  { x: this.width - this.p2.position.x, y : this.p1.position.y})
+
+            }
+            else{
+                if (this.ball.position.x < this.width / 4)
+                    Body.setPosition(this.p1,  { x: this.ball.position.x, y : this.p1.position.y})
+                else
+                    Body.setPosition(this.p1,  { x: this.width - this.p2.position.x, y : this.p1.position.y})
+
+            }
+        });
+    }
+
+    private createWorld(){
+        this.p1 = Bodies.rectangle(
+            this.normalise(globalWidth / 2, 0,globalWidth, 0, this.width),
+            this.normalise( 20 , 0 , globalHeight , 0, this.height),
+            this.normalise( paddleWidth , 0 , globalWidth , 0, this.width),
+            this.normalise( paddleHeight , 0 , globalHeight , 0, this.height),
+            {
                 isStatic: true,
-                render: {
-                    fillStyle: '#FFF',
-                    strokeStyle: '#000',
-                    lineWidth: 1,
-                },
-            };
+                chamfer: {radius: 10 * this.calculateScale() },
+                render: {fillStyle: 'purple'}
+            }
             
+        );
+        this.p2 = Bodies.rectangle(
+            this.normalise(globalWidth / 2, 0,globalWidth, 0, this.width),
+            this.normalise( 780 , 0 , globalHeight , 0, this.height),
+            this.normalise( paddleWidth , 0 , globalWidth , 0, this.width),
+            this.normalise( paddleHeight , 0 , globalHeight , 0, this.height),
+            {
+                isStatic: true,
+                chamfer: {radius: 10 * this.calculateScale() },
+                render: {fillStyle: 'blue'}
+            }
+        );
 
-            var topground =  Bodies.rectangle(0 , 0, render.options.width as number, 10, wallOptions);
-            var downground =  Bodies.rectangle(0, 800, 1200, 10, wallOptions);
-            var leftground =  Bodies.rectangle(0, 0, 10, 1600, wallOptions);
-            var rightground =  Bodies.rectangle(600, 0, 10, 1600, wallOptions);
-            let bounds = Composite.create()
-            Composite.add(bounds, [topground, leftground, downground, rightground])
-            if (mode === "ADV")
-                Composite.add(bounds, [...AdvancedObs])
-
-            var ball = Bodies.circle(width / 2, height / 2, 10, { 
+        this.ball = Bodies.circle(this.width / 2, this.height / 2, 10 * this.calculateScale(), 
+            {
                 restitution: 1,
                 frictionAir: 0,
                 friction:0,
@@ -99,118 +154,169 @@ function GameBot(){
                 render:{
                     fillStyle: "red"
                 }
-            });
-            Matter.Body.setVelocity(ball, {
-                x: 5,
-                y: 5,
-            })
+            }
+        )
+        Body.setVelocity(this.ball, {x: 5, y: 5});
+        Composite.add(this.engine.world, [this.ball, this.p1, this.p2]);
+        Composite.add(this.engine.world, [...this.obstacles]);
 
-            var player1 = Bodies.rectangle(width / 2, 20, paddleWidth, paddleHeight, {
-                isStatic: true,
-                chamfer: { radius: 10},
-                render:{
-                    fillStyle: "purple"
-                },
-            });
-            
-            var player2 = Bodies.rectangle(width / 2, 780, paddleWidth, paddleHeight, { 
-                isStatic: true,
-                chamfer: { radius: 10},
-                render:{
-                    fillStyle: "blue"
-                }
-            });
-            
-            const maxVelocity = 20;
-            
+    }
 
-            Matter.Events.on(engine, "collisionStart", (event) =>{
-                event.pairs.forEach((pair)=>{
-                    const bodyA = pair.bodyA;
-                    const bodyB = pair.bodyB;
-                    
-                    
-                    if (bodyA === ball || bodyB == ball){
-                            const normal = pair.collision.normal;
-                            const Threshold = 0.1;
-                            if (Math.abs(normal.x) < Threshold){
-                                const sign = Math.sign(ball.velocity.x);
-                                const i = 0.5;
-                                Body.setVelocity(ball, {
-                                    x: Math.min(ball.velocity.x + sign * i , maxVelocity),
-                                    y : ball.velocity.y
-                                })
-                                const restitution = 1; // Adjust this value for desired bounciness
-                                const friction = 0; // Adjust this value for desired friction
-                                
+    private mouseEvents(event: MouseEvent){
+        let mouseX = event.clientX - (this.element.clientWidth / 2 - this.width / 2);
+        console.log(`divW : ${this.element.clientWidth} && canvasW: ${this.render.canvas.width} && y : ${this.p2.position.y}`);
+        const paddleX = Math.min(Math.max((mouseX - this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) + 10, (this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) + 10), (this.width - this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) - 10)
+        Body.setPosition(this.p2, {x: paddleX, y: this.p2.position.y})
+    }
+
+    private calculateScale(): number {
+        let scale: number = this.width / globalWidth;
+        let scale2: number = this.height / globalHeight;
+    
+        return Math.min(scale, scale2);
+    }
+
+    public calculateSise(): [number, number]{
+        let width: number, height: number;
+        console.log("element: " , this.element);
+        
+        if (this.element.clientHeight > this.element.clientWidth){
+            width = this.element.clientWidth;
+            height = width / aspectRatio;
+            if (height > this.element.clientHeight){
+                height = this.element.clientHeight;
+                width = height * aspectRatio;
+            }
+        }else{
+            height = this.element.clientHeight;
+            width = height * aspectRatio;
+            if (width > this.element.clientWidth){
+                width = this.element.clientWidth
+                height = width / aspectRatio;
+            }
+        }
+        console.log("calculate scale global aspect : ", aspectRatio);
+        console.log("calculate scale other  aspect : ", width / height);
+        
+        return [width, height]
+    }
+
+    private generateObs(){
+        if (this.map === "ADVANCED")
+            this.obstacles.push(
+                Bodies.rectangle( 
+                    3 * this.width / 4,
+                    3 * this.height / 4,
+                    this.normalise(100, 0, globalWidth, 0, this.width), 
+                    this.normalise(10,0, globalHeight, 0, this.height), 
+                    { isStatic: true, chamfer: { radius: 5 * this.calculateScale() } , render: {fillStyle: 'red'},  label: "ADV"}
+                ),
+                Bodies.rectangle(
+                    this.width / 4, 
+                    this.height / 4,
+                    this.normalise(100, 0, globalWidth, 0, this.width), 
+                    this.normalise(10,0, globalHeight, 0, this.height), 
+                    { isStatic: true, chamfer: { radius: 5 * this.calculateScale() } , render: {fillStyle: 'red'} , label: "ADV"}
+                ),
+            )
+        else if (this.map === "INTEMIDIER")
+            this.obstacles.push(Bodies.rectangle(
+                this.width / 4, 
+                this.height / 4, 
+                this.width / 2, 
+                10, 
+                { isStatic: true, chamfer: { radius: 10 * this.calculateScale() }, render: {fillStyle: 'red'} , label: "INT"}
+            ))
+        //add walls
+        this.topWall = Bodies.rectangle(
+            this.normalise((0 + globalWidth / 2), 0, globalWidth, 0, this.width),
+            0,
+            this.width,
+            this.normalise(10, 0,globalHeight,0,this.height),
+            wallOptions,
+        );
+        this.downWall = Bodies.rectangle(
+            this.normalise((0 + globalWidth / 2), 0, globalWidth, 0, this.width),
+            this.height,
+            this.width,
+            this.normalise(10, 0,globalHeight,0,this.height),
+            wallOptions,
+            
+        )
+        this.obstacles.push(this.topWall, this.downWall)
+        this.obstacles.push(Bodies.rectangle(//left
+            0,
+            this.normalise((0 + globalHeight / 2), 0, globalHeight, 0, this.height),
+            this.normalise(10, 0, globalWidth, 0, this.width),
+            this.height,
+            wallOptions,
+        ))
+        this.obstacles.push(Bodies.rectangle(//right
+            this.width,
+            this.normalise((0 + globalHeight / 2), 0, globalHeight, 0, this.height),
+            this.normalise(10, 0, globalWidth, 0, this.width),
+            this.height,
+            wallOptions,
+        ))
+    }
+
+    private normalise(x: number, a: number, b: number, c: number, d: number){
+        // x in [a, b] && y in [c, d]
+        console.log(`x in [${a}, ${b}] = ${x}, y [${c}, ${d}] =${c + (d - c) * ((x - a) / (b - a))}`);
+        
+        return c + (d - c) * ((x - a) / (b - a));
+    }
+
+    private handleCollistion(){
+        Matter.Events.on(this.engine, "collisionStart", (event) =>{
+            event.pairs.forEach((pair)=>{
+                const bodyA = pair.bodyA;
+                const bodyB = pair.bodyB;
+                        
+                        
+                if (bodyA === this.ball || bodyB == this.ball){
+                    const normal = pair.collision.normal;
+                    const Threshold = 0.1;
+                    if (Math.abs(normal.x) < Threshold){
+                        const sign = Math.sign(this.ball.velocity.x);
+                        const i = 0.5;
+                        Body.setVelocity(this.ball, {
+                            x: Math.min(this.ball.velocity.x + sign * i , this.maxVelocity),
+                            y : this.ball.velocity.y
+                        })
+                        const restitution = 1; // Adjust this value for desired bounciness
+                        const friction = 0; // Adjust this value for desired friction
+                                        
                                 // Set restitution and friction for the ball
-                                Body.set(ball, { restitution, friction });
+                        Body.set(this.ball, { restitution, friction });
                                 
                                 // Set restitution and friction for the other body (if it's not static)
-                                const otherBody = bodyA === ball ? bodyB : bodyA;
-                                if (!otherBody.isStatic) {
-                                    Body.set(otherBody, { restitution, friction });
-                                }
-                                if (otherBody === topground || otherBody === downground){
-                                    if (otherBody === topground) setScore1((prevScore) => prevScore + 1);
-                                    else setScore2((prevScore) => prevScore + 1);
-                                    Body.setPosition(ball, { x: 300, y: 400 });
-                                    Body.setVelocity(ball, { x: 5, y: -5 });
-                                }
-                                
-                            }
+                        const otherBody = bodyA === this.ball ? bodyB : bodyA;
+                        if (!otherBody.isStatic) {
+                            Body.set(otherBody, { restitution, friction });
                         }
-
-                    });
-                }); 
-                
-                Composite.add(engine.world, bounds);
-                Composite.add(engine.world, [ball, player1, player2]);
-                // // run the renderer
-                Render.run(render);
-                Runner.run(Runner.create(), engine);
-                
-                
-                gameDiv.current!.addEventListener('mousemove', (event: MouseEvent) => {
-                    let mouseX = event.clientX - gameDiv.current!.offsetLeft;
-                    let mouseY = event.clientY - gameDiv.current!.offsetTop;
-                    // calculate new position for paddleA
-                    // let newPosition = { x: mouseX, y: player2.position.y };
-                    if (render.options && render.options.width){
-                        const paddleX = Math.min(Math.max(mouseX - paddleWidth / 2, paddleWidth / 2), render.options.width - paddleWidth / 2)
-                        // console.log(`x : ${paddleX} && mouseX: ${mouseX} && y : ${player2.position.y}`);
-                        Body.setPosition(player2, {x: paddleX, y:player2.position.y})
+                        if (otherBody === this.topWall || otherBody === this.downWall){
+                            if (otherBody === this.topWall) this.score1++;
+                            else this.score2++;
+                            Body.setPosition(this.ball, { x: this.width / 2, y: this.height / 2 });
+                            Body.setVelocity(this.ball, { x: this.ball.velocity.x < 0 ? 5 : -5 , y: this.ball.velocity.y > 0 ? 5:  -5});
+                        }
+                                
                     }
-                    
-                });
-                Matter.Events.on(engine, "beforeUpdate", () => {
-                    Body.setPosition(player1,  {x: ball.position.x, y:player1.position.y})
-                });
+                }            
+            });
+        }); 
+    }
+            
+    public destroyGame(){
+        // window.removeEventListener('resize', this.calculateSise);
+        this.element.removeEventListener('mousemove', this.boundHandleMouseMove);
 
-                
-                return () =>{
-                    // window.removeEventListener('resize', handleResize);
-                    render.canvas.remove();
-                }
-        }
-    }, [divSize]);
-        
-        
-    return (
-        <div ref={divRef} className="flex w-full flex-row h-full justify-evenly">
-            <div className="flex flex-col items-center justify-end">
-            <Score avatar="/_next/image?url=%2Fbatman.png&w=3840&q=75" name="PLAYER1" score={score1} />
-            </div>
-            <div ref={gameDiv} className="w-auto red h-full"></div>
-            <div className="flex flex-col items-center justify-start">
-            <Score avatar="/_next/image?url=%2Fbatman.png&w=3840&q=75" name="BO9A" score={score2} />
-            </div>
-        </div>
-      );
+        this.render.canvas.remove();
+        Matter.Runner.stop(this.runner);
+        Matter.Engine.clear(this.engine);
+        Matter.Render.stop(this.render);
+    }
 }
 
-
 export default GameBot;
-
-
-

@@ -19,6 +19,9 @@
 .red{
   @apply border-2 border-red-700;
 }
+.blue{
+  @apply border-2 border-blue-700;
+}
 
 
 body {
@@ -44,3 +47,6 @@ body {
     border-radius: 10px;
     
     }
+  canvas{
+    justify-items: center ;
+  }

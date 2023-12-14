@@ -51,19 +51,18 @@ const RandomButtons = ()=>{
 		  </button>
 		  {showModal ? (
 			<>
-			  <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-				<div className="">
-				  <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+			<div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+				<div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
 					<div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
-					  <h3 className="text-3xl font=semibold">Play With Randoms</h3>
-					  <button
+						<h3 className="text-3xl font=semibold">Play With Randoms</h3>
+						<button
 						className=""
 						onClick={() => setShowModal(false)}
-					  >
-						<span className="text-black opacity-7 h-6 w-6 text-xl block bg-gray-400 py-0 rounded-full">
-						  x
-						</span>
-					  </button>
+						>
+							<span className="text-black opacity-7 h-6 w-6 text-xl block bg-gray-400 py-0 rounded-full">
+							x
+							</span>
+						</button>
 					</div>
 					<div className="relative p-6 flex-auto">
 						<div>
@@ -134,90 +133,10 @@ const RandomButtons = ()=>{
 					</div>
 				  </div>
 				</div>
-			  </div>
 			</>
 		  ) : null}
 		</>
 	  );
-
-
-	{/*return (
-    <>
-      <button
-        className="w-[200px] h-[50px] bg-black text-[white] cursor-pointer text-base m-2.5 px-5 py-2.5 rounded-[5px] border-[none] hover:bg-[#AF6915]"
-        type="button"
-        onClick={() => setShowModal(true)}
-      >
-      Play with Random
-      </button>
-      { showModal ? (
-        <>
-          <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-            <div className="">
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
-                  <h3 className="text-3xl font=semibold">Play With Random</h3>
-                  <button
-                    className=""
-                    onClick={() => setShowModal(false)}
-                  >
-                    <span className="text-black opacity-7 h-6 w-6 text-xl block bg-gray-400 py-0 rounded-full">
-                      x
-                    </span>
-                  </button>
-                </div>
-                <div className="relative p-6 flex-auto">
-                        <div>
-                        <input type="radio" name="mapChoice" value="BEGINNER" checked={map === "BEGINNER"} onChange={handleMap}>BEGINNER</input>
-                            <input>INTEMIDIER</input>
-                            <input>ADVANCED</input>
-                            <select>
-                                <option value="BEGINNER">BEGINNER</option>
-                                <option value="INTEMIDIER">INTEMIDIER</option>
-                                <option value="ADVANCED">ADVANCED</option>
-                            </select>
-                        </div>
-                        <input
-                            type="radio"
-                            name="modsChoice"
-                            value="defi"
-                            checked={mode === 'defi'}
-                            onChange={handleMod}
-                            />
-                            <label>Defi</label>
-
-                            <input
-                            type="radio"
-                            name="modsChoice"
-                            value="time"
-                            checked={mode === 'time'}
-                            onChange={handleMod}
-                            />
-                            <label>Time</label>
-                    
-                </div>
-                <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-                  <button
-                    className=" bg-black text-[white] cursor-pointer text-base m-2.5 px-5 py-2.5 rounded-[5px] border-[none] hover:bg-[#b44242de]"
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="bg-black text-[white] cursor-pointer text-base m-2.5 px-5 py-2.5 rounded-[5px] border-[none] hover:bg-[#AF6915]"
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
-            </div>
-        </> ) : null
-  );
-    </>
-	  )*/}
 };
 
 export default RandomButtons;

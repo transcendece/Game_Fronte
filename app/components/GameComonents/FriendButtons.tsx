@@ -1,25 +1,22 @@
 import React, { useState } from "react";
 import { Socket } from "socket.io-client";
 
-interface FriendButtonsProps  {
-    socket: Socket;
-    clientId: string;
-};
 
-const FriendButtons: React.FC<FriendButtonsProps> = ({socket, clientId})=>{
+
+const FriendButtons  = ()=>{
 	const [showModal, setShowModal] = useState(false);
 
 	const CreateNewGame = () =>{
-        console.log(`Client id : |${clientId}|`);
+        // console.log(`Client id : |${clientId}|`);
         
-        socket.emit("CREATE", { clientId: clientId,})
+        // socket.emit("CREATE", { clientId: clientId,})
     }
     
     const JoinToGame = () =>{
         const GameId = document.getElementById("GameId") as HTMLInputElement;
         console.log(`GameId : ${GameId.value}`);
         
-        socket.emit("JOIN", { clientId: clientId, gameId: GameId.value })
+        // socket.emit("JOIN", { clientId: clientId, gameId: GameId.value })
     }
 
 	return (

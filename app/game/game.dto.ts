@@ -152,7 +152,8 @@ export class GameDependency{
     engineOption: engineOption;
     renderOptions : renderOptions;
     ballOptions : ballOptions;
-    playersOption: playersOption
+    playersOption: playersOption;
+    //add any other object you want from back
     
     constructor(
             engineX: number, engineY: number, scale: number,
