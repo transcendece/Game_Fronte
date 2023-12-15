@@ -1,10 +1,12 @@
 "use client"
 
-import React, { useRef, useEffect, useState, useLayoutEffect } from "react";
+import React, { useRef, useEffect, useState, useLayoutEffect, useContext } from "react";
 import { Engine, Render, Bodies, Composite, Runner, Body, Composites, Vector} from 'matter-js';
 import Matter from "matter-js";
 import 'tailwindcss/tailwind.css';
 import Score from "./scoreComponent";
+import { Socket } from "socket.io-client";
+import { WebsocketContext } from "@/app/Contexts/WebSocketContext";
 
 
 
@@ -50,15 +52,23 @@ class GameBot {
     width: number;
     height: number
     map:string;
+    socket: Socket | null = null;
+    mod: string;
     maxVelocity: number = 5;
     public score1: number = 0;
     public score2: number = 0;
+    Id: number = 0;
+    gameId: string;
     private boundHandleMouseMove: (event: MouseEvent) => void;
 
-    constructor(element: HTMLDivElement, map: string, mod: string){
+    constructor(element: HTMLDivElement, map: string, mod: string, gameId: string,socket?: Socket){
         // window.addEventListener('resize', this.calculateSise);
+        if (socket)
+            this.socket = socket
         this.boundHandleMouseMove = this.mouseEvents.bind(this);
+        this.gameId = gameId;
         this.map = map;
+        this.mod = mod;
         this.element = element;
         [this.width, this.height] = this.calculateSise();
         console.log("WIDTH: ", this.width, " HEIGHT: ", this.height);
@@ -74,16 +84,14 @@ class GameBot {
                 wireframes: false,
             }
         })
+        this.generateObs();
+        this.element.addEventListener('mousemove', this.boundHandleMouseMove);
         if (mod === "BOT"){
-            this.generateObs();
             this.createWorld();
             this.handleCollistion()
-            this.element.addEventListener('mousemove', this.boundHandleMouseMove);
+            this.handleBotMovement()
             Render.run(this.render);
             Runner.run(this.runner, this.engine);
-            this.handleBotMovement()
-        }else if (mod === "RANDOM"){
-
         }
     }
     
@@ -99,19 +107,88 @@ class GameBot {
         this.score2 = s2;
     }
 
+    public startOnligneGame(p1: Vector, p2: Vector, ball: Vector, id: number){
+        // create all elements of engine 
+        this.Id = id;
+        console.log("--------- >ID: ", this.Id);
+        
+        this.p1 = Bodies.rectangle(
+            this.normalise(p1.x, 0, globalWidth, 0, this.width),
+            this.normalise(p1.y, 0, globalHeight, 0, this.height),
+            this.normalise(paddleWidth, 0, globalWidth, 0, this.width),
+            this.normalise(paddleHeight, 0, globalHeight, 0, this.height),
+            {
+                isStatic: true,
+                chamfer: {radius: 10 * this.calculateScale() },
+                render: {fillStyle: 'purple'}
+            }
+        )
+        this.p2 = Bodies.rectangle(
+            this.normalise(p2.x, 0, globalWidth, 0, this.width),
+            this.normalise(p2.y, 0, globalHeight, 0, this.height),
+            this.normalise(paddleWidth, 0, globalWidth, 0, this.width),
+            this.normalise(paddleHeight, 0, globalHeight, 0, this.height),
+            {
+                isStatic: true,
+                chamfer: {radius: 10 * this.calculateScale() },
+                render: {fillStyle: 'purple'}
+            }
+        )
+        this.ball = Bodies.circle(
+            this.normalise(ball.x, 0, globalWidth, 0, this.width),
+            this.normalise(ball.y, 0, globalHeight, 0, this.height),
+            10 * this.calculateScale(),
+        )
+        Body.setVelocity(this.ball, {x: this.normalise(this.ball.velocity.x, 0 , globalWidth, 0, this.width), y: this.normalise(this.ball.velocity.y, 0 , globalHeight, 0, this.height)})
+        Composite.add(this.engine.world, [this.ball, this.p1, this.p2]);
+        Composite.add(this.engine.world, [...this.obstacles]);
+        Render.run(this.render);
+        Runner.run(this.runner, this.engine);
+    }
+
+    public GameFinish(method: string){
+        if (method === "GAMEOVER"){}
+        else if (method === "WinOrLose"){}
+        this.element.removeEventListener('mousemove', this.boundHandleMouseMove);
+        this.destroyGame();
+        //router.back();
+    }
+    public updateOnLigneSizeGame(element: HTMLDivElement){
+        //stop the rendring , upadate the positions and velocity of all element
+        this.element = element;
+        [this.width, this.height] = this.calculateSise();
+        this.render = Render.create({
+            engine: this.engine,
+            element : this.element,
+            options: {
+                background: generateColor(this.map),
+                width: this.width ,
+                height: this.height,
+                wireframes: false,
+            }
+        })
+        this.generateObs();
+        this.startOnligneGame(
+            {x: this.normalise(this.p1.position.x, 0 , globalWidth, 0, this.width), y: this.normalise(this.p1.position.y, 0 , globalHeight, 0, this.height)}, 
+            {x: this.normalise(this.p2.position.x, 0 , globalWidth, 0, this.width), y: this.normalise(this.p2.position.y, 0 , globalHeight, 0, this.height)}, 
+            {x: this.normalise(this.ball.position.x, 0 , globalWidth, 0, this.width), y: this.normalise(this.ball.position.y, 0 , globalHeight, 0, this.height)}, 
+            this.Id
+        )
+    }
+
     private handleBotMovement(){
         Matter.Events.on(this.engine, "beforeUpdate", () => {
             if (this.map === "ADVANCED")
                 Body.setPosition(this.p1,  { x: this.ball.position.x, y : this.p1.position.y})
             else if (this.map === "INTEMIDIER"){
-                if (this.ball.position.x < this.width / 2)
+                if (this.ball.position.x < this.height / 2)
                     Body.setPosition(this.p1,  { x: this.ball.position.x, y : this.p1.position.y})
                 else
                     Body.setPosition(this.p1,  { x: this.width - this.p2.position.x, y : this.p1.position.y})
 
             }
             else{
-                if (this.ball.position.x < this.width / 4)
+                if (this.ball.position.x < this.height / 4)
                     Body.setPosition(this.p1,  { x: this.ball.position.x, y : this.p1.position.y})
                 else
                     Body.setPosition(this.p1,  { x: this.width - this.p2.position.x, y : this.p1.position.y})
@@ -163,10 +240,20 @@ class GameBot {
     }
 
     private mouseEvents(event: MouseEvent){
+        // const socket  = useContext(WebsocketContext)
         let mouseX = event.clientX - (this.element.clientWidth / 2 - this.width / 2);
-        console.log(`divW : ${this.element.clientWidth} && canvasW: ${this.render.canvas.width} && y : ${this.p2.position.y}`);
+        // console.log(`divW : ${this.element.clientWidth} && canvasW: ${this.render.canvas.width} && y : ${this.p2.position.y}`);
         const paddleX = Math.min(Math.max((mouseX - this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) + 10, (this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) + 10), (this.width - this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) - 10)
-        Body.setPosition(this.p2, {x: paddleX, y: this.p2.position.y})
+        console.log("ID: ", this.Id);
+        
+        if (this.mod === "BOT")Body.setPosition(this.p2, {x: paddleX, y: this.p2.position.y});
+        else if (this.socket && this.mod === "RANDOM") this.socket.emit("UPDATE", {
+            gameId: this.gameId,
+            vec: {
+                x: this.Id === 1 ? this.normalise(paddleX, 0, this.width, 0, globalWidth): this.normalise(this.width - paddleX, 0, this.width, 0, globalWidth) ,
+                y : this.Id === 1 ? 780: 20
+            }
+        })
     }
 
     private calculateScale(): number {
@@ -178,7 +265,7 @@ class GameBot {
 
     public calculateSise(): [number, number]{
         let width: number, height: number;
-        console.log("element: " , this.element);
+        // console.log("element: " , this.element);
         
         if (this.element.clientHeight > this.element.clientWidth){
             width = this.element.clientWidth;
@@ -195,8 +282,8 @@ class GameBot {
                 height = width / aspectRatio;
             }
         }
-        console.log("calculate scale global aspect : ", aspectRatio);
-        console.log("calculate scale other  aspect : ", width / height);
+        // console.log("calculate scale global aspect : ", aspectRatio);
+        // console.log("calculate scale other  aspect : ", width / height);
         
         return [width, height]
     }
@@ -262,7 +349,7 @@ class GameBot {
 
     private normalise(x: number, a: number, b: number, c: number, d: number){
         // x in [a, b] && y in [c, d]
-        console.log(`x in [${a}, ${b}] = ${x}, y [${c}, ${d}] =${c + (d - c) * ((x - a) / (b - a))}`);
+        // console.log(`x in [${a}, ${b}] = ${x}, y [${c}, ${d}] =${c + (d - c) * ((x - a) / (b - a))}`);
         
         return c + (d - c) * ((x - a) / (b - a));
     }
@@ -309,13 +396,13 @@ class GameBot {
     }
             
     public destroyGame(){
-        // window.removeEventListener('resize', this.calculateSise);
-        this.element.removeEventListener('mousemove', this.boundHandleMouseMove);
-
-        this.render.canvas.remove();
-        Matter.Runner.stop(this.runner);
-        Matter.Engine.clear(this.engine);
-        Matter.Render.stop(this.render);
+        Runner.stop(this.runner);
+        Render.stop(this.render);
+        if (this.mod === 'BOT'){
+            this.element.removeEventListener('mousemove', this.boundHandleMouseMove);
+            this.render.canvas.remove();
+            Engine.clear(this.engine);
+        }
     }
 }
 

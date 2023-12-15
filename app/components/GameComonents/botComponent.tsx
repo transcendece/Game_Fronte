@@ -33,7 +33,7 @@ const BotComponent : React.FC<BotMap> = (prop) => {
 
     useEffect(() => {
         if (gameDiv && gameDiv.current)
-            { game = new GameBot(gameDiv.current, prop.map, "BOT"); console.log("GAMECLASS"); }
+            { game = new GameBot(gameDiv.current, prop.map, "BOT", "BOT"); console.log("GAMECLASS"); }
         console.log("offs: ", gameDiv.current?.offsetTop);
         
         return () => {
