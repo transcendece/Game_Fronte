@@ -1,13 +1,13 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react';
-import GameBot from './GameBot';
+import GameClass from './GameClass';
 import Score from './scoreComponent';
 
 interface BotMap{
     map: string
 }
 
-let game: GameBot | null = null;
+let game: GameClass | null = null;
 
 const BotComponent : React.FC<BotMap> = (prop) => {
     const gameDiv = useRef<HTMLDivElement>(null);
@@ -33,7 +33,7 @@ const BotComponent : React.FC<BotMap> = (prop) => {
 
     useEffect(() => {
         if (gameDiv && gameDiv.current)
-            { game = new GameBot(gameDiv.current, prop.map, "BOT", "BOT"); console.log("GAMECLASS"); }
+            { game = new GameClass(gameDiv.current, prop.map, "BOT", "BOT"); console.log("GAMECLASS"); }
         console.log("offs: ", gameDiv.current?.offsetTop);
         
         return () => {

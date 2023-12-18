@@ -20,7 +20,7 @@ const BotButtons : React.FC<BotButtonsProps> = (props) => {
     return (
         <>
             {!showBotGame ? (<>
-                <button className="w-[20%] h-[10%] bg-black text-[white] cursor-pointer text-base m-2.5 px-5 py-2.5 rounded-[5px] border-[none] hover:bg-[#AF6915]"
+                <button className="w-[200px] h-[50px] bg-black text-[white] cursor-pointer text-base m-2.5 px-5 py-2.5 rounded-[5px] border-[none] hover:bg-[#AF6915]"
                         type="button"
                         onClick={() => setShowModal(true)}
                         >

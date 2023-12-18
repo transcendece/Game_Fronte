@@ -1,13 +1,12 @@
 import { WebsocketContext } from "@/app/Contexts/WebSocketContext";
-import React, { useContext, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 
-// interface RandomButtons  {
-//     socket: Socket;
-//     clientId: string;
-// };
+interface RandomButtonsProps  {
+    setMap: Dispatch<SetStateAction<string>>;
+};
 
-const RandomButtons = ()=>{
+const RandomButtons : React.FC<RandomButtonsProps> = ()=>{
 	const [showModal, setShowModal] = useState(false);
     const [mode, setMod] = useState('DEFI');
     const [map, setMap] = useState('BEGINNER');
@@ -27,6 +26,7 @@ const RandomButtons = ()=>{
 			map: map,
 			mode: mode,			
 		})
+		setMap(map);
 		setShowModal(false);
 	}
 

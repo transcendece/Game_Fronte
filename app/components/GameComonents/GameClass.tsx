@@ -32,10 +32,10 @@ function generateColor(map: string) : string{
     return '#222222'
 }
 
-class GameBot {
-    engine: Engine = Engine.create({gravity: {x: 0, y: 0, scale: 0},});
-    render: Render;
-    runner: Runner = Runner.create();
+class GameClass {
+    engine: Engine = Engine.create({gravity: {x: 0, y: 0, scale: 0},});//
+    render: Render;//
+    runner: Runner = Runner.create();//
     element :HTMLDivElement;
     ball: Body = Bodies.circle(0, 0, 0);
     p1: Body = Bodies.rectangle(0,0,0,0);
@@ -59,16 +59,24 @@ class GameBot {
     public score2: number = 0;
     Id: number = 0;
     gameId: string;
+    state: boolean;
+    mouse: Matter.Mouse;
+    mouseConstraint: Matter.MouseConstraint;
+
+
+
     private boundHandleMouseMove: (event: MouseEvent) => void;
 
-    constructor(element: HTMLDivElement, map: string, mod: string, gameId: string,socket?: Socket){
+    constructor(element: HTMLDivElement, map: string, mod: string, gameId: string, socket?: Socket){
         // window.addEventListener('resize', this.calculateSise);
+        this.state = false;
         if (socket)
             this.socket = socket
         this.boundHandleMouseMove = this.mouseEvents.bind(this);
         this.gameId = gameId;
         this.map = map;
         this.mod = mod;
+        
         this.element = element;
         [this.width, this.height] = this.calculateSise();
         console.log("WIDTH: ", this.width, " HEIGHT: ", this.height);
@@ -84,8 +92,14 @@ class GameBot {
                 wireframes: false,
             }
         })
+        this.mouse = Matter.Mouse.create(this.render.canvas);
+        Matter.Mouse.setElement(this.mouse, element);
+        this.mouseConstraint = Matter.MouseConstraint.create(this.engine, {
+          mouse: this.mouse,
+        });
         this.generateObs();
-        this.element.addEventListener('mousemove', this.boundHandleMouseMove);
+        // this.element.addEventListener('mousemove', this.boundHandleMouseMove);
+        this.mouseEvents();
         if (mod === "BOT"){
             this.createWorld();
             this.handleCollistion()
@@ -108,7 +122,8 @@ class GameBot {
     }
 
     public startOnligneGame(p1: Vector, p2: Vector, ball: Vector, id: number){
-        // create all elements of engine 
+        // create all elements of engine
+        this.state = true;
         this.Id = id;
         console.log("--------- >ID: ", this.Id);
         
@@ -138,6 +153,7 @@ class GameBot {
             this.normalise(ball.x, 0, globalWidth, 0, this.width),
             this.normalise(ball.y, 0, globalHeight, 0, this.height),
             10 * this.calculateScale(),
+            // {render}
         )
         Body.setVelocity(this.ball, {x: this.normalise(this.ball.velocity.x, 0 , globalWidth, 0, this.width), y: this.normalise(this.ball.velocity.y, 0 , globalHeight, 0, this.height)})
         Composite.add(this.engine.world, [this.ball, this.p1, this.p2]);
@@ -239,22 +255,48 @@ class GameBot {
 
     }
 
-    private mouseEvents(event: MouseEvent){
-        // const socket  = useContext(WebsocketContext)
-        let mouseX = event.clientX - (this.element.clientWidth / 2 - this.width / 2);
-        // console.log(`divW : ${this.element.clientWidth} && canvasW: ${this.render.canvas.width} && y : ${this.p2.position.y}`);
-        const paddleX = Math.min(Math.max((mouseX - this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) + 10, (this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) + 10), (this.width - this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) - 10)
-        console.log("ID: ", this.Id);
+
+    private mouseEvents(): void {
+        Matter.Events.on(this.engine, "beforeUpdate", (event: any) => {
+          let x: number = this.mouse.position.x;
+          let min: number = this.normalise(paddleWidth / 2, 0, globalWidth, 0, this.width) - 5;
+          let max: number = this.width - min + 10;
+          // // console.log("mouse x", this.mouse.position.x);
+          if (x >= min && x <= max ) {
+            this.socket?.emit("UPDATE", {
+                gameId: this.gameId,
+                vec: {
+                    x: this.Id === 1 ? this.normalise(this.mouse.position.x, 0, this.width, 0, globalWidth) : this.normalise(this.width - this.mouse.position.x, 0, this.width, 0, globalWidth),
+                    //x: this.Id === 1 ? this.normalise(paddleX, 0, this.width, 0, globalWidth): this.normalise(this.width - paddleX, 0, this.width, 0, globalWidth) ,
+                    y : this.Id === 1 ? 780: 20
+                }
+            });
+            // Body.setPosition(this.player1, {
+            //   x: this.mouse.position.x,
+            //   y: this.player1.position.y,
+            // });
+          }
+        });
+      }
+    
+
+    // private mouseEvents(event: MouseEvent){
+    //     // const socket  = useContext(WebsocketContext)
+    //     let mouseX = event.clientX - (this.element.clientWidth / 2 - this.width / 2);
+    //     // console.log(`divW : ${this.element.clientWidth} && canvasW: ${this.render.canvas.width} && y : ${this.p2.position.y}`);
+    //     const paddleX = Math.min(Math.max((mouseX - this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) + 10, (this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) + 10), (this.width - this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) - 10)
+    //     // console.log("ID: ", this.gameId);
+    //     // console.log("");
         
-        if (this.mod === "BOT")Body.setPosition(this.p2, {x: paddleX, y: this.p2.position.y});
-        else if (this.socket && this.mod === "RANDOM") this.socket.emit("UPDATE", {
-            gameId: this.gameId,
-            vec: {
-                x: this.Id === 1 ? this.normalise(paddleX, 0, this.width, 0, globalWidth): this.normalise(this.width - paddleX, 0, this.width, 0, globalWidth) ,
-                y : this.Id === 1 ? 780: 20
-            }
-        })
-    }
+    //     if (this.mod === "BOT")Body.setPosition(this.p2, {x: paddleX, y: this.p2.position.y});
+    //     else if (this.socket && this.mod === "RANDOM") this.socket.emit("UPDATE", {
+    //             gameId: this.gameId,
+    //             vec: {
+    //                 x: this.Id === 1 ? this.normalise(paddleX, 0, this.width, 0, globalWidth): this.normalise(this.width - paddleX, 0, this.width, 0, globalWidth) ,
+    //                 y : this.Id === 1 ? 780: 20
+    //             }
+    //         })
+    // }
 
     private calculateScale(): number {
         let scale: number = this.width / globalWidth;
@@ -266,7 +308,8 @@ class GameBot {
     public calculateSise(): [number, number]{
         let width: number, height: number;
         // console.log("element: " , this.element);
-        
+        // width = this.element.clientWidth;
+        // height = this.element.clientHeight;
         if (this.element.clientHeight > this.element.clientWidth){
             width = this.element.clientWidth;
             height = width / aspectRatio;
@@ -349,7 +392,7 @@ class GameBot {
 
     private normalise(x: number, a: number, b: number, c: number, d: number){
         // x in [a, b] && y in [c, d]
-        // console.log(`x in [${a}, ${b}] = ${x}, y [${c}, ${d}] =${c + (d - c) * ((x - a) / (b - a))}`);
+        // console.log(`x in [${a}, ${b}] = ${x}, y [${c}, ${d}] =${c + (d - c) * ((x - a) / (b - a))}`); 
         
         return c + (d - c) * ((x - a) / (b - a));
     }
@@ -394,16 +437,18 @@ class GameBot {
             });
         }); 
     }
-            
+    public getSize(){return [this.width, this.height]}
     public destroyGame(){
+        this.state = false;
         Runner.stop(this.runner);
         Render.stop(this.render);
-        if (this.mod === 'BOT'){
-            this.element.removeEventListener('mousemove', this.boundHandleMouseMove);
-            this.render.canvas.remove();
-            Engine.clear(this.engine);
-        }
+        // this.element.removeEventListener('mousemove', this.boundHandleMouseMove);
+        this.render.canvas.remove();
+        Engine.clear(this.engine);
+        // this.engine = Engine.create()
+        console.log("DISTROY ENGINE: ", this.gameId);
+        
     }
 }
 
-export default GameBot;
+export default GameClass;
