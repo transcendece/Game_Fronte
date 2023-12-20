@@ -1,12 +1,8 @@
 "use client"
-
-import React, { useRef, useEffect, useState, useLayoutEffect, useContext } from "react";
-import { Engine, Render, Bodies, Composite, Runner, Body, Composites, Vector} from 'matter-js';
+import { Engine, Render, Bodies, Composite, Runner, Body, Vector} from 'matter-js';
 import Matter from "matter-js";
 import 'tailwindcss/tailwind.css';
-import Score from "./scoreComponent";
 import { Socket } from "socket.io-client";
-import { WebsocketContext } from "@/app/Contexts/WebSocketContext";
 
 
 
@@ -28,8 +24,8 @@ function generateColor(map: string) : string{
     if (map === "ADVANCED")
         return '#000000'
     else if (map === 'INTEMIDIER')
-        return '#1f1f1f'
-    return '#222222'
+        return '#191919'
+    return '#999999'
 }
 
 class GameClass {
@@ -55,8 +51,8 @@ class GameClass {
     socket: Socket | null = null;
     mod: string;
     maxVelocity: number = 5;
-    public score1: number = 0;
-    public score2: number = 0;
+    score1: number = 0;
+    score2: number = 0;
     Id: number = 0;
     gameId: string;
     state: boolean;
@@ -169,6 +165,7 @@ class GameClass {
         this.destroyGame();
         //router.back();
     }
+    
     public updateOnLigneSizeGame(element: HTMLDivElement){
         //stop the rendring , upadate the positions and velocity of all element
         this.element = element;
@@ -222,7 +219,7 @@ class GameClass {
             {
                 isStatic: true,
                 chamfer: {radius: 10 * this.calculateScale() },
-                render: {fillStyle: 'purple'}
+                render: {fillStyle: 'blue'}
             }
             
         );
@@ -262,42 +259,20 @@ class GameClass {
           let min: number = this.normalise(paddleWidth / 2, 0, globalWidth, 0, this.width) - 5;
           let max: number = this.width - min + 10;
           // // console.log("mouse x", this.mouse.position.x);
+
           if (x >= min && x <= max ) {
-            this.socket?.emit("UPDATE", {
+            if (this.mod === "BOT")Body.setPosition(this.p2, {x: x, y: this.p2.position.y});
+            else if (this.socket && this.mod === "RANDOM")this.socket?.emit("UPDATE", {
                 gameId: this.gameId,
                 vec: {
                     x: this.Id === 1 ? this.normalise(this.mouse.position.x, 0, this.width, 0, globalWidth) : this.normalise(this.width - this.mouse.position.x, 0, this.width, 0, globalWidth),
-                    //x: this.Id === 1 ? this.normalise(paddleX, 0, this.width, 0, globalWidth): this.normalise(this.width - paddleX, 0, this.width, 0, globalWidth) ,
                     y : this.Id === 1 ? 780: 20
                 }
             });
-            // Body.setPosition(this.player1, {
-            //   x: this.mouse.position.x,
-            //   y: this.player1.position.y,
-            // });
           }
         });
       }
     
-
-    // private mouseEvents(event: MouseEvent){
-    //     // const socket  = useContext(WebsocketContext)
-    //     let mouseX = event.clientX - (this.element.clientWidth / 2 - this.width / 2);
-    //     // console.log(`divW : ${this.element.clientWidth} && canvasW: ${this.render.canvas.width} && y : ${this.p2.position.y}`);
-    //     const paddleX = Math.min(Math.max((mouseX - this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) + 10, (this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) + 10), (this.width - this.normalise( paddleWidth , 0 , globalWidth , 0, this.width) / 2) - 10)
-    //     // console.log("ID: ", this.gameId);
-    //     // console.log("");
-        
-    //     if (this.mod === "BOT")Body.setPosition(this.p2, {x: paddleX, y: this.p2.position.y});
-    //     else if (this.socket && this.mod === "RANDOM") this.socket.emit("UPDATE", {
-    //             gameId: this.gameId,
-    //             vec: {
-    //                 x: this.Id === 1 ? this.normalise(paddleX, 0, this.width, 0, globalWidth): this.normalise(this.width - paddleX, 0, this.width, 0, globalWidth) ,
-    //                 y : this.Id === 1 ? 780: 20
-    //             }
-    //         })
-    // }
-
     private calculateScale(): number {
         let scale: number = this.width / globalWidth;
         let scale2: number = this.height / globalHeight;
@@ -307,9 +282,6 @@ class GameClass {
 
     public calculateSise(): [number, number]{
         let width: number, height: number;
-        // console.log("element: " , this.element);
-        // width = this.element.clientWidth;
-        // height = this.element.clientHeight;
         if (this.element.clientHeight > this.element.clientWidth){
             width = this.element.clientWidth;
             height = width / aspectRatio;
@@ -325,9 +297,6 @@ class GameClass {
                 height = width / aspectRatio;
             }
         }
-        // console.log("calculate scale global aspect : ", aspectRatio);
-        // console.log("calculate scale other  aspect : ", width / height);
-        
         return [width, height]
     }
 
@@ -350,13 +319,40 @@ class GameClass {
                 ),
             )
         else if (this.map === "INTEMIDIER")
-            this.obstacles.push(Bodies.rectangle(
+            this.obstacles.push(Bodies.circle(
                 this.width / 4, 
                 this.height / 4, 
-                this.width / 2, 
-                10, 
-                { isStatic: true, chamfer: { radius: 10 * this.calculateScale() }, render: {fillStyle: 'red'} , label: "INT"}
+                20 * this.calculateScale(),
+                {
+                    isStatic: true,
+                    render: {fillStyle: 'blue'}
+                }
+            ), Bodies.circle(
+                3 * this.width / 4, 
+                this.height / 4, 
+                20 * this.calculateScale(), 
+                {
+                    isStatic: true,
+                    render: {fillStyle: 'blue'}
+                }
+            ), Bodies.circle(
+                this.width / 4, 
+                3 * this.height / 4, 
+                20 * this.calculateScale(),
+                {
+                    isStatic: true,
+                    render: {fillStyle: 'blue'}
+                }
+            ), Bodies.circle(
+                3 * this.width / 4, 
+                3 * this.height / 4, 
+                20 * this.calculateScale(), 
+                {
+                    isStatic: true,
+                    render: {fillStyle: 'blue'}
+                }
             ))
+
         //add walls
         this.topWall = Bodies.rectangle(
             this.normalise((0 + globalWidth / 2), 0, globalWidth, 0, this.width),

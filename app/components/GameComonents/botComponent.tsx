@@ -1,10 +1,11 @@
 "use client"
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import GameClass from './GameClass';
 import Score from './scoreComponent';
 
 interface BotMap{
     map: string
+    setBotGame:  Dispatch<SetStateAction<boolean>>;
 }
 
 let game: GameClass | null = null;
@@ -43,14 +44,15 @@ const BotComponent : React.FC<BotMap> = (prop) => {
     }, [width, height]);
 
     return (
-        <div ref={divRef} className="flex red w-full flex-row h-full justify-evenly">
+        <div ref={divRef} className="flex justify-center items-center w-full h-full flex-col">
                  <div className="flex flex-col items-center justify-end">
                  <Score avatar="/_next/image?url=%2Fbatman.png&w=3840&q=75" name="PLAYER1" score={0} />
                  </div>
-                 <div ref={gameDiv} className="flex justify-center w-full blue h-full"></div>
+                 <div ref={gameDiv} className="flex w-[60%] h-[60%] justify-center blue "></div>
             <div className="flex flex-col items-center justify-start">
                  <Score avatar="/_next/image?url=%2Fbatman.png&w=3840&q=75" name="BO9A" score={0} />
             </div>
+            <button type="button" onClick={()=>prop.setBotGame(false)}>Cencel</button>
         </div>
     );
 };

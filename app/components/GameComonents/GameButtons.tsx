@@ -28,52 +28,56 @@ const GameButtons = () => {
     
     const socket :Socket = useContext(WebsocketContext);
 	const gameDiv = useRef<HTMLDivElement>(null);
-    const [map, setMap] = useState<string>('');
+    const [map, setMap] = useState<string>('BEGINNER');
     const [wait, setWait] = useState<boolean>(false);
 	const [waitmsg, setWaitMsg] = useState<string>('WAITTTTT')
-    const [gameId, setGameId] = useState('');
     const [showBotGame, setShowBotGame] = useState(false)
     const [showRandomGame, setShowRandomGame] = useState(false)
+	const [dep1, setDep1] = useState<[string, string]>()
+	const [dep2, setDep2] = useState<[string, string]>()
+	const [score, setScore] = useState<[number, number]>([0, 0])
+	const [Id, setId] = useState<number>(0)
 
-
-
-	// const handleCreate = useCallback((res : {gameId: string}) => {
-	// 	console.log()
-	// 	setGameId(res.gameId);
-	// }, [])
-
-	useEffect(() => 
-	console.log("-> gameid : ", gameId), [gameId])
-
-	const handlePlay = async (res: {gameId: string} & Update) => {
+	const handlePlay = async (res: {gameId: string} & Update & {avatar: [string, string], names: [string, string]}) => {
 		console.log("START");
+		setDep1([res.avatar[0], res.names[0]])
+		setDep2([res.avatar[1], res.names[1]])
+		setId(res.ID);
+		console.log("dep: ", res.avatar, res.names);
+		
 		console.log("gameid : ", res.gameId);
 		setWait(false);
 		setShowRandomGame(true);
-		console.log({ bdiv: gameDiv.current })
-		// await new Promise(res => setTimeout(res, 1000));
-		console.log({ adiv: gameDiv.current })
-		setGameId(res.gameId);
-		game = new GameClass(gameDiv.current!, "BEGINNER", "RANDOM", gameId, socket);
-		console.log("==> GAMEID CREATED: ", game.Id)
-		game.startOnligneGame(res.p1, res.p2, res.ball, res.ID);
-		game.updateScore(res.score1, res.score2);
+		setTimeout(() => {
+			console.log({ adiv: gameDiv.current })
+			console.log("MAAAAAAP:::: ", map);
+			
+			game = new GameClass(gameDiv.current!, map, "RANDOM", res.gameId, socket);
+			console.log("==> GAMEID CREATED: ", game.Id)
+			game.startOnligneGame(res.p1, res.p2, res.ball, res.ID);
+			game.updateScore(res.score1, res.score2);
+			setScore([res.score1, res.score2])
+			console.log({ showRandomGame })
+		}, 200)
 	};
-
+	
 	function removeGame() {
 		setShowRandomGame(false);
 		game?.destroyGame();
 		game = null;
 	}
-
 	
+		useEffect(()=>{console.log("MAP IN: ", map);
+	}, [map])
+
 	useEffect(()=>{
 		socket.on("START", handlePlay);
-		// socket.on("START", handleStart);
 		
-		// socket.on("CREATE", handleCreate);
-		socket.on("UPDATE", (res : Update)=>{
+		socket.on("UPDATE", (res : Update)=> {
 			game?.updateState(res.p1, res.p2, res.ball);
+			// console.log("res: ", res);
+			setScore([res.score1, res.score2])
+			
 			game?.updateScore(res.score1, res.score2);
 		});
 		socket.on("WinOrLose", () => {
@@ -113,7 +117,7 @@ const GameButtons = () => {
 			console.log(showRandomGame, "usestate");
 			
         }
-    } , [gameId]);
+    } , [map, dep1]);
 
 	useEffect(() => {
 		return () => {
@@ -127,18 +131,22 @@ const GameButtons = () => {
 		<div className='flex justify-center items-center w-full h-full flex-col '>
 			{!showRandomGame && !showBotGame && !wait && ( 
 			<>
-					<BotButtons setShowBotGame={setShowBotGame} setModBot={setMap}/>
+					<BotButtons setShowBotGame={setShowBotGame} setMap={setMap}/>
 					<RandomButtons setMap={setMap} />
-					<FriendButtons></FriendButtons>
 			</>
 			)}
-			{(showBotGame ) && <BotComponent map={map}></BotComponent>}
-			{/* {(showRandomGame) && <RealTimeGame gameId={gameId}/>} */}
-			{showRandomGame  && (
+			{(showBotGame ) && <BotComponent map={map} setBotGame={setShowBotGame}></BotComponent>}
+			{(
 				<>
-					<Score avatar="/_next/image?url=%2Fbatman.png&w=3840&q=75" name="PLAYER1" score={0}></Score>
-					<div ref={gameDiv} className="flex justify-center w-[60%] blue h-[60%]"></div>
-					<Score avatar="/_next/image?url=%2Fbatman.png&w=3840&q=75" name="PLAYER1" score={2}></Score>
+					{
+						showRandomGame && (Id === 1 ? <Score avatar={dep2?.[0]} name={dep2?.[1]} score={score[1]}></Score> 
+						: <Score avatar={dep1?.[0]} name={dep1?.[1]} score={score[0]}></Score>)
+					}
+					<div ref={gameDiv} className={`flex justify-center w-[60%] h-[60%] ${!showRandomGame ? 'hidden' : ''}`}></div>
+					{
+						showRandomGame && (Id === 1 ? <Score avatar={dep1?.[0]} name={dep1?.[1]} score={score[0]}></Score> 
+						: <Score avatar={dep2?.[0]} name={dep2?.[1]} score={score[1]}></Score>) 
+					}
 				</>
 			)}
 			{(wait) && <Loadig msg={waitmsg}></Loadig>}
