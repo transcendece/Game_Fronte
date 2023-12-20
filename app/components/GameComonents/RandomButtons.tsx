@@ -8,7 +8,7 @@ interface RandomButtonsProps  {
     setMap: Dispatch<SetStateAction<string>>;
 };
 
-const RandomButtons : React.FC<RandomButtonsProps> = ()=>{
+const RandomButtons : React.FC<RandomButtonsProps> = (props)=>{
 	const [showModal, setShowModal] = useState(false);
     const [map, setMap] = useState('BEGINNER');
 	const socket :Socket = useContext(WebsocketContext);
@@ -35,7 +35,7 @@ const RandomButtons : React.FC<RandomButtonsProps> = ()=>{
 		socket.emit("RANDOM", {
 			map: map,	
 		})
-		
+		props.setMap(map)
 		setMap(map);
 		console.log("MAP: ", map);
 		setShowModal(false);

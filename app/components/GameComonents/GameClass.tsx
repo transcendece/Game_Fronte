@@ -51,8 +51,8 @@ class GameClass {
     socket: Socket | null = null;
     mod: string;
     maxVelocity: number = 5;
-    public score1: number = 0;
-    public score2: number = 0;
+    score1: number = 0;
+    score2: number = 0;
     Id: number = 0;
     gameId: string;
     state: boolean;

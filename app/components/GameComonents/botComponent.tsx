@@ -44,7 +44,7 @@ const BotComponent : React.FC<BotMap> = (prop) => {
     }, [width, height]);
 
     return (
-        <div ref={divRef} className="flex red w-full flex-row h-full justify-evenly">
+        <div ref={divRef} className="flex justify-center items-center w-full h-full flex-col">
                  <div className="flex flex-col items-center justify-end">
                  <Score avatar="/_next/image?url=%2Fbatman.png&w=3840&q=75" name="PLAYER1" score={0} />
                  </div>
