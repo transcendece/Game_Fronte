@@ -21,7 +21,7 @@ export interface Conversation {
 
 const initialState:{entity:Conversation []; loading: boolean; error: null | string } = {
   entity: [],
-  loading: false,
+  loading: true,
   error: null,
 };
 
@@ -55,10 +55,11 @@ const chatSlice = createSlice({
       .addCase(fetchChatData.fulfilled, (state, action) => {
         // console.log('Chat data from server:', action.payload);
         state.entity = action.payload;
-        state.loading = false
+        if (state.entity !== undefined)
+          state.loading = false;
       })
       .addCase(fetchChatData.rejected, (state, action) => {
-        state.loading = false;
+        state.loading = true;
         state.error = action.error.message || 'Something went wrong !';
       });
   },

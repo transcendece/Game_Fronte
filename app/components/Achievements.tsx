@@ -11,13 +11,13 @@ interface Achievement {
 
 type Props = {
     noBadge: string;
-    Achievs: Achievement[];
+    Achievs: Achievement[] | undefined;
   };
 
 
 
-function Achievements({noBadge, Achievs = []}:Props) {
-  console.log("++++", Achievs);
+function Achievements({noBadge, Achievs}:Props) {
+  Achievs && console.log("++++", Achievs[0].unlocked);
   // const Achievs = useSelector((state: RootState) => state.user.user_Data?.achievements);
   // const unlocked = Achievs;
   return (

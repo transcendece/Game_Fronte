@@ -3,6 +3,9 @@ import { RootState } from '../store/store';
 import { log } from 'console'
 import axios from 'axios';
 import { userInfo } from 'os';
+import { getCookies } from 'cookies-next';
+import { cookies } from 'next/headers';
+import { Cookies } from 'react-cookie';
 
 interface UserData {
   id: number;
@@ -11,6 +14,7 @@ interface UserData {
   rank: number;
   level: number;
   avatar: string;
+  IsEnabled?: boolean
 }
 
 interface MatchHIst {
@@ -77,33 +81,39 @@ export interface UserInfos {
 //} as any;
 
 
-const initialState:{entity:null | UserInfos ; loading: boolean; error: null | string } = {
+const initialState:{entity: null | UserInfos ; loading: boolean; error: null | string } = {
   entity: null,
-  loading: false,
+  loading: true,
   error: null,
 };
 
   export const fetchInfos = createAsyncThunk("user/fetch", async (thunkApi) => {
-  try {
-    const response = await axios.get('http://localhost:4000/Profile', {withCredentials: true });
 
+    const response = await axios.get('http://localhost:4000/Profile', {withCredentials: true });
+    if (response.status === 401){
+      console.log('Eroororororo 401');
+    }
     if (response.status === 200) {
-      console.log('Data getted successfully:', response.data.userData.avatar);
+      console.log('Data getted successfully:', response.data);
+      console.log("status = ", response.headers["set-cookies"]);
       return (response.data);
-      // console.log(response.data);
-    } else {
+    }else {
       console.error('Data getting failed:', response.data);
     }
-  } catch (error) {
-    console.error('Error getting data:', error);
-  }
-  })
+  } )
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-
+    updateUserNameValue: (state, action: PayloadAction<string>) => {
+      if (state.entity && state.entity.userData) {
+        state.entity.userData.username = action.payload;
+      }
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -112,10 +122,13 @@ const userSlice = createSlice({
       })
       .addCase(fetchInfos.fulfilled, (state, action) => {
         state.entity = action.payload;
-        state.loading = false;
+        console.log("data received : ", state.entity);
+        if (state.entity !== undefined)
+          state.loading = false;
       })
       .addCase(fetchInfos.rejected, (state, action) => {
         state.loading = false;
+        console.log("slice error ==> ", action.error.message);
         state.error = action.error.message || 'Something went wrong !';
       });
   },
@@ -124,6 +137,10 @@ const userSlice = createSlice({
 
 // export const { addInfos } = userSlice.actions;
 export default userSlice.reducer;
+export const { updateUserNameValue } = userSlice.actions;
+export const { setLoading } = userSlice.actions;
+
+
 // export const selectUser = (state: RootState) => state.user.user_Data
 // export const selectLoading = (state: RootState) => state.user.loading
 // export const selectError = (state: RootState) => state.user.error

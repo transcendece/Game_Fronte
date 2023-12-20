@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-function notFoud404() {
+function NotFoud404() {
   return (
     <div className='bg-[#131313] h-screen w-screen items-center flex m-auto justify-center'>
       <Image src={'/40-4.png'} height={400} width={600} alt='Page Not Found'/>
@@ -8,4 +8,4 @@ function notFoud404() {
   )
 }
 
-export default notFoud404
+export default NotFoud404
