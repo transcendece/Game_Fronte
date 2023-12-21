@@ -10,6 +10,8 @@ import BotComponent from './botComponent';
 import Loadig from './LoadingComponent';
 import Score from './scoreComponent';
 import { Vector } from 'matter-js';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Update{
 	ball	:Vector
@@ -79,14 +81,19 @@ const GameButtons = () => {
 			
 			game?.updateScore(res.score1, res.score2);
 		});
-		socket.on("WinOrLose", () => {
-			console.log("WINORLOSE");
+		socket.on("WinOrLose", (res:{content:  string}) => {
+			console.log("WINORLOSE", res.content);
 			removeGame();
+			if(res.content === "win")
+				notifyWin();
+			else if (res.content === 'lose')
+				notifyLose();
 		} )
 		
 		socket.on("GAMEOVER", ()=>{
 			console.log("GAMEOVER");
 			removeGame();
+			notifyGameOver();
 			
 		} )
 
@@ -105,6 +112,44 @@ const GameButtons = () => {
 			
 		})
 		
+		const notifyGameOver = () =>{
+			toast.warn('Your Adverser Disconnected', {
+				position: "top-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "dark",
+				});
+		}
+
+		const notifyWin= ()=> {
+			toast.success('You Win', {
+				position: "top-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+				});
+		}
+		const notifyLose= ()=> {
+			toast.error('You Lose', {
+				position: "top-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+				});
+		}
+
 		/**
 		 * events: ERROR, GAMEOVER, CREATE, WAIT, UPDATE, PLAY
 		*/
@@ -156,6 +201,18 @@ const GameButtons = () => {
 				</>
 			)}
 			{(wait) && <Loadig msg={waitmsg}></Loadig>}
+			<ToastContainer
+				position="top-right"
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+				theme="dark"
+				/>
 		</div>
   );
 };
