@@ -115,7 +115,7 @@ const GameButtons = () => {
 			socket.off("WinOrLose");
 			socket.off("ERROR")
 			console.log(showRandomGame, "usestate");
-			
+			// socket.disconnect();
         }
     } , [map, dep1]);
 
