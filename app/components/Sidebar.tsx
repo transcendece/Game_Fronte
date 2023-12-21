@@ -52,8 +52,8 @@ export default function Sidebar({onData}: Props) {
         onData({ loading: loadingUser, error: errorUser });
     }, [loadingUser, errorUser])
     
-    console.log('child data = ', loadingUser);
-    console.log('child data = ', errorUser);
+    // console.log('child data = ', loadingUser);
+    // console.log('child data = ', errorUser);
     const handlelogout = async () => {
         
         await axios.post('http://localhost:4000/auth/logout', {} ,{withCredentials: true})

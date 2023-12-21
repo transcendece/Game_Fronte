@@ -3,8 +3,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import GameClass from "./GameClass";
 import { WebsocketContext } from '../../Contexts/WebSocketContext';
-import FriendButtons from './FriendButtons';
-import { GameDependency } from '../../game/game.dto';
 import RandomButtons from './RandomButtons';
 import { Socket } from 'socket.io-client';
 import BotButtons from './BotButtons';
@@ -33,8 +31,8 @@ const GameButtons = () => {
 	const [waitmsg, setWaitMsg] = useState<string>('WAITTTTT')
     const [showBotGame, setShowBotGame] = useState(false)
     const [showRandomGame, setShowRandomGame] = useState(false)
-	const [dep1, setDep1] = useState<[string, string]>()
-	const [dep2, setDep2] = useState<[string, string]>()
+	const [dep1, setDep1] = useState<[string, string]>(["", ""])
+	const [dep2, setDep2] = useState<[string, string]>(["", ""])
 	const [score, setScore] = useState<[number, number]>([0, 0])
 	const [Id, setId] = useState<number>(0)
 
@@ -67,10 +65,11 @@ const GameButtons = () => {
 		game = null;
 	}
 	
-		useEffect(()=>{console.log("MAP IN: ", map);
+	useEffect(()=>{console.log("MAP IN: ", map);
 	}, [map])
 
 	useEffect(()=>{
+		console.log("ID: ", socket.id);
 		socket.on("START", handlePlay);
 		
 		socket.on("UPDATE", (res : Update)=> {
@@ -96,15 +95,22 @@ const GameButtons = () => {
 
 		})
 
-		socket.on("ERROR", () => {
-			console.log("ERROR BUTT");
+		socket.on("ERROR", (res: string) => {
+			console.log("ERROR BUTT", res);
 		})
 
+		socket.on("REDIRECT", (url: string) => {
+			window.location.href = url;
+			console.log("URL : url");
+			
+		})
+		
 		/**
 		 * events: ERROR, GAMEOVER, CREATE, WAIT, UPDATE, PLAY
 		*/
 		return ()=>{
 			console.log('remove game listeners')
+			socket.off("REDIRECT")
 			socket.off("connect");
 			socket.off("CREATE");
 			socket.off("PLAY")
@@ -139,13 +145,13 @@ const GameButtons = () => {
 			{(
 				<>
 					{
-						showRandomGame && (Id === 1 ? <Score avatar={dep2?.[0]} name={dep2?.[1]} score={score[1]}></Score> 
-						: <Score avatar={dep1?.[0]} name={dep1?.[1]} score={score[0]}></Score>)
+						showRandomGame && (Id === 1 ? <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score> 
+						: <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score>)
 					}
 					<div ref={gameDiv} className={`flex justify-center w-[60%] h-[60%] ${!showRandomGame ? 'hidden' : ''}`}></div>
 					{
-						showRandomGame && (Id === 1 ? <Score avatar={dep1?.[0]} name={dep1?.[1]} score={score[0]}></Score> 
-						: <Score avatar={dep2?.[0]} name={dep2?.[1]} score={score[1]}></Score>) 
+						showRandomGame && (Id === 1 ? <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score> 
+						: <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score>) 
 					}
 				</>
 			)}
