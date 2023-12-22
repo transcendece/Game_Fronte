@@ -4,6 +4,7 @@ import chatReducer from '../Slices/chatSlice'
 import { useDispatch } from 'react-redux';
 import channelMessagesSlice from '../Slices/channelMessagesSlice';
 import userSettingsSlice from '../Slices/userSettingsSlice';
+import channelReducer from "../Slices/channelSlice"
 
 const store = configureStore({
     reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
         chat: chatReducer,
         channelMessages : channelMessagesSlice,
         userSettings : userSettingsSlice,
+        channel: channelReducer,
     }
 })
 

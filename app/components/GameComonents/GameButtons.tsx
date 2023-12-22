@@ -12,6 +12,7 @@ import Score from './scoreComponent';
 import { Vector } from 'matter-js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/navigation'
 
 interface Update{
 	ball	:Vector
@@ -25,7 +26,7 @@ interface Update{
 let game: GameClass | null = null;
 
 const GameButtons = () => {
-    
+    const router = useRouter()
     const socket :Socket = useContext(WebsocketContext);
 	const gameDiv = useRef<HTMLDivElement>(null);
     const [map, setMap] = useState<string>('BEGINNER');
@@ -71,7 +72,10 @@ const GameButtons = () => {
 	}, [map])
 
 	useEffect(()=>{
-		console.log("ID: ", socket.id);
+		if (!socket.id){
+			console.log("ID: ", socket);
+			router.push("/profile")
+		}
 		socket.on("START", handlePlay);
 		
 		socket.on("UPDATE", (res : Update)=> {
@@ -106,9 +110,10 @@ const GameButtons = () => {
 			console.log("ERROR BUTT", res);
 		})
 
-		socket.on("REDIRECT", (url: string) => {
-			window.location.href = url;
-			console.log("URL : url");
+		socket.on("REDIRECT", (res: {url: string}) => {
+			// window.location.href = url;
+			console.log("REDIRECT : ", res.url);
+			router.push(res.url)
 			
 		})
 		
@@ -134,7 +139,7 @@ const GameButtons = () => {
 				pauseOnHover: true,
 				draggable: true,
 				progress: undefined,
-				theme: "light",
+				theme: "dark",
 				});
 		}
 		const notifyLose= ()=> {
@@ -146,7 +151,7 @@ const GameButtons = () => {
 				pauseOnHover: true,
 				draggable: true,
 				progress: undefined,
-				theme: "light",
+				theme: "dark",
 				});
 		}
 
@@ -168,7 +173,7 @@ const GameButtons = () => {
 			console.log(showRandomGame, "usestate");
 			
         }
-    } , [map, dep1]);
+    } , [socket, map, dep1]);
 
 	useEffect(() => {
 		return () => {

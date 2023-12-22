@@ -1,14 +1,14 @@
 'use client'
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar"
-import ChatHeader from "@/app/components/chatComp/chatHeader"
-import ChatContent from "../components/chatComp/chatContent";
-import ChatInput from "../components/chatComp/chatInput";
-import ConversComp from "../components/chatComp/conversComp";
+import ChatHeader from "@/app/components/chatComponents/chatHeader"
+import ChatContent from "../components/chatComponents/chatContent";
+import ChatInput from "../components/chatComponents/chatInput";
+import ConversComp from "../components/chatComponents/conversComp";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { messages } from "../components/chatComp/messages";
-import { socket } from "../components/chatComp/socket";
+import { messages } from "../components/chatComponents/messages";
+import { socket } from "../components/chatComponents/socket";
 import { BiConversation } from "react-icons/bi";
 import { BiSolidMessageSquareEdit } from "react-icons/bi";
 import { PropagateLoader } from "react-spinners";

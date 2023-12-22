@@ -11,7 +11,13 @@ const config: Config = {
         'xLarge': '2170px',
         'Large' : '1500px',
         'xMedium': '1179px',
-        'medium': '780px'
+        'medium': '780px',
+        'sm': '640px',
+        'md': '768px',
+        'lg':'1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
+        // 'medium': '570px'
         
     },
     extend: {
