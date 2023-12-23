@@ -45,14 +45,14 @@ const GameButtons = () => {
 		setDep2([res.avatar[1], res.names[1]])
 		setId(res.ID);
 		console.log("dep: ", res.avatar, res.names);
-		
+
 		console.log("gameid : ", res.gameId);
 		setWait(false);
 		setShowRandomGame(true);
 		setTimeout(() => {
 			console.log({ adiv: gameDiv.current })
 			console.log("MAAAAAAP:::: ", map);
-			
+
 			game = new GameClass(gameDiv.current!, map, "RANDOM", res.gameId, socket);
 			console.log("==> GAMEID CREATED: ", game.Id)
 			game.startOnligneGame(res.p1, res.p2, res.ball, res.ID);
@@ -61,13 +61,13 @@ const GameButtons = () => {
 			console.log({ showRandomGame })
 		}, 200)
 	};
-	
+
 	function removeGame() {
 		setShowRandomGame(false);
 		game?.destroyGame();
 		game = null;
 	}
-	
+
 	useEffect(()=>{console.log("MAP IN: ", map);
 	}, [map])
 
@@ -76,14 +76,13 @@ const GameButtons = () => {
 			console.log("ID: ", socket);
 			router.push("/profile")
 		}
-		socket.connect();
 		socket.on("START", handlePlay);
-		
+
 		socket.on("UPDATE", (res : Update)=> {
 			game?.updateState(res.p1, res.p2, res.ball);
 			// console.log("res: ", res);
 			setScore([res.score1, res.score2])
-			
+
 			game?.updateScore(res.score1, res.score2);
 		});
 		socket.on("WinOrLose", (res:{content:  string}) => {
@@ -94,17 +93,17 @@ const GameButtons = () => {
 			else if (res.content === 'lose')
 				notifyLose();
 		} )
-		
+
 		socket.on("GAMEOVER", ()=>{
 			console.log("GAMEOVER");
 			removeGame();
 			notifyGameOver();
-			
+
 		} )
 
 		socket.on("WAIT", ()=>{
 			console.log("WAITTTTTT");
-			
+
 			setWait(true);
 
 		})
@@ -117,9 +116,9 @@ const GameButtons = () => {
 			// window.location.href = url;
 			console.log("REDIRECT : ", res.url);
 			router.push(res.url)
-			
+
 		})
-		
+
 		const notifyGameOver = () =>{
 			toast.warn('Your Adverser Disconnected', {
 				position: "top-right",
@@ -173,11 +172,10 @@ const GameButtons = () => {
 			socket.off("GAMEOVER");
 			socket.off("WinOrLose");
 			socket.off("ERROR")
-			socket.disconnect()
 			console.log(showRandomGame, "usestate");
-			
+
         }
-    } , [socket, map, dep1]);
+    } , [socket,map, dep1]);
 
 	useEffect(() => {
 		return () => {
@@ -186,10 +184,18 @@ const GameButtons = () => {
 		}
 	}, [])
 
-      
+	useEffect(() => {
+		// no-op if the socket is already connected
+		socket.connect();
+
+		return () => {
+		  socket.disconnect();
+		};
+	  }, []);
+
     return (
 		<div className='flex justify-center items-center w-full h-full flex-col '>
-			{!showRandomGame && !showBotGame && !wait && ( 
+			{!showRandomGame && !showBotGame && !wait && (
 			<>
 					<BotButtons setShowBotGame={setShowBotGame} setMap={setMap}/>
 					<RandomButtons setMap={setMap} />
@@ -199,13 +205,13 @@ const GameButtons = () => {
 			{(
 				<>
 					{
-						showRandomGame && (Id === 1 ? <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score> 
+						showRandomGame && (Id === 1 ? <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score>
 						: <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score>)
 					}
 					<div ref={gameDiv} className={`flex justify-center w-[60%] h-[60%] ${!showRandomGame ? 'hidden' : ''}`}></div>
 					{
-						showRandomGame && (Id === 1 ? <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score> 
-						: <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score>) 
+						showRandomGame && (Id === 1 ? <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score>
+						: <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score>)
 					}
 				</>
 			)}
