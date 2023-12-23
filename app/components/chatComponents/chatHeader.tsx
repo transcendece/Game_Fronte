@@ -40,10 +40,14 @@ const ChatHeader = ({ name }: ChatHeaderProps) => {
     if (!socket.hasListeners("EnterGame")) {
       socket.on("EnterGame", redirectToGame)
     }
-
-    return ()=>{
-      //socket.off all l3aybat
+    if (!socket.hasListeners("ERROR",)) {
+      socket.on("ERROR", (res : string)=> {console.log(res);
+      })
     }
+
+    // return ()=>{
+    //   //socket.off all l3aybat
+    // }
    
 }, [socket, ShowInvite, invite]); 
   

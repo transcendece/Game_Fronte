@@ -35,7 +35,7 @@ const GameInviteModal : React.FC<GameInviteModalProps> = (props) => {
                   className="bg-transparent border-0 text-black float-right"
                   onClick={() => {
                     props.setGameInviteModal(false);
-                    props.socket.emit("GameInvite", {state: "KO"})
+                    props.socket.emit("GameInvite", {state: "KO", recieverId: props.reciever, senderId: props.sender})
                   }}
                   >
                   <span className="text-black opacity-7 h-6 w-6 text-xl block bg-gray-400 py-0 rounded-full">
@@ -50,7 +50,7 @@ const GameInviteModal : React.FC<GameInviteModalProps> = (props) => {
                   type="button"
                   onClick={() => {
                     props.setGameInviteModal(false);
-                    props.socket.emit("GameInvite", {state: "KO"})  
+                    props.socket.emit("GameInvite", {state: "KO", recieverId: props.reciever, senderId: props.sender})  
                     }}>
                   Close
                 </button>
