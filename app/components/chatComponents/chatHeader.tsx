@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { socket } from "./socket";
+// import { socket } from "./socket";
+import { socket } from "@/app/Contexts/socket";
 import { useRouter } from "next/navigation";
 import GameInviteModal from "@/app/chat/gameInvite.modal";
 
@@ -16,12 +17,15 @@ const ChatHeader = ({ name }: ChatHeaderProps) => {
 
   const handlePlayClick = (name : string) => {
     console.log("NEW PLAY: ", name);
-    
+    //SEND THE ID OF CLIENT WITH INVIT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     socket.emit("INVITE", "98783")
   }
 
   const redirectToGame = () => {
-    router.push('/game');
+    setTimeout(()=>{
+
+      router.push('/game');
+    }, 500)
   }
   const popEnvite = async (res: {recieverId: string, senderId: string}) => {
     console.log("IVITE recieved: ", res);
@@ -30,9 +34,18 @@ const ChatHeader = ({ name }: ChatHeaderProps) => {
   }
 
   useEffect (() => {
-    if (!socket.hasListeners("INVITE")) {
-      socket.on("INVITE", redirectToGame);
-    }
+    /***
+     * INVITE send by the first client,{
+     * we send a GameInvite demande to second player
+     *    if the second player accepte
+     *        redirect to game
+     *    else
+     *      send to first client refuse
+     * }when 2em client accepte the demande 
+     */
+    // if (!socket.hasListeners("INVITE")) {
+    //   socket.on("INVITE", redirectToGame);
+    // }
     if (!socket.hasListeners("GameInvite")) {
       
       socket.on("GameInvite", popEnvite);
@@ -45,9 +58,13 @@ const ChatHeader = ({ name }: ChatHeaderProps) => {
       })
     }
 
-    // return ()=>{
-    //   //socket.off all l3aybat
-    // }
+    return ()=>{
+      //socket.off all l3aybat
+      socket.off("GameInvite")
+      socket.off("EnterGame")
+      socket.off("ERROR")
+      // socket.disconnect()
+    }
    
 }, [socket, ShowInvite, invite]); 
   

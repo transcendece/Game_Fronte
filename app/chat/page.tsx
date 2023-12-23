@@ -8,7 +8,7 @@ import ConversComp from "../components/chatComponents/conversComp";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { messages } from "../components/chatComponents/messages";
-import { socket } from "../components/chatComponents/socket";
+import { socket } from "../Contexts/socket";
 import { BiConversation } from "react-icons/bi";
 import { BiSolidMessageSquareEdit } from "react-icons/bi";
 import { PropagateLoader } from "react-spinners";

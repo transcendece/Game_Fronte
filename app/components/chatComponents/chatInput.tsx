@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { RiSendPlane2Fill } from "react-icons/ri";
-import { socket } from './socket';
+import { socket } from '../../Contexts/socket';
 import { io } from 'socket.io-client';
 import { Conversation } from '@/app/Slices/chatSlice';
 import axios from 'axios';

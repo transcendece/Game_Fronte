@@ -72,10 +72,11 @@ const GameButtons = () => {
 	}, [map])
 
 	useEffect(()=>{
-		if (!socket.id){
+		if (!socket){
 			console.log("ID: ", socket);
 			router.push("/profile")
 		}
+		socket.connect();
 		socket.on("START", handlePlay);
 		
 		socket.on("UPDATE", (res : Update)=> {
@@ -102,6 +103,8 @@ const GameButtons = () => {
 		} )
 
 		socket.on("WAIT", ()=>{
+			console.log("WAITTTTTT");
+			
 			setWait(true);
 
 		})
@@ -170,6 +173,7 @@ const GameButtons = () => {
 			socket.off("GAMEOVER");
 			socket.off("WinOrLose");
 			socket.off("ERROR")
+			socket.disconnect()
 			console.log(showRandomGame, "usestate");
 			
         }

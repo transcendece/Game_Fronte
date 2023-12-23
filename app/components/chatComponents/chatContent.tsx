@@ -1,7 +1,7 @@
 import React from 'react'
 import { Message } from '@/app/chat/page';
 import { useRef, useEffect } from 'react';
-import { socket } from './socket';
+import { socket } from '../../Contexts/socket';
 
 interface ChatContentProps {
     messages: Message[];
