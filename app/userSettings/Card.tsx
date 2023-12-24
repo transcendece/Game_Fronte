@@ -30,6 +30,7 @@ function Card(props : CardData) {
       myMap.set("Invitations","accepteInvite");
       myMap.set("Invitationsx","deleteInvite");
       myMap.set("Friends","removeFriend");
+      console.log('ikhan: ',       props.data);
     return (
         <div className="w-[20%] h-[30%] flex flex-col m-5 p-5 bg-[#30313E] items-center rounded-md">
             <div className="w-[50%] flex flex-row justify-around">
@@ -37,7 +38,7 @@ function Card(props : CardData) {
                 {props.title != "Friends" && <Modal content="+" title={props.title}/>}
             </div>
             <div className=" w-[50%] h-[10%] grid items-center">
-             {props?.data?.length && props?.data.map((user, index)=> {
+             {props?.data?.length  && props?.data?.map((user, index)=> {
                 return (
                     <div key={index} className="flex flex-row justify-around">
                         {user && <p>{user}</p>} 

@@ -15,12 +15,12 @@ type userSettingsData = {
 function UserSettings() {
     const dispatch = useAppDispatch();
     const userSettingsData : userSettingsData = useSelector((state: RootState) => state.userSettings)
-    const [data, setData] = useState<userSettingsData>({
-        user: "",
-        friends: [],
-        bandUsers: [],
-        invitations : []
-    });
+    // const [data, setData] = useState<userSettingsData>({
+    //     user: "",
+    //     friends: [],
+    //     bandUsers: [],
+    //     invitations : []
+    // });
     
     const fetchInfo = () => { 
         return fetch("http://localhost:4000/Chat/userSettings", {
@@ -30,7 +30,7 @@ function UserSettings() {
                 .then((res) => res.json()) 
                 .then((d) => 
                 {
-                    setData(d.data)
+                    // setData(d.data)
                     console.log(d);
                 }).catch((error) => {
                     console.error('Error:', error);
@@ -39,8 +39,8 @@ function UserSettings() {
         
         useEffect(() => {
             dispatch(fetchUserSettings());
-            console.log(data?.friends);
-        }, [])
+            // console.log(data?.friends);
+        }, [dispatch])
         console.log("fetched Data : ", userSettingsData);
     return (
             <div className="h-full w-full flex flex-row items-center justify-around">
