@@ -51,6 +51,15 @@ export default function chat() {
   }, [conversations])
 
   useEffect(() => {
+		// no-op if the socket is already connected
+		socket.connect();
+
+		return () => {
+		  socket.disconnect();
+		};
+	  }, []);
+
+  useEffect(() => {
     socket.on('RecieveMessage', (data: Message) => {
       
       if (data.conversationId) {
