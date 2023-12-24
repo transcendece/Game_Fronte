@@ -43,6 +43,16 @@ function ChannelChat() {
     });
   }, [dispatch]);
   
+
+  useEffect(() => {
+		// no-op if the socket is already connected
+		socket.connect();
+
+		return () => {
+		  socket.disconnect();
+		};
+	  }, []);
+    
   useEffect (() => {
       if (!socket.hasListeners("channelMessage")) {
         socket.on("channelMessage", handleChannelMessage);
