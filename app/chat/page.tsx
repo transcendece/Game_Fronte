@@ -258,7 +258,7 @@ export default function chat() {
                 { (<div id="id_2" className={`${showConversations ? 'hidden' : 'flex'} flex-col xMedium:block w-full h-full xMedium:w-[65%] bg-[#131313] border-2 border-[#323232] rounded-xl`}>
                   <ChatHeader name="Nems"/>
                   <ChatContent messages={selectedConv.find((conversation) => conversation.id === selectConvId)?.messages || []}/>
-                  <ChatInput onSendMessage={handleSendMessage} conversation={sortedConversations.find((conversation) => conversation.id === selectConvId) as Conversation}  senderId={sortedConversations.find((conversation) => conversation.id === selectConvId)?.messages[0].senderId as string} receiverId={sortedConversations.find((conversation) => conversation.id === selectConvId)?.messages[0].recieverId as string}/>
+                  <ChatInput onSendMessage={handleSendMessage} conversation={sortedConversations.find((conversation) => conversation.id === selectConvId) as Conversation}  senderId={sortedConversations.find((conversation) => conversation.id === selectConvId)?.senderId as string} receiverId={sortedConversations.find((conversation) => conversation.id === selectConvId)?.recieverId as string}/>
                 </div>)}
               </div>
               <div className="xMedium:hidden mt-4 w-full flex shadow-sm border border-[#323232] rounded-xl shadow-[#E58E27] ">
