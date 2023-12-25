@@ -10,21 +10,35 @@ import axios from 'axios';
 export interface chatInputProps {
   onSendMessage: (message: string) => void;
   conversation: Conversation;
+  senderId: string;
+  receiverId: string;
 }
 
-function ChatInput({onSendMessage, conversation}: chatInputProps) {
+function ChatInput({onSendMessage, conversation, senderId, receiverId}: chatInputProps) {
   const [message, setMessage] = useState<string>('');
+
+  console.log('receiverid = ', receiverId);
+  console.log('senderid = ', senderId);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
   };
 
+  const handleKeyDown = (event: any) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   const handleSendMessage = () => {
     if (message.trim() !== '') {
+      console.log("sender , ", senderId, ", reciever , " , receiverId);
+      
       socket.emit('SendMessage', {
         "content" : message,
-        "senderId" : conversation?.owner,
-        "recieverId" : conversation?.username,
+        "senderId" : senderId,
+        "recieverId" : receiverId,
       });
       onSendMessage(message);
       setMessage('');
@@ -38,6 +52,7 @@ function ChatInput({onSendMessage, conversation}: chatInputProps) {
         type="text"
         value={message}
         onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
         placeholder="Send a message ..."
         className="w-[85%] medium:w-[90%] h-[60%] bg-[#131313] text-slate-400 p-2 border-2 rounded-full outline-none border-[#ababab] focus:border focus:border-[#E58E27]"
       />
