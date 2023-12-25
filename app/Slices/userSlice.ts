@@ -114,6 +114,11 @@ const userSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
+    updateUserImage: (state, action: PayloadAction<string>) => {
+      if (state.entity && state.entity.userData) {
+        state.entity.userData.avatar = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -137,7 +142,7 @@ const userSlice = createSlice({
 
 // export const { addInfos } = userSlice.actions;
 export default userSlice.reducer;
-export const { updateUserNameValue } = userSlice.actions;
+export const { updateUserNameValue, updateUserImage } = userSlice.actions;
 export const { setLoading } = userSlice.actions;
 
 

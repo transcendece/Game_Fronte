@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { PropagateLoader, GridLoader } from "react-spinners";
 import Link from "next/link";
-import {fetchInfos, updateUserNameValue} from '../Slices/userSlice';
+import {updateUserImage, updateUserNameValue} from '../Slices/userSlice';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ClipLoader } from "react-spinners";
@@ -136,6 +136,7 @@ export default function setting() {
 
   const handleImageUpload = async () => {
     setLoadingSubmit(false);
+    
 
     if (imageD instanceof File) {
       const formData = new FormData();
@@ -149,13 +150,21 @@ export default function setting() {
           formData
         );
         
-        if (response.status === 201) {
+        if (response.data) {
           console.log('Image uploaded successfully:', response.data);
-
+          dispatch(updateUserImage(response.data.url));
+          const imageUrl = response.data.url;
+          const serverResponse = await axios.post('http://localhost:4000/Settings/image', imageUrl, { withCredentials: true });
+          if (serverResponse.status === 200) {
+            console.log('Second request successful:', serverResponse.data);
+          } else {
+            console.error('Second request failed:', serverResponse.data);
+          }
         } else {
-          console.error('Image upload failed:', response.data);
+          console.error('Image upload failed:', response);
         }
       } catch (error) {
+        //document.getElementById('notifyError')?.click();
         console.error('Error uploading image:', error);
       }
     }
