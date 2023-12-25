@@ -75,8 +75,8 @@ export default function RootLayout({
   }
   return (
 
+      <html lang="en" >
     <MyProvider>
-      <html lang="en" className={spaceGrotesk.className}>
         <body className=' bg-[#131313] h-full w-full'>
           <main className='flex min-w-fit h-full text-white justify-start relative' >
               <div><button onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className={`${childData?.loading || childData?.error ? "hidden" : "block"} cursor-pointer absolute text-xl left-5 medium:hidden p-2 bg-[#E58E27] rounded-full top-3 z-50 w-5 h-10`}><AiOutlineMenu/></button></div>
@@ -86,7 +86,7 @@ export default function RootLayout({
               </div>
           </main>
         </body>
-      </html>
     </MyProvider>
+      </html>
   )
 }

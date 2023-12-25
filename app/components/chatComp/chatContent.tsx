@@ -18,7 +18,8 @@ function ChatContent({messages}: ChatContentProps) {
   //  };
 //
   //}, [messages])
-
+  console.log("mouaddddd : ",messages);
+  
     return (
         <div className="max-h-[80%] h-[78%] px-6 py-1 overflow-y-auto scrollbar-hide">
           { messages.slice(0).reverse().map((message, index) => (

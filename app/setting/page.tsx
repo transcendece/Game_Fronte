@@ -153,8 +153,8 @@ export default function setting() {
         if (response.data) {
           console.log('Image uploaded successfully:', response.data);
           dispatch(updateUserImage(response.data.url));
-          const imageUrl = response.data.url;
-          const serverResponse = await axios.post('http://localhost:4000/Settings/image', imageUrl, { withCredentials: true });
+          const url = response.data.url;
+          const serverResponse = await axios.post('http://localhost:4000/Settings/image', {url : url}, { withCredentials: true });
           if (serverResponse.status === 200) {
             console.log('Second request successful:', serverResponse.data);
           } else {

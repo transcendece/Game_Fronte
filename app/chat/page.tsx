@@ -19,16 +19,17 @@ import { addMessage } from '../Slices/chatSlice';
 
 import axios from "axios";
 import Link from "next/link";
+import { Avatar } from "@mui/material";
 
 export interface Message {
   avatar: string,
   content: string;
   sender: string;
-  receiver:string;
+  reciever:string;
   senderId: string;
   recieverId:string;
   isOwner: boolean;
-  conversationId? : string;
+  conversationId : string;
 }
 
 export interface Conversation {
@@ -41,9 +42,9 @@ export interface Conversation {
   senderId: string;
   recieverId:string;
   messages: Message[];
-  conversationId? : string;
+  Conversationid : string;
   sender: string;
-  receiver:string;
+  reciever:string;
 }
 
 export default function chat() {
@@ -72,23 +73,50 @@ export default function chat() {
   useEffect(() => {
     
     socket.on('RecieveMessage', (data: Message) => {
-      
+      console.log('id id = ', data);
       if (data.conversationId) {
         const timestamp = Date.now();
         
-        const existingConversation: Conversation | undefined = selectedConv.find((conversation) => conversation.username === data.sender);
-          console.log('herre herre = ', data.conversationId);
-          
+        // const existingConversation: Conversation | undefined = conversations.find((conversation) => {String(conversation.Conversationid) === data.conversationId;});
+        let existingConversation : Conversation = {
+          sender : "",
+          senderId : "",
+          reciever : "",
+          recieverId : "",
+          Conversationid : "",
+          username : "",
+          online : true,
+          owner : "",
+          id : 0,
+          avatar : "",
+          messages : []
+        }  
+        for (let index : number = 0; index < conversations.length; index++) {
+          if (conversations[index].Conversationid === data.conversationId)
+            existingConversation = conversations[index]
+        }
+        console.log('herre herre = ', existingConversation)
           
           if (existingConversation ) {
+          //dispatch(addMessage({ convId: String(existingConversation.Conversationid), message: data }));
+            let tmp : Message = {
+                sender: data.sender,
+                reciever:data.reciever,
+                senderId: data.senderId,
+                recieverId: data.recieverId,
+                isOwner: false,
+                conversationId : data.conversationId,
+                avatar: data.avatar,
+                content:data.content
+            }
             setSelectedConv((prevConversations) =>
             prevConversations.map((conversation) =>
-            conversation.id === existingConversation.id
+            conversation.Conversationid === existingConversation.Conversationid
             ? {
               ...existingConversation,
               timestamp,
-              messages: [...existingConversation.messages, data],
-            }
+              messages: [...existingConversation.messages, tmp],
+          }
             : conversation
             )
             );
@@ -184,7 +212,7 @@ export default function chat() {
         )
       );
     }
-    dispatch(addMessage({ convId: String(selectConvId), message: newMessage }));
+    //dispatch(addMessage({ convId: String(selectConvId), message: newMessage }));
       //console.log("updated conv =  ", selectedConv);
       
       
@@ -241,7 +269,7 @@ export default function chat() {
                     </div>
                   </div>
                   <div className=" h-full w-full overflow-y-auto scrollbar-hide rounded-b-xl">
-                      {sortedConversations.map((conversation: Conversation) => (
+                      {selectedConv.map((conversation: Conversation) => (
                         <div key={conversation.id} className="h-20 w-full xMedium:bg-opacity-10">
                           <button
                           
