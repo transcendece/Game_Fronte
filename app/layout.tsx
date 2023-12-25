@@ -18,7 +18,7 @@ interface Datas {
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
-  weight: '300',
+  weight: ['300', '600'],
 })
 
 const metadata: Metadata = {

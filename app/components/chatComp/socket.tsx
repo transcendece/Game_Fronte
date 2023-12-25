@@ -6,4 +6,4 @@ import io from 'socket.io-client';
 const serverUrl = 'http://localhost:4000'; // Replace with your server URL
 
 // Create a socket connection
-export const socket = io('http://localhost:4000', {transports : ["websocket"]});
+export const socket = io('http://localhost:8888', {transports : ["websocket"]});

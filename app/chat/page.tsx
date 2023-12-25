@@ -5,15 +5,16 @@ import ChatHeader from "@/app/components/chatComp/chatHeader"
 import ChatContent from "../components/chatComp/chatContent";
 import ChatInput from "../components/chatComp/chatInput";
 import ConversComp from "../components/chatComp/conversComp";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
 import { messages } from "../components/chatComp/messages";
 import { socket } from "../components/chatComp/socket";
 import { BiConversation } from "react-icons/bi";
 import { BiSolidMessageSquareEdit } from "react-icons/bi";
 import { PropagateLoader } from "react-spinners";
 import { RiChatNewFill } from "react-icons/ri";
-import { MdVideogameAsset } from "react-icons/md";
+import { addMessage } from '../Slices/chatSlice'; 
+
 
 
 import axios from "axios";
@@ -23,6 +24,9 @@ export interface Message {
   avatar: string,
   content: string;
   sender: string;
+  receiver:string;
+  senderId: string;
+  recieverId:string;
   isOwner: boolean;
   conversationId? : string;
 }
@@ -34,13 +38,19 @@ export interface Conversation {
   avatar: string;
   owner:string;
   timestamp?: number;
+  senderId: string;
+  recieverId:string;
   messages: Message[];
   conversationId? : string;
+  sender: string;
+  receiver:string;
 }
 
 export default function chat() {
 
   const conversations: Conversation[] = useSelector((state: RootState) => state.chat?.entity);
+  const userId: string = useSelector((state: RootState) => String(state.user?.entity?.userData?.id));
+  const ownerName: string = useSelector((state: RootState) => String(state.user?.entity?.userData?.username));
   const loading: boolean = useSelector((state: RootState) => state.chat?.loading);
   const error: string | null = useSelector((state: RootState) => state.chat?.error);
   const [selectedConv, setSelectedConv] = useState<Conversation[]>(conversations);
@@ -48,25 +58,28 @@ export default function chat() {
   const [showContent, setShowContent] = useState(false);
   const [selectConvId, setSelectConvId] = useState<number>(0);
   const [isNewChat, setIsNewChat] = useState<Boolean>(false);
-
+  const [sendTo, setSendTo] = useState<string>("");
+  const [receiver, setReceiver] = useState<string>("");
+  const [sender, setSender] = useState<string>("");
+  const dispatch = useDispatch<AppDispatch>();
+  
+  
   useEffect(() => {
     setSelectedConv(conversations)
+    
   }, [conversations])
-
+  
   useEffect(() => {
+    
     socket.on('RecieveMessage', (data: Message) => {
       
       if (data.conversationId) {
         const timestamp = Date.now();
         
-        const existingConversation: Conversation | undefined = selectedConv.find(
-          (conversation) => conversation.username === data.sender
-          );
-          console.log(data.conversationId);
-          console.log(existingConversation);
+        const existingConversation: Conversation | undefined = selectedConv.find((conversation) => conversation.username === data.sender);
+          console.log('herre herre = ', data.conversationId);
           
-          console.log('got event ==> ', existingConversation);
-
+          
           if (existingConversation ) {
             setSelectedConv((prevConversations) =>
             prevConversations.map((conversation) =>
@@ -81,50 +94,111 @@ export default function chat() {
             );
           }
         }
+      });
+
+      socket.on('ERROR', (data: string) => {
+        console.log('data  : ', data);
+      });
+
+
+      
+      return () => {
+        socket.off('RecieveMessage');
+        //socket.disconnect();
+      };
+    }, [selectedConv, socket]); 
+    
+    useEffect(() => {
+      console.log('SelectedConv updated:', selectedConv);
+    }, [selectedConv]);
+    // const [allMessages, setAllMessages] = useState<Message[]>(selectedConv[0].messages);
+
+    
+    const sendNewMessageTo = () => {
+      
+    const sendToElement = document.getElementById('sendTo') as HTMLInputElement | null
+    const newconversation = document.getElementById('contentMessage') as HTMLInputElement | null
+    console.log('send to receiver = ' ,receiver);
+    console.log('send to sender = ' ,sender);
+    
+    socket.emit('newMessage', {
+      "content" : newconversation?.value,
+      "senderId" : userId,
+      "recieverId" : sendToElement?.value
     });
-  
-    return () => {
-      socket.off('RecieveMessage');
-    };
-  }, [selectedConv]); 
-  
-  // const [allMessages, setAllMessages] = useState<Message[]>(selectedConv[0].messages);
+    setIsNewChat(false);
+    console.log('send To ===== ',sendToElement?.value);
+      
+      
+    
+
+  }
 
   
   
-  // console.log(allMessages);
   const handleSendMessage = (newMessage: string) => {
+    //if (selectConvId !== null) {
+    //  const timestamp = Date.now();
+    //  const updatedConversations = selectedConv.map((conversation: any) =>
+    //    conversation.id === selectConvId
+    //      ? {
+    //          ...conversation,
+    //          timestamp: timestamp,
+    //          senderId: userId,
+    //          recieverId: conversation.recieverId,
+    //          messages: [
+    //            ...conversation.messages,
+    //            {
+    //              avatar: conversation.avatar,
+    //              content: newMessage,
+    //              sender: ownerName,
+    //              isOwner: true,
+    //            },
+    //          ],
+    //        }
+    //      : conversation
+    //  );
+//
+    //  setSelectedConv(updatedConversations);
     if (selectConvId !== null) {
       const timestamp = Date.now();
-      const updatedConversations = selectedConv.map((conversation: any) =>
-        conversation.id === selectConvId
-          ? {
-              ...conversation,
-              timestamp: timestamp,
-              messages: [
-                ...conversation.messages,
-                {
-                  avatar: conversation.avatar,
-                  content: newMessage,
-                  sender: conversation.owner,
-                  isOwner: true,
-                },
-              ],
-            }
-          : conversation
+      setSelectedConv((prevConversations) =>
+        prevConversations.map((conversation: any) =>
+          conversation.id === selectConvId
+            ? {
+                ...conversation,
+                timestamp: timestamp,
+                senderId: userId,
+                recieverId: conversation.recieverId,
+                messages: [
+                  ...conversation.messages,
+                  {
+                    avatar: conversation.avatar,
+                    content: newMessage,
+                    sender: ownerName,
+                    isOwner: true,
+                  },
+                ],
+              }
+            : conversation
+        )
       );
-
-      setSelectedConv(updatedConversations);
-      
-    // const newChatMessage: Message = {
-    //   avatar:"",
-    //   text: newMessage,
-    //   sentBy: 'owner',
-    //   isChatOwner: true,
-    // };
-    // setAllMessages((prevMessages) => [...prevMessages, newChatMessage]);
     }
-  }
+    dispatch(addMessage({ convId: String(selectConvId), message: newMessage }));
+      //console.log("updated conv =  ", selectedConv);
+      
+      
+      // const newChatMessage: Message = {
+        //   avatar:"",
+        //   text: newMessage,
+        //   sentBy: 'owner',
+        //   isChatOwner: true,
+        // };
+        // setAllMessages((prevMessages) => [...prevMessages, newChatMessage]);
+        
+      }
+      
+      //console.log("new conversations  =  ", conversations);
 
   const handleNewChat = () => {
     setIsNewChat(true);
@@ -160,21 +234,20 @@ export default function chat() {
               <div className="w-full h-[90%] xMedium:h-full flex xMedium:flex xMedium:justify-between xMedium:items-center ">
                 <div id="id_1" className={`${showConversations ? 'flex' : 'hidden'} h-full w-full xMedium:flex flex-col bg-[#131313] border-2 border-[#323232] xMedium:w-[33%] rounded-xl`}>
                   <div className="flex h-20 bg-[#323232] p-6 m-auto w-full border-b rounded-t-lg border-b-[#E58E27]">
-                    <h1 className="w-[60%] h-full">INBOX</h1>
-                    <div className="w-[40%] h-full flex justify-between space-x-4">
-                      <button onClick={handleNewChat} className="w-[25%] rounded-lg h-full text-2xl p-1 bg-[#E58E27] "><RiChatNewFill /></button>
-                      <button className="w-[75%] rounded-lg px-3 py-1 bg-[#E58E27] text-sm">
-                        <h1 className="m-auto">New game</h1>
-                      </button>
+                    <h1 className="w-[85%] h-full">INBOX</h1>
+                    <div className="w-[15%] h-full flex justify-center">
+                      <button onClick={handleNewChat} className="w-8 rounded-lg h-full m-auto text-center text-2xl p-1 bg-[#E58E27] "><RiChatNewFill /></button>
+                       
                     </div>
                   </div>
-                  <div className=" h-full w-full overflow-y-auto scrollbar-hide rounded-b-xl xMedium:rounded-xl">
+                  <div className=" h-full w-full overflow-y-auto scrollbar-hide rounded-b-xl">
                       {sortedConversations.map((conversation: Conversation) => (
-                        <div key={conversation.id} className="h-20 w-full xMedium:bg-opacity-20 xMedium:bg-white shadow-sm xMedium:shadow-white">
+                        <div key={conversation.id} className="h-20 w-full xMedium:bg-opacity-10">
                           <button
                           
-                          onClick={() => {setSelectConvId(conversation.id); setShowConversations(false);}}
-                          className="xMedium:w-full xMedium:h-full xMedium:bg-white xMedium:bg-opacity-10 transition duration-500 ease-in-out hover:text-orange-500 hover:bg-opacity-100"
+                          onClick={() => {setSelectConvId(conversation.id); setShowConversations(false);
+                            setSender(conversation.senderId); setReceiver(conversation.recieverId);}}
+                          className="w-full h-full bg-white bg-opacity-10 transition duration-500 ease-in-out hover:text-[#E58E27] hover:bg-opacity-75"
                           ><ConversComp conversation={conversation}/>
                           </button>
                         </div>
@@ -185,7 +258,7 @@ export default function chat() {
                 { (<div id="id_2" className={`${showConversations ? 'hidden' : 'flex'} flex-col xMedium:block w-full h-full xMedium:w-[65%] bg-[#131313] border-2 border-[#323232] rounded-xl`}>
                   <ChatHeader name="Nems"/>
                   <ChatContent messages={selectedConv.find((conversation) => conversation.id === selectConvId)?.messages || []}/>
-                  <ChatInput onSendMessage={handleSendMessage} conversation={sortedConversations.find((conversation) => conversation.id === selectConvId) as Conversation}/>
+                  <ChatInput onSendMessage={handleSendMessage} conversation={sortedConversations.find((conversation) => conversation.id === selectConvId) as Conversation}  senderId={sortedConversations.find((conversation) => conversation.id === selectConvId)?.messages[0].senderId as string} receiverId={sortedConversations.find((conversation) => conversation.id === selectConvId)?.messages[0].recieverId as string}/>
                 </div>)}
               </div>
               <div className="xMedium:hidden mt-4 w-full flex shadow-sm border border-[#323232] rounded-xl shadow-[#E58E27] ">
@@ -213,14 +286,14 @@ export default function chat() {
                                       <div className="relative flex items-center flex-col gap-4 border-gray-200 ms-3.5 mb-4 md:mb-5">
                                           <label className="w-[82%] ">
                                             <h3>Send to </h3>
-                                            <input className="w-full bg-[#323232] p-1 h-10 rounded-lg text-slate-100 focus:border focus:border-[#E58E27] outline-none" type="text" />                              
+                                            <input id="sendTo"  className="w-full bg-[#323232] p-1 h-10 rounded-lg text-slate-100 focus:border focus:border-[#E58E27] outline-none" type="text" />                              
                                           </label>
                                           <label>
                                             <h3>Write your message :</h3>
-                                            <textarea className="bg-[#323232] p-1 rounded-lg text-slate-100 focus:border focus:border-[#E58E27] outline-none" name="postContent" rows={4} cols={30} />
+                                            <textarea id="contentMessage" className="bg-[#323232] p-1 rounded-lg text-slate-100 focus:border focus:border-[#E58E27] outline-none" name="postContent" rows={4} cols={30} />
                                           </label>                           
-                                      <button className="text-white items-center inline-flex w-[82%] justify-center bg-[#E58E27] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                                        <Link href={'/2FaValidation'}> SEND </Link>
+                                      <button onClick={sendNewMessageTo} className="text-white items-center inline-flex w-[82%] justify-center bg-[#E58E27] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                                         SEND 
                                       </button>
                                       </div>
                                   </div>

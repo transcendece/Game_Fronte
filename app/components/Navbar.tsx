@@ -37,17 +37,19 @@ export default function Navbar({pageName}:Props) {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
-    console.log("searcg input length = ", searchInput.length);
-    if (searchInput.length + 1 > 0)
-      setLoadingCode(true);
-    else
-      setLoadingCode(false);
+    setLoadingCode(true);
   };
-
+  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        if (searchInput.trim() !== '') {
+        console.log("searcg input length = ", searchInput.length);
+        if (searchInput.length === 0)
+          setLoadingCode(false);
+        if (searchInput.trim().length === 0)
+          setLoadingCode(false);
+
+        if (searchInput.trim().length > 0) {
           const response = await axios.get(`http://localhost:4000/Search/${searchInput}`, {withCredentials: true });
           setLoadingCode(false);
           setUserData(response.data);
@@ -92,7 +94,7 @@ export default function Navbar({pageName}:Props) {
         </div>
       </div>
       <div className='flex w-[40%] text-[#E58E27] justify-end items-center'>
-        <Link href={'/'}><h1 className={`${hideIt ? "hidden medium:block" : ""} text-[#E58E27] mr-2 md:mr-8 font-sans medium:text-md font-bold flex-none Large:text-xl`}>AREA 420</h1></Link>
+        <Link href={'/'}><h1 className={`${hideIt ? "hidden medium:block" : ""} text-[#E58E27] mr-2 md:mr-8 font-sans medium:text-md font-semibold flex-none Large:text-xl`}>AREA 420</h1></Link>
         <Link href={'/game'} className="medium:py-1 medium:px-6 Large:px-8 bg-[#E58E27] text-sm text-slate-100 rounded-full medium:rounded-sm flex-none Large:text-xl  ml-8">
           <div className='hidden medium:block'>PLAY</div>
           <div className='text-3xl rounded-full medium:hidden'><BsFillPlayCircleFill/></div>
