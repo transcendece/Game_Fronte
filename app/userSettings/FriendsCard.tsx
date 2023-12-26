@@ -35,15 +35,15 @@ function FriendsCard(props : CardData) {
       let myMap = new Map<string, string>();
       myMap.set("Friends","removeFriend");
     return (
-        <div className="w-[20%] h-[30%] flex flex-col m-5 p-5 bg-[#30313E] items-center rounded-md">
-            <div className="w-[50%] flex flex-row justify-around">
+        <div className="w-[80%] md:w-1/4 h-[30%] flex flex-col m-5 p-5 items-center rounded-md bg-[#30313E]">
+            <div className="w-full flex flex-row justify-around ">
                 <h3>{props.title}</h3>
                 {props.title != "Friends" && <Modal content="+" title={props.title}/>}
             </div>
-            <div className=" w-[50%] h-[10%] flex flex-col">
+            <div className=" w-full h-[10%] flex flex-col">
              {data  && data?.map((user, index)=> {
                 return (
-                  <div key={index} className="w-full flex flex-row p-2 justify-around">
+                  <div key={index} className="w-full flex flex-row p-2 justify-between">
                     <div><p>{user.name}</p></div>
                     {user.online && !user.inGame && <div className="text-white rounded-sm truncate bg-green-600"><p >Online</p></div>}
                     {user.inGame && <div className="text-white rounded-full border bg-yellow-600"><p>InGame</p></div>}
