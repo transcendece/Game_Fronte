@@ -101,9 +101,9 @@ const GameButtons = () => {
 
 		} )
 
-		socket.on("WAIT", ()=>{
+		socket.on("WAIT", (req: {map: string})=>{
 			console.log("WAITTTTTT");
-
+			setMap(req.map)
 			setWait(true);
 
 		})
@@ -213,9 +213,16 @@ const GameButtons = () => {
 						showRandomGame && (Id === 1 ? <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score>
 						: <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score>)
 					}
+					{ showRandomGame && game  &&  <button type="button" onClick={()=>{setShowRandomGame(false);socket.emit("EXITGAME", {gameId: game!.gameId})}}>Cencel</button>}
 				</>
 			)}
-			{(wait) && <Loadig msg={waitmsg}></Loadig>}
+			{((wait) && 
+				<>
+					<h2>WAITTTT</h2>
+					<Loadig msg={waitmsg}></Loadig>
+					<button type="button" onClick={()=>{setWait(false);socket.emit("EXITWAIT")}}>Cencel</button>
+				</>
+			)}
 			<ToastContainer
 				position="top-right"
 				autoClose={5000}

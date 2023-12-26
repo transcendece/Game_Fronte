@@ -8,9 +8,10 @@ import { MdVideogameAsset } from "react-icons/md";
 
 interface ChatHeaderProps {
   name: string;
+  reciever : string;
 }
 
-const ChatHeader = ({ name }: ChatHeaderProps) => {
+const ChatHeader = ({ name, reciever }: ChatHeaderProps) => {
 
   const router = useRouter()
   const [ShowInvite, SetShowInvite] = useState(false);
@@ -19,7 +20,7 @@ const ChatHeader = ({ name }: ChatHeaderProps) => {
   const handlePlayClick = (name : string) => {
     console.log("NEW PLAY: ", name);
     //SEND THE ID OF CLIENT WITH INVIT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    socket.emit("INVITE", "98783")
+    socket.emit("INVITE", reciever)
   }
 
   const redirectToGame = () => {

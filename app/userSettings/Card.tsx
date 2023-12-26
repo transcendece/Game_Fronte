@@ -38,7 +38,7 @@ function Card(props : CardData) {
                 {props.title != "Friends" && <Modal content="+" title={props.title}/>}
             </div>
             <div className=" w-[50%] h-[10%] grid items-center">
-             {props?.data?.length  && props?.data?.map((user, index)=> {
+             {props?.data  && props?.data?.map((user, index)=> {
                 return (
                     <div key={index} className="flex flex-row justify-around">
                         {user && <p>{user}</p>} 
