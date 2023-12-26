@@ -20,17 +20,19 @@ type bodyData = {
 }
 
 export const fetchUserSettings = createAsyncThunk(
- 'user/fetch',
+ 'setuser/fetch',
  async (thunkAPI) => {
  try {
    const response = await fetch(`http://localhost:4000/Chat/userSettings`, {
      method: 'GET',
      credentials: 'include'
    });
+   console.log('user Settings')
    const responseData = await response.json();
    console.log("userSettings data : ", responseData);
    return responseData.data;
  } catch (error) {
+   console.log('user settings error')
    console.error('Error:', error);
    throw error;
  }
@@ -39,7 +41,7 @@ export const fetchUserSettings = createAsyncThunk(
 
 
 export const Action = createAsyncThunk(
-   'user/action',
+   'setuser/action',
    async ({endpoint, bodyData} : {endpoint : string, bodyData : bodyData}, thunnkAPi) => {
       try {
         const response = await fetch(`http://localhost:4000/Chat/${endpoint}`, {
@@ -60,8 +62,8 @@ export const Action = createAsyncThunk(
     }
 );
 
-const userSlice = createSlice({
- name: 'user',
+const userSettingSlice = createSlice({
+ name: 'setuser',
  initialState: {
    user: "",
    friends: [],
@@ -109,6 +111,6 @@ const userSlice = createSlice({
 
 });
 
-export const { setUserSettings } = userSlice.actions;
+export const { setUserSettings } = userSettingSlice.actions;
 
-export default userSlice.reducer;
+export default userSettingSlice.reducer;

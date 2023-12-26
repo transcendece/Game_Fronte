@@ -23,19 +23,19 @@ function UserSettings() {
     const dispatch = useAppDispatch();
     const userSettingsData : userSettingsData = useSelector((state: RootState) => state.userSettings)
     
-    const fetchInfo = () => { 
-        return fetch("http://localhost:4000/Chat/userSettings", {
-            method : "GET",
-            credentials : 'include'
-        }) 
-                .then((res) => res.json()) 
-                .then((d) => 
-                {
-                    console.log(d);
-                }).catch((error) => {
-                    console.error('Error:', error);
-                })
-        }
+    // const fetchInfo = () => { 
+    //     return fetch("http://localhost:4000/Chat/userSettings", {
+    //         method : "GET",
+    //         credentials : 'include'
+    //     }) 
+    //             .then((res) => res.json()) 
+    //             .then((d) => 
+    //             {
+    //                 console.log(d);
+    //             }).catch((error) => {
+    //                 console.error('Error:', error);
+    //             })
+    //     }
         
         useEffect(() => {
             dispatch(fetchUserSettings());

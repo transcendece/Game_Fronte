@@ -15,7 +15,7 @@ function MCard({index} : Props) {
 
         <div className='flex h-32 xMedium:h-40 w-40 m-auto'>
             <div className='flex flex-col'>
-                <Image className='rounded-full h-16 w-16  medium:h-28 medium:w-28' alt='' src={matchHIst?.[index]?.playerBAvatar} height={150} width={150}/>
+                <Image className='rounded-full h-16 w-16  medium:h-28 medium:w-28' alt='/noBadge' src={matchHIst?.[index]?.playerBAvatar as string} height={150} width={150}/>
                 <div className='text-center text-slate-500 medium:text-2xl'>{matchHIst?.[index]?.playerBUsername}</div>
             </div>
             <div className='m-auto medium:text-2xl pl-4'>{matchHIst?.[index]?.playerBScore}</div>

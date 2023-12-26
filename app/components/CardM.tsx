@@ -21,7 +21,7 @@ function CardM({index} : Props) {
         <div className='flex h-32 xMedium:h-40 w-40 m-auto'>
             <div className='m-auto pr-4 medium:text-2xl'>{matchHIst?.[index]?.playerAScore}</div>
             <div >
-                <Image className='rounded-full m-auto h-16 w-16 medium:h-28 medium:w-28' alt='' src={matchHIst?.[index]?.playerAAvatar} height={150} width={150}/>
+                <Image className='rounded-full m-auto h-16 w-16 medium:h-28 medium:w-28' alt='' src={matchHIst?.[index]?.playerAAvatar as string} height={150} width={150}/>
                 <div className='text-center medium:text-2xl text-slate-500'>{matchHIst?.[index]?.playerAUsername}</div>
             </div>
         </div>

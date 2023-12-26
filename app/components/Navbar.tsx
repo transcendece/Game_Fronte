@@ -41,6 +41,7 @@ export default function Navbar({pageName}:Props) {
   };
   
   useEffect(() => {
+    console.log("nav UseEffect")
     const fetchUserData = async () => {
       try {
         console.log("searcg input length = ", searchInput.length);
@@ -51,16 +52,20 @@ export default function Navbar({pageName}:Props) {
 
         if (searchInput.trim().length > 0) {
           const response = await axios.get(`http://localhost:4000/Search/${searchInput}`, {withCredentials: true });
+          console.log('nav bar Data')
           setLoadingCode(false);
           setUserData(response.data);
         }
       } catch (error) {
+        console.log("Error nav bar")
         setLoadingCode(false);
         setErrorCode(error as string)
         console.error('Error fetching user data:', error);
       }
     };
     fetchUserData();
+   
+    
   }, [searchInput]);
 
   console.log('search here 2:', userData);
