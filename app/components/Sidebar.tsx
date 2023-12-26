@@ -5,7 +5,7 @@ import axios from 'axios';
 import { GoPerson, GoTrophy } from "react-icons/go";
 import { HiOutlineChatBubbleLeftEllipsis } from "react-icons/hi2";
 import { GiAchievement } from "react-icons/gi";
-import { IoSettingsOutline } from "react-icons/io5";
+import { IoBook, IoDocuments, IoLogoSnapchat, IoMaleFemale, IoMan, IoSettingsOutline } from "react-icons/io5";
 import { useRouter } from 'next/navigation';
 import { BiLogOutCircle } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -106,6 +106,8 @@ export default function Sidebar({onData}: Props) {
                         <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/chat'}><HiOutlineChatBubbleLeftEllipsis/></Link>
                         <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/channel'}><GiAchievement/></Link>
                         <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/setting'}><IoSettingsOutline/></Link>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/userSettings'}><IoLogoSnapchat/></Link>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/channelSet'}><IoDocuments/></Link>
                     </div>
                 </div>
                 <Link className="text-[#E58E27] mx-auto my-5 text-2xl medium:text-3xl xLarge:text-4xl grid place-items-end h-[30%]" onClick={handlelogout} href={'/login'}><BiLogOutCircle/></Link>

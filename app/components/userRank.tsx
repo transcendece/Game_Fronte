@@ -7,6 +7,7 @@ type LeaderboardDto = {
   avatar: string;
   rank: number;
   level: number;
+  GamesPlayed : number;
   achievements: string[];
  };
 
@@ -61,7 +62,7 @@ function UserRank() {
             </div>
           <div className=' w-[10%] flex flex-row justify-center truncate'><h1 className='max-md:hidden '>Rank :</h1><h1 className='text-[#E58E27]'>{index + 1}</h1></div>
           <div className=' w-[10%] flex flex-row  justify-center truncate '><h1 className='max-md:hidden '>Level :</h1><h1 className='text-[#E58E27]'>{user.level.toPrecision(2)}</h1></div>
-          <div className=' w-[20%] flex flex-row justify-center truncate'><h1 className=' max-md:hidden '>Games played :</h1><h1 className='text-[#E58E27]'>{user.level}</h1></div>
+          <div className=' w-[20%] flex flex-row justify-center truncate'><h1 className=' max-md:hidden '>Games played :</h1><h1 className='text-[#E58E27]'>{user.GamesPlayed}</h1></div>
         <div className='   flex justify-center items-center truncate'>
           <h1 className='max-md:hidden '>Acheivements :</h1>
           <img className=' bg-[#30313E] rounded-full w-10 h-10 object-cover bg-[#E58E27]' src ={user.achievements[0]} />

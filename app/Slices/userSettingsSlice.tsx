@@ -1,10 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+
+type friends = {
+  name : string;
+  online : boolean;
+  inGame : boolean;
+}
+
 type userSettingsData = {
    user :     string;
    invitations : string[];
-   friends    : string[];
+   friends    : friends[];
    bandUsers  : string[];
 };
 
@@ -21,6 +28,7 @@ export const fetchUserSettings = createAsyncThunk(
      credentials: 'include'
    });
    const responseData = await response.json();
+   console.log("userSettings data : ", responseData);
    return responseData.data;
  } catch (error) {
    console.error('Error:', error);
@@ -81,9 +89,9 @@ const userSlice = createSlice({
       else if (action.payload.action == "addFriend") {
         let index = state.invitations.indexOf(action.payload.username)
         state.invitations.splice(index, 1);
-        state.friends.push(action.payload.username);
+        state.friends.push({name : action.payload.username, online : false, inGame : false});
       }
-      else if (action.payload.action == "removeFriend") {
+      else if (action.payload.action == "removeFriend") { // modify this part
         let index = state.friends.indexOf(action.payload.username)
         state.friends.splice(index, 1);
       }

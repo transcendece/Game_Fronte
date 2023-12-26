@@ -4,23 +4,24 @@ import { RootState, useAppDispatch } from "../store/store";
 import Card from "./Card";
 import React, { useEffect, useState } from 'react';
 import { fetchUserSettings } from "../Slices/userSettingsSlice";
+import FriendsCard from "./FriendsCard";
+
+type friends = {
+    name : string;
+    online : boolean;
+    inGame : boolean;
+}
 
 type userSettingsData = {
     user :      string;
     invitations : string[];
-    friends     : string[];
+    friends     : friends[];
     bandUsers   : string[];
 };
  
 function UserSettings() {
     const dispatch = useAppDispatch();
     const userSettingsData : userSettingsData = useSelector((state: RootState) => state.userSettings)
-    // const [data, setData] = useState<userSettingsData>({
-    //     user: "",
-    //     friends: [],
-    //     bandUsers: [],
-    //     invitations : []
-    // });
     
     const fetchInfo = () => { 
         return fetch("http://localhost:4000/Chat/userSettings", {
@@ -30,7 +31,6 @@ function UserSettings() {
                 .then((res) => res.json()) 
                 .then((d) => 
                 {
-                    // setData(d.data)
                     console.log(d);
                 }).catch((error) => {
                     console.error('Error:', error);
@@ -39,12 +39,11 @@ function UserSettings() {
         
         useEffect(() => {
             dispatch(fetchUserSettings());
-            // console.log(data?.friends);
         }, [dispatch])
         console.log("fetched Data : ", userSettingsData);
     return (
-            <div className="h-full w-full flex flex-row items-center justify-around">
-                <Card data={userSettingsData.friends} title="Friends" user={userSettingsData.user}/>
+            <div className="h-full w-full flex md:flex-row flex-col items-center justify-around min-w-1179px max-w-1179px">
+                <FriendsCard title="Friends" user={userSettingsData.user}/>
                 <Card data={userSettingsData.bandUsers} title="BandUsers" user={userSettingsData.user}/>
                 <Card data={userSettingsData.invitations} title="Invitations" user={userSettingsData.user}/>
             </div>

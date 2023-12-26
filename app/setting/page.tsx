@@ -267,7 +267,7 @@ export default function setting() {
               <div className="flex flex-col w-[100%] xMedium:w-[40%] Large:h-[63%] xMedium:h-[57%] min-h-[500px] h-[80%] justify-between">
                 <form onSubmit={handleSubmit} className="flex flex-col w-[100%] gap-4 h-[40%] justify-between">
                   <div className="flex py-4 xMedium:min-w-[600px] justify-center w-[400px] mx-auto">
-                    <Image className='rounded-full border-4 w-48 h-48 xMedium:w-[250px] xMedium:h-[250px] border-[#E58E27]' alt='' src={avatar ? avatar : "noBadge.png"} height={250} width={250}/>
+                    <Image className='rounded-full border-4 w-48 h-48 xMedium:w-[250px] xMedium:h-[250px] border-[#E58E27]' alt='' src={avatar ? avatar : "/noBadge.png"} height={250} width={250}/>
                     <label id="file-input-label" htmlFor="file-input" className="flex xMedium:mt-56 cursor-pointer text-[#E58E27] h-10">
                         <FiEdit2 className="text-2xl"/>
                         <div className="xMedium:text-2xl text-lg pl-1">Edit image</div>
@@ -281,7 +281,7 @@ export default function setting() {
                   </div>
                   <div className={`${hide ? 'hidden' : 'flex'} py-4 justify-between xMedium:h-[5rem] xMedium:text-2xl Large:h-24 h-16 w-[400px] mx-auto  xMedium:min-w-[500px] rounded-3xl bg-[#323232]`}>
                       <div className="text-[#E58E27] text-xl xMedium:text-2xl m-auto">New one  </div>
-                      <div className="m-auto bg-[#323232]">
+                      <div className="m-auto bg-[#e28888]">
                         <input onChange={handleChange} value={inputValue} id="username" name="username" type="text" className="border-none placeholder-slate-400 bg-[#323232] outline-0 w-[160px] text-xl xMedium:text-2xl" />
                       </div>
                   </div>
