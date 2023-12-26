@@ -34,12 +34,12 @@ export default function Sidebar({onData}: Props) {
     
     const router = useRouter();
     
-    // useEffect(()=> {
+    useEffect(()=> {
         
-    //     socket.connect();
-    //     console.log("trying to connect //// state: ", socket.connected);
-    //     return ()=> {socket.disconnect()}
-    // }, [])
+        socket.connect();
+        console.log("trying to connect //// state: ", socket.connected);
+        return ()=> {socket.disconnect()}
+    }, [])
     
     useEffect(()=> {
         socket.on("ERROR", (message :string) => {
