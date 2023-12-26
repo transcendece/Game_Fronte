@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store/store';
 import { UserInfos, fetchInfos } from '../Slices/userSlice';
 import { fetchChatData } from '../Slices/chatSlice';
+import { socket } from './SideBar.socket';
 
 interface Datas {
     loading: boolean;
@@ -33,6 +34,22 @@ export default function Sidebar({onData}: Props) {
     
     const router = useRouter();
     
+    // useEffect(()=> {
+        
+    //     socket.connect();
+    //     console.log("trying to connect //// state: ", socket.connected);
+    //     return ()=> {socket.disconnect()}
+    // }, [])
+    
+    useEffect(()=> {
+        socket.on("ERROR", (message :string) => {
+            console.log(message);
+        })
+        return ()=> {
+            socket.off("ERROR")
+        }
+    }, [socket])
+
     useEffect(() => {
     if (errorChat || errorUser) {
         router.push('/login');
