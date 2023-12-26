@@ -50,7 +50,7 @@ function UserRank() {
     </div>
   {userData.map((user, index) => (
 
-    <div key={index} className='w-full flex h-[5%]  bg-[#30313E] rounded-lg m-2'>
+    <div key={index} className='w-full flex h-[5%]  bg-[#323232] rounded-lg m-2'>
       <div className='w-full flex flex-row justify-between  '>
         <div className='  w-full justify-around items-center  flex items-center justify-center '>
             <div className='w-[10%] flex justify-center '>
@@ -65,9 +65,9 @@ function UserRank() {
           <div className=' w-[20%] flex flex-row justify-center truncate'><h1 className=' max-md:hidden '>Games played :</h1><h1 className='text-[#E58E27]'>{user.GamesPlayed}</h1></div>
         <div className='   flex justify-center items-center truncate'>
           <h1 className='max-md:hidden '>Acheivements :</h1>
-          <img className=' bg-[#30313E] rounded-full w-10 h-10 object-cover bg-[#E58E27]' src ={user.achievements[0]} />
-          <img className= 'max-md:hidden profile-img bg-[#30313E] rounded-full w-10 h-10 object-cover bg-[#E58E27] 'src ={user.achievements[1]} />
-          <img className='max-md:hidden profile-img bg-[#30313E] rounded-full w-10 h-10 object-cover bg-[#E58E27] 'src ={user.achievements[2]} />
+          <img className=' bg-[#323232] rounded-full w-10 h-10 object-cover bg-[#E58E27]' src ={user.achievements[0]} />
+          <img className= 'max-md:hidden profile-img bg-[#323232] rounded-full w-10 h-10 object-cover bg-[#E58E27] 'src ={user.achievements[1]} />
+          <img className='max-md:hidden profile-img bg-[#323232] rounded-full w-10 h-10 object-cover bg-[#E58E27] 'src ={user.achievements[2]} />
         </div>
         </div>
       </div>

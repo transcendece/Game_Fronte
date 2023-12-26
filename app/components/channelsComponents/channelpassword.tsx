@@ -24,11 +24,11 @@ export default function  PasswordParams() {
     dispatch(removePasswordFromChannel({channelName}));
   }
   return (
-   <div className='w-full  h-[90%]  flex flex-row bg-[#30313E] items-center rounded-lg '>
+   <div className='w-full  h-[90%]  flex flex-row bg-[#323232] items-center rounded-lg '>
      <div className=' w-full  h-full flex flex-row gap-4 p-4 items-center justify-around'>
        <div className="w-full h-full flex  items-center justify-around">
          <p className='w-full h-full  truncate text-[#E58E27]'>Change Password</p>
-         <input type="text" className="w-full text-black"
+         <input type="text" className="w-full bg-[#30313E]"
               id = "password"
               placeholder='Password'
               required

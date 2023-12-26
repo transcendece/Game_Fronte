@@ -39,7 +39,7 @@ const ChannelAdminList: React.FC = () => {
 
  
  return (
-  <div className = "w-full h-full flex flex-col items-center bg-[#30313E]">
+  <div className = "w-full h-full flex flex-col items-center bg-[#323232]">
   <div className=" w-full h-[5%] flex  flex-row items-center justify-between  truncate "> 
         <p className = "text-[#E58E27] truncate">Admins Users</p>
         <Modal content='+' channelName={channelName} title='admin'/>

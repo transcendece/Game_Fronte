@@ -18,7 +18,7 @@ function ChanSetting() {
 
 //  return (
 //  <div className="w-full h-[70%] flex max-[640px]:flex-col max-[640px]:h-screen flex-row items-center justify-around justify-items-center pr-10 pl-10 max-[640px]:pl-2 ">
-//   <div className="w-[50%] max-[640px]:w-[80%] max-[640px]:h-[30%] h-[50%] bg-[#30313E] mr-5 rounded-lg">
+//   <div className="w-[50%] max-[640px]:w-[80%] max-[640px]:h-[30%] h-[50%] bg-[#323232] mr-5 rounded-lg">
 //     <ChannelCreate channel={channelss} />
 //   </div>
 //   <div className='w-[90%] max-[640px]:w-screen h-[70%] max-[640px]:h-[60%] mx-px flex items-center  m-2 flex-col'>
@@ -42,7 +42,7 @@ function ChanSetting() {
 
 return (
   <div className=" w-full flex flex-col justify-between items-center h-full  min-w-screen md:flex-row object-cover">
-  <div className="w-full md:w-1/3 h-1/3 bg-[#30313E] mr-5 rounded-lg p-2 m-2">
+  <div className="w-full md:w-1/3 h-1/3 bg-[#323232] mr-5 rounded-lg p-2 m-2">
     <ChannelCreate channel={channelss} />
   </div>
   <div className='w-full flex md:w-full h-[800px]  md:h-[700px] mx-px   p-1 flex-col border border-[#E58E27] '>

@@ -27,7 +27,7 @@ function ChannelSelect(props:shn)  {
  
  console.log("zbi oh my code ",props.channel);
  return (
-   <select className='text-[#E58E27] bg-[#30313E]' onClick={(e :any) => {
+   <select className='text-[#E58E27] bg-[#323232]' onClick={(e :any) => {
      const selectedChannel = props.channel.find(channel => channel.channelName === e.target.value);
      
      if (selectedChannel) {

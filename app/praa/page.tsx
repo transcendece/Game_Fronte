@@ -25,7 +25,7 @@ export default function Profile() {
                       <Image className='m-auto items-center p-3 rounded-full shadow-neon-light' layout="fill" objectFit="contain" src={'/batman.png'} alt="PING PONG" priority={true} />
                     </div>
                   </div>
-                  <div className="flex justify-between text-[9px] md:text-[16px] w-[60%] rounded-lg bg-[#30313E] h-full">
+                  <div className="flex justify-between text-[9px] md:text-[16px] w-[60%] rounded-lg bg-[#323232] h-full">
                     <div className="flex flex-col m-auto text-slate-500">
                       <div className="md:py-2">Name :</div>
                       <div className="md:py-2">User Name :</div>
@@ -41,13 +41,13 @@ export default function Profile() {
                     <div></div>
                   </div>
                 </div>
-                <div className="w-[97%] h-[60%] rounded-lg bg-[#30313E] mt-2 mx-auto">
+                <div className="w-[97%] h-[60%] rounded-lg bg-[#323232] mt-2 mx-auto">
 
                 </div>
                 
               </div>
               <div className="h-full w-[60%]">
-                <div className="w-[97%] h-full rounded-lg bg-[#30313E] mx-auto">
+                <div className="w-[97%] h-full rounded-lg bg-[#323232] mx-auto">
 
                 </div>
               </div>
