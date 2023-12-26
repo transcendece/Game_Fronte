@@ -8,8 +8,9 @@ type Props = {
 }
 
 function MCard({index} : Props) {
-  const matchHIst = useSelector((state: RootState) => state.user.user_Data?.matches);
-
+  const matchHIst = useSelector((state: RootState) => state.user.entity?.matches);
+    console.log("match history : ", matchHIst);
+    
   return (
 
         <div className='flex h-32 xMedium:h-40 w-40 m-auto'>

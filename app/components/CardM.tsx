@@ -12,7 +12,7 @@ type Props = {
 function CardM({index} : Props) {
 
 
-  const matchHIst = useSelector((state: RootState) => state.user.user_Data?.matches);
+  const matchHIst = useSelector((state: RootState) => state.user.entity?.matches);
 //   console.log("****");
 //   console.log(matchHIst?.[index]?.id);
 //   console.log("****");

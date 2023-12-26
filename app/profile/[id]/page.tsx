@@ -35,6 +35,8 @@ export default function Pra({params}: Props) {
       try {
         const response = await axios.get(`http://localhost:4000/Profile/${params.id}`, {withCredentials: true });
         if (response.data){
+    
+          console.error('Fetching data ==:', response.data);
           setData(response.data);
           setLoading(false);
         }
@@ -48,6 +50,7 @@ export default function Pra({params}: Props) {
     fetchData();
     
   }, [params.id]);
+
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -114,7 +117,7 @@ export default function Pra({params}: Props) {
                     <div className="text-sm text-[#E58E27]">Add friend</div>
                   </button>
                   <button onClick={handleOptionClick} id="dropdownDefaultButton" data-dropdown-toggle="dropdown" className={`${isFriend ? "flex" : "hidden"} z-50 items-end py-2 xMedium:py-0 xMedium:px-1 text-2xl text-[#E58E27] relative`}><div ref={dropdownRef}><SlOptions className="absolute left-1 top-3 medium:left-3 medium::top-5 xMedium:-left-5 xMedium:-top-5"/></div></button>
-
+{/* DropDown menu */}
 
 <div  id="dropdown" className={`z-40 ${!isOption ? "hidden" : "block"} divide-y divide-gray-100 rounded-lg shadow h-28 w-44 bg-[#323232] bg-opacity-75 absolute top-3 -left-1 medium:left-1 xMedium:-top-5 xMedium:-left-6`}>
     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 mt-5" aria-labelledby="dropdownDefaultButton">
@@ -127,6 +130,8 @@ export default function Pra({params}: Props) {
       </li>
     </ul>
 </div>
+
+{/* DropDown menu */}
                 </div>
             </div>
             <div className="flex flex-col my-auto h-48 medium:h-[57%] w-[70%] justify-between text-[14px] xMedium:w-[90%] medium:rounded-xl rounded-2xl min-w-[320px] Large:h-[90%] xLarge:h-[95%] xMedium:h-[95%] xMedium:text-[16px]">
