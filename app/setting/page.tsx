@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { PropagateLoader, GridLoader } from "react-spinners";
 import Link from "next/link";
-import {fetchInfos, updateUserNameValue} from '../Slices/userSlice';
+import {updateUserImage, updateUserNameValue} from '../Slices/userSlice';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ClipLoader } from "react-spinners";
@@ -38,6 +38,7 @@ export default function setting() {
   const [inputValue, setInputValue] = useState('');
   const dispatch = useDispatch<AppDispatch>();
   const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
+  
   
   
   const [code, setCode] = useState<any>({
@@ -96,7 +97,8 @@ export default function setting() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked, files } = e.target;
-    console.log('lllllllsss = ', checked);
+    const newUserName = document.getElementById('username') as HTMLInputElement | null
+    console.log('lllllllsss = ', newUserName?.value);
     
     
     if (type === 'file' && files) {
@@ -112,16 +114,15 @@ export default function setting() {
               ...prevData,
               [name]: checked,
             };
-          } else if (name === 'username') {
+          } else if (name === 'username' && (newUserName?.value.length as number > 0)) {
               setInputValue(value);
-              if (inputValue.length > 0){
 
                 return {
                   ...prevData,
-                  [name]: value,
+                  [name]: newUserName?.value,
                   
                 }
-              }
+              
           } 
           else {
             return {
@@ -134,6 +135,9 @@ export default function setting() {
   }
 
   const handleImageUpload = async () => {
+    setLoadingSubmit(false);
+    
+
     if (imageD instanceof File) {
       const formData = new FormData();
       formData.append('file', imageD);
@@ -145,14 +149,22 @@ export default function setting() {
           'https://api.cloudinary.com/v1_1/dlnhacgo2/image/upload',
           formData
         );
-
-        if (response.status === 200) {
+        
+        if (response.data) {
           console.log('Image uploaded successfully:', response.data);
-
+          dispatch(updateUserImage(response.data.url));
+          const url = response.data.url;
+          const serverResponse = await axios.post('http://localhost:4000/Settings/image', {url : url}, { withCredentials: true });
+          if (serverResponse.status === 200) {
+            console.log('Second request successful:', serverResponse.data);
+          } else {
+            console.error('Second request failed:', serverResponse.data);
+          }
         } else {
-          console.error('Image upload failed:', response.data);
+          console.error('Image upload failed:', response);
         }
       } catch (error) {
+        //document.getElementById('notifyError')?.click();
         console.error('Error uploading image:', error);
       }
     }
@@ -163,6 +175,7 @@ export default function setting() {
       const response = await axios.post('http://localhost:4000/Settings/username', formData, { withCredentials: true });
   
       console.log('API Response:', response); 
+
   
       if (response.status === 201) {
         console.log('Data submitted successfully:', response.data);
@@ -196,10 +209,12 @@ export default function setting() {
       setTfaEnabled(true);
     }
     setLoadingSubmit(true);
-    
+    //console.log("checked = ", formData?.checked_ );
     await handleImageUpload();
-
-    await handleFormDataSubmit();
+    if (formData?.checked_ || formData?.username.trim().length > 0){
+      await handleFormDataSubmit();
+    }
+    //await handleFormDataSubmit();
     setInputValue('');
   }
 
@@ -221,7 +236,7 @@ export default function setting() {
   const notifySuccess = () => {
     console.log('notify');
     toast.success('Profile updated successfuly.', {
-      position: "top-right",
+      position:"top-right",
       autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -234,7 +249,7 @@ export default function setting() {
 
   const notifyError = () => {
     toast.error('Error to update profile', {
-      position: "top-right",
+      position:"top-right",
       autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -262,12 +277,12 @@ export default function setting() {
                   <div className="relative flex py-4 justify-between xMedium:h-[5rem] xMedium:text-2xl Large:h-24 h-16 w-[400px] mx-auto  xMedium:min-w-[500px] rounded-3xl bg-[#323232]">
                       <div className="text-[#E58E27] text-xl xMedium:text-2xl m-auto">Username</div>
                       <div className="text-slate-400 text-xl xMedium:text-2xl m-auto w-[160px]">{userName}</div>
-                      <div onClick={hideUserInput}><FiEdit2 className="text-xl absolute bg-[#E58E27] p-1 rounded-lg top-8 right-5"/></div>
+                      <div onClick={hideUserInput}><FiEdit2 className="text-xl absolute bg-[#E58E27] p-1 rounded-lg top-5 xMedium:top-8 right-5 cursor-pointer"/></div>
                   </div>
                   <div className={`${hide ? 'hidden' : 'flex'} py-4 justify-between xMedium:h-[5rem] xMedium:text-2xl Large:h-24 h-16 w-[400px] mx-auto  xMedium:min-w-[500px] rounded-3xl bg-[#323232]`}>
                       <div className="text-[#E58E27] text-xl xMedium:text-2xl m-auto">New one  </div>
                       <div className="m-auto bg-[#323232]">
-                        <input onChange={handleChange} id="username" value={inputValue} name="username" type="text" className="border-none placeholder-slate-400 bg-[#323232] outline-0 w-[160px] text-xl xMedium:text-2xl" />
+                        <input onChange={handleChange} value={inputValue} id="username" name="username" type="text" className="border-none placeholder-slate-400 bg-[#323232] outline-0 w-[160px] text-xl xMedium:text-2xl" />
                       </div>
                   </div>
                   <div className="flex py-4 justify-between xMedium:h-[5rem] xMedium:text-2xl Large:h-24 h-16 w-[400px] mx-auto  xMedium:min-w-[500px] rounded-3xl bg-[#323232]">
@@ -315,10 +330,7 @@ export default function setting() {
                       </div>
                   </div> 
                   {/* pop-Up */}
-                </form>           
-              </div>
-              <div className=" xMedium:min-w-[500px] w-[600px] hidden medium:block">
-                <Image className='' alt='' src={'/pingPaddles.png'} height={1200} width={1200}/>
+                </form>      
                 <button className="hidden" id="notifySuccess" onClick={notifySuccess}>notify</button>
                 <button className="hidden" id="notifyError" onClick={notifyError}>notify</button>
                 <ToastContainer
@@ -331,7 +343,11 @@ export default function setting() {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
-                theme="dark"/>
+                theme="dark"/>     
+              </div>
+              <div className=" xMedium:min-w-[500px] w-[600px] hidden medium:block">
+                <Image className='' alt='' src={'/pingPaddles.png'} height={1200} width={1200}/>
+                
               </div>
             </div>
           </div>

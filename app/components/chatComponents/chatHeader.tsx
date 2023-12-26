@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { socket } from "@/app/Contexts/socket";
 import { useRouter } from "next/navigation";
 import GameInviteModal from "@/app/chat/gameInvite.modal";
+import { MdVideogameAsset } from "react-icons/md";
 
 
 interface ChatHeaderProps {
@@ -73,15 +74,20 @@ const ChatHeader = ({ name }: ChatHeaderProps) => {
     <div className="border-b border-b-[#E58E27] bg-[#323232] rounded-t-lg h-20 w-full px-6 flex flex-row justify-between items-center">
       <div className="flex flex-row items-center justify-around space-x-1.5">
       {ShowInvite && invite && <GameInviteModal socket={socket} setGameInviteModal={SetShowInvite} reciever={invite[0]} sender={invite[1]}/>}
-      <img src={"/noBadge.png"} alt="Your Image" className=" w-11 h-11 rounded-lg border"/>                                           
+      <div className="w-5/6 flex items-center">
+      <img src={"/noBadge.png"} alt="Your Image" className=" w-11 h-11 rounded-lg border flex"/>                                           
         <div className="flex flex-col">
           <p className="text-xs text-gray-600">{name}</p>
         </div>
-          <button className="border rounded border-[#E58E27] p-1 hover:bg-[#E58E27]" onClick={ 
+          <button className="w-32 flex rounded-lg px-3 py-1 bg-[#E58E27] text-sm" onClick={ 
             () => {
               handlePlayClick(name)
             }
-          }>Play</button>
+          }>
+             <h1 className="m-auto w-full text-center">Invite</h1>
+              <h1 className="text-2xl text-[#E58E27] bg-white px-1 rounded-lg m-auto"><MdVideogameAsset /></h1>
+          </button>
+      </div>
       </div>
     </div>
   );

@@ -87,7 +87,7 @@ export default function Sidebar({onData}: Props) {
                         <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/profile'}><GoPerson/></Link>
                         <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/rank'}><GoTrophy/></Link>
                         <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/chat'}><HiOutlineChatBubbleLeftEllipsis/></Link>
-                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/notFoud404'}><GiAchievement/></Link>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/channel'}><GiAchievement/></Link>
                         <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/setting'}><IoSettingsOutline/></Link>
                     </div>
                 </div>
