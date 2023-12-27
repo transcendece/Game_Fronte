@@ -9,36 +9,23 @@ import { RootState } from '../../store/store';
 import { Channel } from '@/app/Slices/channelSlice';
 import passwordParams from './channelpassword';
 import PasswordParams from './channelpassword';
+import { PropagateLoader } from "react-spinners";
 
 
 function ChanSetting() {
   const channelss = useSelector((state: RootState) => state.channel.channels);
    const loading = useSelector((state: RootState) => state.channel.loading);
-   console.log("99999llaaaawiiiiiii ",channelss);
 
-//  return (
-//  <div className="w-full h-[70%] flex max-[640px]:flex-col max-[640px]:h-screen flex-row items-center justify-around justify-items-center pr-10 pl-10 max-[640px]:pl-2 ">
-//   <div className="w-[50%] max-[640px]:w-[80%] max-[640px]:h-[30%] h-[50%] bg-[#323232] mr-5 rounded-lg">
-//     <ChannelCreate channel={channelss} />
-//   </div>
-//   <div className='w-[90%] max-[640px]:w-screen h-[70%] max-[640px]:h-[60%] mx-px flex items-center  m-2 flex-col'>
-//     <div className="m-2 h-[10%] flex flex-row  items-center">
-//       <div>
-//           <h1>Select channel :</h1>
-//       </div>
-//       <ChannelSelect loading={loading} channel={channelss} />
-//     </div>
-//       <div className = "w-full h-full">
-//           <DisplayUsersChannel/>
-//       </div>
-//       <div className='w-full h-[15%]  max-[640px]:h-full'>
-//           <PasswordParams/>
-//       </div>
-
-//   </div>
-//  </div>
-//  );
-
+   if (loading){
+    return (
+      <div className="text-white flex flex-col justify-center items-center w-full h-[70%] xMedium:h-screen">
+        <div className="m-auto flex flex-col justify-center text-xl h-[30%]">
+          <div className="absolute top-[45%] left-[42%] medium:left-[45%]">  LOADING . . .</div>
+          <div className="absolute top-[50%] left-[48%]"><PropagateLoader color={"#E58E27"} loading={loading} size={20} aria-label="Loading Spinner"/></div>
+        </div>
+      </div>
+    )
+  }
 
 return (
   <div className=" w-full flex flex-col justify-between items-center h-full  min-w-screen md:flex-row object-cover">
