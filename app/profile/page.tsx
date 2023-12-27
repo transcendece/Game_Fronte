@@ -47,7 +47,7 @@ export default function Pra() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col my-auto h-48 medium:h-[40%] xMedium:h-[50%] w-[70%] justify-between text-[14px] xMedium:w-[90%] medium:rounded-xl rounded-2xl min-w-[320px] Large:h-[90%] xLarge:h-[95%] xMedium:h-[95%] xMedium:text-[16px]">
+            <div className="flex flex-col my-auto h-48 medium:h-[40%] xMedium:h-[50%] w-[70%] justify-between text-[14px] xMedium:w-[90%] medium:rounded-xl rounded-2xl min-w-[320px] Large:h-[90%] xLarge:h-[95%] xMedium:text-[16px]">
               
               <div className="flex xLarge:text-2xl Large:text-xl Large:p-5 xLarge:p-6 justify-between w-full p-2 medium:p-3 mx-auto bg-[#323232] rounded-2xl">
                 <div>User Name :</div>

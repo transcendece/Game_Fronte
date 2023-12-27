@@ -22,7 +22,7 @@ type bodyData = {
 
 function FriendsCard(props : CardData) {
     const dispatch = useAppDispatch();
-    const data = useSelector((state: RootState) => state.userSettings.friends)
+    const data = useSelector((state: RootState) => state.setuser.entity?.friends)
     function handleClick(endpoint: string | undefined, username: string) {
         if (!endpoint)
           return

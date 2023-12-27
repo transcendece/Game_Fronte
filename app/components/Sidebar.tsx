@@ -15,6 +15,7 @@ import { fetchChatData } from '../Slices/chatSlice';
 import { socket } from './SideBar.socket';
 import { fetchChannelData } from '../Slices/channelMessagesSlice';
 import { fetchChannelSetData } from '../Slices/channelSlice';
+import { fetchUserSettings } from '../Slices/userSettingsSlice';
 
 interface Datas {
     loading: boolean;
@@ -37,6 +38,12 @@ export default function Sidebar({onData}: Props) {
     const errorChannelSet = useSelector((state: RootState) => state.channel.error);
     const dispatch = useDispatch<AppDispatch>();
     const entity: UserInfos | null = useSelector((state: RootState) => state.user.entity)
+    const loadingSettinguser = useSelector((state: RootState) => {state.setuser.loading})
+
+    console.log('loading setting ', loadingSettinguser);
+    const errorSettinguser = useSelector((state: RootState) => {state.setuser.error})
+
+
     
     const router = useRouter();
     
@@ -57,7 +64,7 @@ export default function Sidebar({onData}: Props) {
     }, [socket])
 
     useEffect(() => {
-    if (errorChat || errorUser || channelError || errorChannelSet ) {
+    if (errorChat || errorUser || channelError || errorChannelSet) {
         router.push('/login');
     }
     }, [errorChat, errorUser]);
@@ -67,6 +74,7 @@ export default function Sidebar({onData}: Props) {
         dispatch(fetchChannelData());
         dispatch(fetchChatData());
         dispatch(fetchChannelSetData());
+        dispatch(fetchUserSettings());
     }, [])
     
     //const handleData = (data: Datas) => {

@@ -11,7 +11,7 @@ const store = configureStore({
         user: userReducer,
         chat: chatReducer,
         channelMessages : channelMessagesSlice,
-        userSettings : userSettingsReducer,
+        setuser : userSettingsReducer,
         channel: channelReducer,
     }
 })

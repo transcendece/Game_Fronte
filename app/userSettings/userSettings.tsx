@@ -20,8 +20,8 @@ type userSettingsData = {
 };
  
 function UserSettings() {
-    const dispatch = useAppDispatch();
-    const userSettingsData : userSettingsData = useSelector((state: RootState) => state.userSettings)
+    // const dispatch = useAppDispatch();
+    const userSettingsData : userSettingsData | null = useSelector((state: RootState) => state.setuser.entity)
     
     // const fetchInfo = () => { 
     //     return fetch("http://localhost:4000/Chat/userSettings", {
@@ -37,15 +37,15 @@ function UserSettings() {
     //             })
     //     }
         
-        useEffect(() => {
-            dispatch(fetchUserSettings());
-        }, [dispatch])
-        console.log("fetched Data : ", userSettingsData);
+        // useEffect(() => {
+            // dispatch(fetchUserSettings());
+        // }, [dispatch])
+        // console.log("fetched Data : ", userSettingsData);
     return (
-            <div className="h-full w-full flex md:flex-row flex-col items-center justify-around min-w-1179px max-w-1179px">
-                <FriendsCard title="Friends" user={userSettingsData.user}/>
-                <Card data={userSettingsData.bandUsers} title="BandUsers" user={userSettingsData.user}/>
-                <Card data={userSettingsData.invitations} title="Invitations" user={userSettingsData.user}/>
+             <div className="h-full w-full flex md:flex-row flex-col items-center justify-around min-w-1179px max-w-1179px">
+                <FriendsCard title="Friends" user={userSettingsData?.user as string}/>
+                <Card data={userSettingsData?.bandUsers as string[]} title="BandUsers" user={userSettingsData?.user as string}/>
+                <Card data={userSettingsData?.invitations as string[]} title="Invitations" user={userSettingsData?.user as string}/>
             </div>
     );
 }
