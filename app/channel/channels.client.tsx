@@ -97,7 +97,7 @@ function ChannelChat() {
       </div>
   )
  return (
-    <div className="relative h-[80%] w-full flex flex-row md:flex-col items-center justify-around p-5">
+    <div className="relative h-[80%] w-full flex flex-col md:flex-row items-center justify-around p-5">
       <div className=' w-[30%] h-full flex flex-col items-center rounded-lg border border-[#E58E27]'>
         <div className='flex flex-row'>
           <h3 className='p-4 flex-start'>conversations</h3>

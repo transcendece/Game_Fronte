@@ -56,9 +56,9 @@ export default function RootLayout({
     // console.log(isOpen);
     
 
-    if (router !== '/chat' && router !== '/profile' && router !== '/setting' && router !== '/login' && router !== '/rank' && router !== '/profs' && router !== '/game' && router !== '/2FaValidation' && router !== '/userSettings'  && router !== '/channelSet'  && router !== '/channel') {
-      return <NotFoud404/>;
-    }
+    // if (router !== '/chat' && router !== '/profile' && router !== '/setting' && router !== '/login' && router !== '/rank' && router !== '/profs' && router !== '/game' && router !== '/2FaValidation' && router !== '/userSettings'  && router !== '/channelSet'  && router !== '/channel') {
+    //   return <NotFoud404/>;
+    // }
 
     if (router === '/2FaValidation' || router === '/login'){
 

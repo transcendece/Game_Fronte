@@ -13,6 +13,7 @@ import { BsPersonFillAdd } from "react-icons/bs";
 import { SlOptions } from "react-icons/sl";
 import { BsPersonFillX } from "react-icons/bs";
 import { ImBlocked } from "react-icons/im";
+import { useRouter } from "next/navigation";
 
 
 
@@ -29,6 +30,7 @@ export default function Pra({params}: Props) {
   const [isFriend, setIsFriend] = useState<boolean>(false);
   const [isOption, setIsOption] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,10 +38,16 @@ export default function Pra({params}: Props) {
         const response = await axios.get(`http://localhost:4000/Profile/${params.id}`, {withCredentials: true });
         if (response.data){
     
-          console.error('Fetching data ==:', response.data);
+          console.log('Fetching data ==:', response.data.isFriend);
           setData(response.data);
+          setIsFriend(response.data.isFriend);
           setLoading(false);
         }
+        // if(response.status === 401){
+        //   console.error('Error fetching data:', error);
+        //   setLoading(false);
+        //   setError("Error profile not something !");
+        // }
       } catch (error) {
         console.error('Error fetching data:', error);
         setLoading(false);
@@ -69,12 +77,18 @@ export default function Pra({params}: Props) {
   const Achievs = useSelector((state: RootState) => state.user.entity?.achievements);
   const dataUser = useSelector((state: RootState) => state.user.entity?.userData);
 
-  const handleAddFriendClick = () => {
-    setIsFriend(true);
+  const handleAddFriendClick = async () => {
+    const username = data?.userData.username;
+    if (!isFriend){
+      const response = await axios.post(`http://localhost:4000/Chat/invite`, {username}, {withCredentials: true });
+
+      setIsFriend(true);
+    }
   }
 
   const handleOptionClick  = () => {
     setIsOption(!isOption);
+    router.push('/userSettings');
     console.log('options bool = ', isOption);
   }
 
