@@ -16,7 +16,7 @@ function ChanSetting() {
   const channelss = useSelector((state: RootState) => state.channel.channels);
    const loading = useSelector((state: RootState) => state.channel.loading);
 
-   if (loading){
+   if (loading && !channelss){
     return (
       <div className="text-white flex flex-col justify-center items-center w-full h-[70%] xMedium:h-screen">
         <div className="m-auto flex flex-col justify-center text-xl h-[30%]">

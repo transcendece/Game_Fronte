@@ -34,7 +34,7 @@ function ChannelChat() {
   const [redirecting, setRedirection] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   let channelData: channelNames = useSelector((state: RootState) => state.channelMessages.entity);
-  let loading : boolean = useSelector((state: RootState) => state.channelMessages.loading);
+  let loading: boolean = useSelector((state: RootState) => state.channelMessages.loading);
  
 
   const handleChannelMessage = useCallback((res : channelMessages) => {
@@ -66,7 +66,7 @@ function ChannelChat() {
   }, [dispatch]);
  
   useEffect(() => {
-    const channelToRender = channelData.channels?.find(channel => channel.channelName === ChoosenChannel) || { channelName: "", messages: [] };
+    const channelToRender = channelData.channels.find(channel => channel.channelName === ChoosenChannel) || { channelName: "", messages: [] };
     setChannelData(channelToRender);
     console.log("channel to render : ",channelToRender);
   }, [channelData, ChoosenChannel]);
@@ -92,7 +92,7 @@ function ChannelChat() {
     dispatch(updateChannelMessages({ channelName: name, messages: data}));
     SetChoosenChannel(name);
   }
-  if (loading || redirecting){
+  if (loading ){
     return (
       <div className="text-white flex flex-col justify-center items-center w-full h-[70%] xMedium:h-screen">
         <div className="m-auto flex flex-col justify-center text-xl h-[30%]">
@@ -110,7 +110,7 @@ function ChannelChat() {
           <ChannelSearch />
         </div>
            <div className='w-full h-full text-white flex flex-col items-center overflow-y-auto scrollbar-hide '>
-              {channelData && Array.isArray(channelData) && channelData.channels.map((channel, index) => {
+              {channelData && channelData.channels.map((channel, index) => {
                return (
                <div className='w-full text-center bg-[#E58E27] bg-opacity-50 p-2 rounded-lg m-2 border border-[#E58E27]' key={index} style={{cursor: 'pointer'}} onClick={() => handleClick(channel.channelName)}>{channel.channelName}</div>
              );
@@ -126,7 +126,7 @@ function ChannelChat() {
         <div className='w-full h-[80%] flex flex-col overflow-y-auto scrollbar-hide'>
         {channelToRender && Array.isArray(channelToRender.messages) && channelToRender.messages.map((channel, index) => (
           <div key={index} className={`flex flex-row max-w-[600px] rounded-lg p-2 m-4 text-ellipsis ${channel.sender === channelData.username ? ' bg-[#E58E27] self-start flex-start bg-opacity-50' : ' bg-[#323232] self-end justify-end bg-opacity-50'}`}>
-                <Link onClick={()=> {setRedirection(true)}} href={`/profile/${channel.userId}`}><p>{channel?.sender}</p></Link>
+                <Link href={`/profile/${channel.userId}`}><p>{channel?.sender}</p></Link>
                 <p className='break-all'>  : {channel?.content}</p>
           </div>
         ))}
