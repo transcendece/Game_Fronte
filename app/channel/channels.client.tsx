@@ -34,7 +34,9 @@ function ChannelChat() {
   const [redirecting, setRedirection] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   let channelData: channelNames = useSelector((state: RootState) => state.channelMessages.entity);
-  let loading: boolean = useSelector((state: RootState) => state.channelMessages.loading);
+  const loading: boolean = useSelector((state: RootState) => state.channelMessages.loading);
+  const error: string | null = useSelector((state: RootState) => state.channelMessages.error);
+  console.log('error chat = ', error);
  
 
   const handleChannelMessage = useCallback((res : channelMessages) => {
@@ -61,9 +63,9 @@ function ChannelChat() {
         console.log("current data : ", channelData);
       }
   }, [socket]); 
-  useEffect(() => {
-    dispatch(fetchChannelData());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchChannelData());
+  // }, [dispatch]);
  
   useEffect(() => {
     const channelToRender = channelData.channels.find(channel => channel.channelName === ChoosenChannel) || { channelName: "", messages: [] };

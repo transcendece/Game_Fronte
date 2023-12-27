@@ -16,16 +16,6 @@ function ChanSetting() {
   const channelss = useSelector((state: RootState) => state.channel.channels);
    const loading = useSelector((state: RootState) => state.channel.loading);
 
-   if (loading && !channelss){
-    return (
-      <div className="text-white flex flex-col justify-center items-center w-full h-[70%] xMedium:h-screen">
-        <div className="m-auto flex flex-col justify-center text-xl h-[30%]">
-          <div className="absolute top-[45%] left-[42%] medium:left-[45%]">  LOADING . . .</div>
-          <div className="absolute top-[50%] left-[48%]"><PropagateLoader color={"#E58E27"} loading={loading} size={20} aria-label="Loading Spinner"/></div>
-        </div>
-      </div>
-    )
-  }
 
 return (
   <div className=" w-full flex flex-col justify-between items-center h-full  min-w-screen md:flex-row object-cover">

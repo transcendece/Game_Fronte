@@ -1,5 +1,5 @@
 //selctedChannel.tsx
-import { fetchChannelData, setSelectedChannel,Channel } from "../../Slices/channelSlice";
+import { setSelectedChannel,Channel } from "../../Slices/channelSlice";
 import { AppDispatch, RootState } from "@/app/store/store";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,9 +16,9 @@ function ChannelSelect(props:shn)  {
   // console.log("===============================" , users);
 
  
- useEffect(() => {
-   dispatch(fetchChannelData());
- }, [dispatch]);
+//  useEffect(() => {
+//    dispatch(fetchChannelData());
+//  }, [dispatch]);
 
  
  if (props.loading) {

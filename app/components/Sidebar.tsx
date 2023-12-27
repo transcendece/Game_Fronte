@@ -13,6 +13,8 @@ import { AppDispatch, RootState } from '../store/store';
 import { UserInfos, fetchInfos } from '../Slices/userSlice';
 import { fetchChatData } from '../Slices/chatSlice';
 import { socket } from './SideBar.socket';
+import { fetchChannelData } from '../Slices/channelMessagesSlice';
+import { fetchChannelSetData } from '../Slices/channelSlice';
 
 interface Datas {
     loading: boolean;
@@ -29,6 +31,10 @@ export default function Sidebar({onData}: Props) {
     const loadingChat = useSelector((state: RootState) => state.chat.loading);
     const errorUser = useSelector((state: RootState) => state.user.error);
     const errorChat = useSelector((state: RootState) => state.chat.error);
+    const channelError = useSelector((state:RootState) => state.channelMessages.error)
+    const channelLoading = useSelector((state:RootState) => state.channelMessages.loading)
+    const loadingChannelSet = useSelector((state: RootState) => state.channel.loading);
+    const errorChannelSet = useSelector((state: RootState) => state.channel.error);
     const dispatch = useDispatch<AppDispatch>();
     const entity: UserInfos | null = useSelector((state: RootState) => state.user.entity)
     
@@ -51,14 +57,16 @@ export default function Sidebar({onData}: Props) {
     }, [socket])
 
     useEffect(() => {
-    if (errorChat || errorUser) {
+    if (errorChat || errorUser || channelError || errorChannelSet ) {
         router.push('/login');
     }
     }, [errorChat, errorUser]);
     
     useEffect(() => {
         dispatch(fetchInfos());
+        dispatch(fetchChannelData());
         dispatch(fetchChatData());
+        dispatch(fetchChannelSetData());
     }, [])
     
     //const handleData = (data: Datas) => {
@@ -88,7 +96,7 @@ export default function Sidebar({onData}: Props) {
             }
         })
     }
-    if(loadingUser || loadingChat){
+    if(loadingUser || loadingChat || channelLoading || loadingChannelSet){
         return <div></div>
     }
     //if (errorChat || errorUser)

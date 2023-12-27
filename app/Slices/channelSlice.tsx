@@ -2,6 +2,7 @@
 import { createAction, createAsyncThunk ,createSlice, PayloadAction } from '@reduxjs/toolkit'
 import store from '../store/store';
 import { log } from 'console';
+import axios from 'axios';
 
 export interface Channel {
     channelName: string;
@@ -61,15 +62,15 @@ const initialState = {
        extraReducers: (builder) => {
          builder
          // FETCH CHANNEL DATA_____________________________________________________________________________________________________
-           .addCase(fetchChannelData.pending, (state) => {
+           .addCase(fetchChannelSetData.pending, (state) => {
              state.loading = true;
            })
-           .addCase(fetchChannelData.fulfilled, (state, action) => {
+           .addCase(fetchChannelSetData.fulfilled, (state, action) => {
              state.channels = action.payload;
              
              state.loading = false;
             })
-            .addCase(fetchChannelData.rejected, (state, action) => {
+            .addCase(fetchChannelSetData.rejected, (state, action) => {
               state.loading = false;
               state.error = action.error.message!;
             })
@@ -277,20 +278,19 @@ const initialState = {
      });
 
      export const clearError = createAction('Channel/clearError');
-export const fetchChannelData = createAsyncThunk("Channel/fetch", async (thunkApi) => {
-  try {
-    const response = await fetch("http://localhost:4000/Chat/channelSettings", {
-      method: "GET",
-      credentials: 'include',
-    });
-    const data = await response.json();
-    console.log('Channel data from server:', data);
-    return data;
-  } catch (error) {
-    console.error('Error fetching Channel Channel data:', error);
-    throw error;
-  }
-})
+export const fetchChannelSetData = createAsyncThunk("Channel/fetch", async (thunkApi) => {
+
+      const response = await axios.get('http://localhost:4000/Chat/channelSettings', {withCredentials: true });
+      if (response.status === 401){
+        console.log('Eroororororo 401');
+      }
+      if (response.status === 200) {
+        console.log('chatData getted successfully:', response.data);
+        return (response.data);
+      }else {
+        console.error('Data getting failed:', response.data);
+      }
+    } )
 
 export const removeUserFromChannel = createAsyncThunk(
     'Channel/removeUser',
