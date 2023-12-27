@@ -32,12 +32,12 @@ export default function Pra() {
   return (
     <main className="flex flex-col justify-between items-center h-screen min-h-screen min-w-screen">
       <div className="h-16 w-full Large:h-24"><Navbar pageName="Profile" /></div>
-      <div className="flex justify-between flex-col items-center space-y-5 medium:space-y-0 h-full  medium:flex-row xMedium:h-[90vh]  medium:gap-12 w-[410px] medium:w-[95%] medium:min-w-[1000px] medium:min-h-[750px] medium:mx-auto">
-        <div className="w-[100%] xMedium:w-[45%] medium:h-[90%] xMedium:h-[90%] Large:h-full items-center xMedium:ml-0 m-auto flex flex-col">
-          <div className="flex flex-col xMedium:flex-row w-[100%] items-center xMedium:w-full medium:h-[50%] xMedium:h-[35%] xLarge:h-[45%] Large:h-[38%] rounded-lg medium:mb-2 mx-auto">
+      <div className="bg-green-200 flex justify-between flex-col items-center space-y-5 medium:space-y-0 h-full  medium:flex-row xMedium:h-[90vh]  medium:gap-12 w-[410px] medium:w-[95%] medium:min-w-[1000px] medium:min-h-[950px] medium:mx-auto">
+        <div className="w-[100%] xMedium:w-[45%] medium:h-[90%] xMedium:h-[90%] Large:h-full items-center xMedium:ml-0 flex flex-col">
+          <div className="flex flex-col xMedium:flex-row w-[100%] m-auto items-center xMedium:w-full medium:h-[40%] xMedium:h-[35%] xLarge:h-[45%] Large:h-[38%] rounded-lg medium:mb-2 mx-auto">
             <div className="min-w-[30%] w-72 h-[70%] medium:h-[45%]">
               <div className="grid h-full w-full content-center relative">
-                {<Image className='rounded-full border-4 mx-auto w-40 h-40 xMedium:w-36 xMedium:h-36 Large:w-56 Large:h-56 border-[#E58E27]' alt='' src={dataUser?.avatar || "/noBadge.png"} height={150} width={150}/>}
+                {<Image className='rounded-full border-4 mx-auto w-40 h-40 xMedium:w-36 xMedium:h-36 Large:w-56 Large:h-56 border-[#E58E27]' alt='userImage' src={dataUser?.avatar || "/noBadge.png"} height={150} width={150}/>}
                 {/* <Image className='shadow-neon-light' layout="fill" objectFit="contain" src={'/gsus.jpeg'} alt="PING PONG" /> */}
                 <div className="absolute xMedium:w-full top-36 left-52 medium:top-28 xMedium:left-12 xMedium:top-32">
                   <Link href={"/setting"} className="flex items-end">
@@ -47,7 +47,7 @@ export default function Pra() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col my-auto h-48 medium:h-[50%] w-[70%] justify-between text-[14px] xMedium:w-[90%] medium:rounded-xl rounded-2xl min-w-[320px] Large:h-[90%] xLarge:h-[95%] xMedium:h-[95%] xMedium:text-[16px]">
+            <div className="flex flex-col my-auto h-48 medium:h-[40%] xMedium:h-[50%] w-[70%] justify-between text-[14px] xMedium:w-[90%] medium:rounded-xl rounded-2xl min-w-[320px] Large:h-[90%] xLarge:h-[95%] xMedium:h-[95%] xMedium:text-[16px]">
               
               <div className="flex xLarge:text-2xl Large:text-xl Large:p-5 xLarge:p-6 justify-between w-full p-2 medium:p-3 mx-auto bg-[#323232] rounded-2xl">
                 <div>User Name :</div>

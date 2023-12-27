@@ -1,5 +1,6 @@
 import { createAsyncThunk ,createSlice, PayloadAction } from '@reduxjs/toolkit'
 import store from '../store/store';
+import axios from 'axios';
 
 export interface Message {
   avatar: string,
@@ -35,19 +36,18 @@ const initialState:{entity:Conversation []; loading: boolean; error: null | stri
 
 
 export const fetchChatData = createAsyncThunk("chat/fetch", async (thunkApi) => {
-    try {
-        const response = await fetch("http://localhost:4000/Chat/user", {
-          method: "GET",
-          credentials: 'include',
-        });
-        const data = await response.json();
-        // console.log('Chat data from server:', data);
-        return data;
-      } catch (error) {
-        console.error('Error fetching chat chat data:', error);
-        throw error;
-      }
-})
+
+  const response = await axios.get('http://localhost:4000/Chat/user', {withCredentials: true });
+  if (response.status === 401){
+    console.log('Eroororororo 401');
+  }
+  if (response.status === 200) {
+    console.log('chatData getted successfully:', response.data);
+    return (response.data);
+  }else {
+    console.error('Data getting failed:', response.data);
+  }
+} )
 
 const chatSlice = createSlice({
   name: 'chat',

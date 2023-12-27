@@ -96,7 +96,7 @@ export default function Sidebar({onData}: Props) {
     
     return (
         <div id="navbar1" className="bg-[#323232] text-slate-100 flex flex-col justify-between min-h-full h-screen fixed w-12 medium:w-20 xLarge:w-32">                
-                <div className='flex flex-col justify-between h-[60%]'>
+                <div className='flex flex-col justify-between h-[60%] '>
                     <div className="rounded-full border-2 border-[#E58E27] xLarge:p-0 h-12 medium:h-20">
                         <Image className='rounded-full shadow-neon-light' src={entity?.userData?.avatar || "/noBadge.png"} layout="responsive" width={30} height={30} alt="PING PONG" priority={true} />
                     </div>
