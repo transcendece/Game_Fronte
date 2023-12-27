@@ -275,7 +275,7 @@ export default function chat() {
                     </div>
                   </div>
                   <div className=" h-full w-full overflow-y-auto scrollbar-hide rounded-b-xl">
-                      {selectedConv.map((conversation: Conversation) => (
+                      {Array.isArray(selectedConv) && selectedConv.map((conversation: Conversation) => (
                         <div key={conversation.id} className="h-20 w-full xMedium:bg-opacity-10">
                           <button
                           

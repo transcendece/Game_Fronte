@@ -40,7 +40,7 @@ function ChannelSelect(props:shn)  {
       dispatch(setSelectedChannel(selectedChannel));
     }
   }}>
-     {props.channel.map(channel => (
+     {Array.isArray(props.channel) && props.channel.map(channel => (
        <option key={channel.channelName} value={channel.channelName}>
          {channel.channelName}
        </option>
