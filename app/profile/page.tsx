@@ -10,11 +10,7 @@ import { FaUserEdit } from "react-icons/fa";
 import Link from "next/link";
 
 
-type Props = {
-  isOpen: boolean;
-}
-
-export default function Pra({isOpen}: Props) {
+export default function Pra() {
 
   const loading: boolean = useSelector((state:RootState) => state.user.loading);
   const error: string | null = useSelector((state:RootState) => state.user.error);
