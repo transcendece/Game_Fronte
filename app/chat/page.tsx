@@ -49,6 +49,7 @@ export default function chat() {
 
   const conversations: Conversation[] = useSelector((state: RootState) => state.chat?.entity);
   const userId: string = useSelector((state: RootState) => String(state.user?.entity?.userData?.id));
+  const userAvatar: string = useSelector((state: RootState) => String(state.user?.entity?.userData?.avatar));
   const ownerName: string = useSelector((state: RootState) => String(state.user?.entity?.userData?.username));
   const loading: boolean = useSelector((state: RootState) => state.chat?.loading);
   const error: string | null = useSelector((state: RootState) => state.chat?.error);
@@ -206,7 +207,7 @@ export default function chat() {
                 messages: [
                   ...conversation.messages,
                   {
-                    avatar: conversation.avatar,
+                    avatar: userAvatar,
                     content: newMessage,
                     sender: ownerName,
                     isOwner: true,
