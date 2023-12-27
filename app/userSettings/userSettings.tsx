@@ -10,9 +10,10 @@ type friends = {
     name : string;
     online : boolean;
     inGame : boolean;
+    id      : string;
 }
 
-type userSettingsData = {
+export type userSettingsData = {
     user :      string;
     invitations : string[];
     friends     : friends[];

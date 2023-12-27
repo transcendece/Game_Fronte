@@ -81,8 +81,12 @@ export default function Pra({params}: Props) {
     const username = data?.userData.username;
     if (!isFriend){
       const response = await axios.post(`http://localhost:4000/Chat/invite`, {username}, {withCredentials: true });
+      if (response.data === 200)
+        setIsFriend(true);
+      else{
+        console.error('invite not accepted yet !');
+      }
 
-      setIsFriend(true);
     }
   }
 
@@ -133,7 +137,7 @@ export default function Pra({params}: Props) {
                   <button onClick={handleOptionClick} id="dropdownDefaultButton" data-dropdown-toggle="dropdown" className={`${isFriend ? "flex" : "hidden"} z-50 items-end py-2 xMedium:py-0 xMedium:px-1 text-2xl text-[#E58E27] relative`}><div ref={dropdownRef}><SlOptions className="absolute left-1 top-3 medium:left-3 medium::top-5 xMedium:-left-5 xMedium:-top-5"/></div></button>
 {/* DropDown menu */}
 
-<div  id="dropdown" className={`z-40 ${!isOption ? "hidden" : "block"} divide-y divide-gray-100 rounded-lg shadow h-28 w-44 bg-[#323232] bg-opacity-75 absolute top-3 -left-1 medium:left-1 xMedium:-top-5 xMedium:-left-6`}>
+{/* <div  id="dropdown" className={`z-40 ${!isOption ? "hidden" : "block"} divide-y divide-gray-100 rounded-lg shadow h-28 w-44 bg-[#323232] bg-opacity-75 absolute top-3 -left-1 medium:left-1 xMedium:-top-5 xMedium:-left-6`}>
     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 mt-5" aria-labelledby="dropdownDefaultButton">
       <li className="flex">
         <a href="#" className="flex w-full justify-between px-4 py-2 hover:bg-gray-100 hover:bg-opacity-20 text-white dark:hover:bg-gray-100 text-md dark:hover:text-[#E58E27]">DELETE <BsPersonFillX className="text-xl bg-[#E58E27] rounded-lg p-1 text-red-600"/></a>
@@ -143,7 +147,7 @@ export default function Pra({params}: Props) {
         <a href="#" className="flex w-full justify-between px-4 py-2 hover:bg-gray-100 hover:bg-opacity-20 text-white dark:hover:bg-gray-100 dark:hover:text-[#E58E27]">Block <ImBlocked className="text-lg bg-[#E58E27] rounded-lg p-1 text-red-600"/></a>
       </li>
     </ul>
-</div>
+</div> */}
 
 {/* DropDown menu */}
                 </div>

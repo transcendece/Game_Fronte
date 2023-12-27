@@ -32,14 +32,14 @@ export default function Pra() {
   return (
     <main className="flex flex-col justify-between items-center h-screen min-h-screen min-w-screen">
       <div className="h-16 w-full Large:h-24"><Navbar pageName="Profile" /></div>
-      <div className="bg-green-200 flex justify-between flex-col items-center space-y-5 medium:space-y-0 h-full  medium:flex-row xMedium:h-[90vh]  medium:gap-12 w-[410px] medium:w-[95%] medium:min-w-[1000px] medium:min-h-[950px] medium:mx-auto">
-        <div className="w-[100%] xMedium:w-[45%] medium:h-[90%] xMedium:h-[90%] Large:h-full items-center xMedium:ml-0 flex flex-col">
+      <div className="bg-green-200 flex flex-col items-center medium:space-y-0 h-full gap-2 medium:flex-row xMedium:h-[90vh]  medium:gap-12 w-[410px] medium:w-[95%] medium:min-w-[1000px] medium:min-h-[950px] medium:mx-auto">
+        <div className="bg-red-500 w-[100%] xMedium:w-[45%] medium:h-[90%] xMedium:h-[90%] Large:h-full items-center xMedium:ml-0 flex flex-col">
           <div className="flex flex-col xMedium:flex-row w-[100%] m-auto items-center xMedium:w-full medium:h-[40%] xMedium:h-[35%] xLarge:h-[45%] Large:h-[38%] rounded-lg medium:mb-2 mx-auto">
             <div className="min-w-[30%] w-72 h-[70%] medium:h-[45%]">
               <div className="grid h-full w-full content-center relative">
                 {<Image className='rounded-full border-4 mx-auto w-40 h-40 xMedium:w-36 xMedium:h-36 Large:w-56 Large:h-56 border-[#E58E27]' alt='userImage' src={dataUser?.avatar || "/noBadge.png"} height={150} width={150}/>}
                 {/* <Image className='shadow-neon-light' layout="fill" objectFit="contain" src={'/gsus.jpeg'} alt="PING PONG" /> */}
-                <div className="absolute xMedium:w-full top-36 left-52 medium:top-28 xMedium:left-12 xMedium:top-32">
+                <div className="absolute xMedium:w-full top-36 left-52 medium:top-32 xMedium:left-12 xMedium:top-36 Large:top-44 xLarge:top-48 xLarge:left-20">
                   <Link href={"/setting"} className="flex items-end">
                     <div className=" py-2 xMedium:py-0 xMedium:px-1 text-2xl text-[#E58E27]"><FaUserEdit /></div>
                     <div className="text-sm text-[#E58E27]">Edit profile</div>

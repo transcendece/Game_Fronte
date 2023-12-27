@@ -7,6 +7,7 @@ type friends = {
   name : string;
   online : boolean;
   inGame : boolean;
+  id    : string;
 }
 
 type userSettingsData = {
@@ -69,9 +70,9 @@ const userSettingSlice = createSlice({
  name: 'setuser',
  initialState,
  reducers: {
-   setUserSettings: (state, action: PayloadAction<{entity: null | userSettingsData ; loading: boolean; error: null | string }>) => {
-     return action.payload;
-   },
+  //  setUserSettings: (state, action: PayloadAction<{entity: null | userSettingsData ; loading: boolean; error: null | string }>) => {
+  //    state.entity?.bandUsers =  action.payload.entity;
+  //  },
  },
  extraReducers: (builder) => {
     builder
@@ -96,7 +97,7 @@ const userSettingSlice = createSlice({
       else if (action.payload.action == "addFriend") {
         let index : number = state.entity?.invitations.indexOf(action.payload.username) as number
         state.entity?.invitations.splice(index, 1);
-        state.entity?.friends.push({name : action.payload.username, online : false, inGame : false});
+        state.entity?.friends.push({name : action.payload.username, online : false, inGame : false, id : action.payload.id});
       }
       else if (action.payload.action == "removeFriend") { // modify this part
         let index : number = state.entity?.friends.indexOf(action.payload.username) as number
@@ -116,6 +117,6 @@ const userSettingSlice = createSlice({
 
 });
 
-export const { setUserSettings } = userSettingSlice.actions;
+// export const { setUserSettings } = userSettingSlice.actions;
 
 export default userSettingSlice.reducer;
