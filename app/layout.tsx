@@ -56,7 +56,7 @@ export default function RootLayout({
     // console.log(isOpen);
     
 
-    // if (router !== '/chat' && router !== '/profile' && router !== '/setting' && router !== '/login' && router !== '/rank' && router !== '/profs' && router !== '/game' && router !== '/2FaValidation' && router !== '/userSettings'  && router !== '/channelSet'  && router !== '/channel') {
+    // if (router !== '/chat' && router !== '/profile' && router !== '/setting' && router !== '/login' && router !== '/rank' && router !== '/profs' && router !== '/game' && router !== '/2FaValidation' && router !== '/userSettings'  && router !== '/channelSet'  && router !== '/channel' && router.startsWith("/profile/")) {
     //   return <NotFoud404/>;
     // }
 
@@ -75,6 +75,7 @@ export default function RootLayout({
       </html>
     )
   }
+  
   return (
 
     <MyProvider>
