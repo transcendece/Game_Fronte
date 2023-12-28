@@ -1,5 +1,5 @@
 "use client"
-import { Engine, Render, Bodies, Composite, Runner, Body, Vector} from 'matter-js';
+import { Engine, Render, Bodies, Composite, Runner, Body, Vector, Events} from 'matter-js';
 import Matter from "matter-js";
 import 'tailwindcss/tailwind.css';
 import { Socket } from "socket.io-client";
@@ -100,11 +100,26 @@ class GameClass {
             this.createWorld();
             this.handleCollistion()
             this.handleBotMovement()
+            this.handleBallOut()
             Render.run(this.render);
             Runner.run(this.runner, this.engine);
         }
     }
     
+    private handleBallOut(){
+        Events.on(this.engine, "afterUpdate", ()=>{
+            if (this.ball.position.x < 0 || this.ball.position.x > this.width)
+                console.log("KHRJAT x: ", this.ball.position.x);
+            if (this.ball.position.y < 0 || this.ball.position.y > this.height)
+                console.log("KHRJAT y: ", this.ball.position.y);
+
+            if((this.ball.velocity.x >= -0.5 && this.ball.velocity.x <= 0.5) ||
+                (this.ball.velocity.y >= -0.5 && this.ball.velocity.y <= 0.5))
+                    Body.setVelocity(this.ball, {x: this.ball.velocity.x + 0.5, y: this.ball.velocity.y + 0.5})
+                
+        })
+    }
+
     public updateState(p1: Vector, p2: Vector, ball: Vector){
         Body.setPosition(this.p1, {x:this.normalise(p1.x, 0, globalWidth, 0, this.width),y:this.normalise(p1.y, 0, globalHeight, 0, this.height)})
         Body.setPosition(this.p2, {x:this.normalise(p2.x, 0, globalWidth, 0, this.width),y:this.normalise(p2.y, 0, globalHeight, 0, this.height)})
@@ -256,7 +271,7 @@ class GameClass {
     private mouseEvents(): void {
         Matter.Events.on(this.engine, "beforeUpdate", (event: any) => {
           let x: number = this.mouse.position.x;
-          let min: number = this.normalise(paddleWidth / 2, 0, globalWidth, 0, this.width) - 5;
+          let min: number = this.normalise(paddleWidth / 2 - 3, 0, globalWidth, 0, this.width);
           let max: number = this.width - min + 10;
           // // console.log("mouse x", this.mouse.position.x);
 
@@ -387,9 +402,6 @@ class GameClass {
     }
 
     private normalise(x: number, a: number, b: number, c: number, d: number){
-        // x in [a, b] && y in [c, d]
-        // console.log(`x in [${a}, ${b}] = ${x}, y [${c}, ${d}] =${c + (d - c) * ((x - a) / (b - a))}`); 
-        
         return c + (d - c) * ((x - a) / (b - a));
     }
 
