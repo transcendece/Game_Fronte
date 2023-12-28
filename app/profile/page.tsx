@@ -32,8 +32,8 @@ export default function Pra() {
   return (
     <main className="flex flex-col justify-between items-center h-screen min-h-screen min-w-screen">
       <div className="h-16 w-full Large:h-24"><Navbar pageName="Profile" /></div>
-      <div className="bg-green-200 flex flex-col items-center medium:space-y-0 h-full gap-2 medium:flex-row xMedium:h-[90vh]  medium:gap-12 w-[410px] medium:w-[95%] medium:min-w-[1000px] medium:min-h-[950px] medium:mx-auto">
-        <div className="bg-red-500 w-[100%] xMedium:w-[45%] medium:h-[90%] xMedium:h-[90%] Large:h-full items-center xMedium:ml-0 flex flex-col">
+      <div className="flex flex-col items-center medium:space-y-0 h-full gap-2 medium:flex-row xMedium:h-[90vh]  medium:gap-12 w-[410px] medium:w-[95%] medium:min-w-[1000px] medium:min-h-[950px] medium:mx-auto">
+        <div className="w-[100%] xMedium:w-[45%] medium:h-[90%] xMedium:h-[90%] Large:h-full items-center xMedium:ml-0 flex flex-col">
           <div className="flex flex-col xMedium:flex-row w-[100%] m-auto items-center xMedium:w-full medium:h-[40%] xMedium:h-[35%] xLarge:h-[45%] Large:h-[38%] rounded-lg medium:mb-2 mx-auto">
             <div className="min-w-[30%] w-72 h-[70%] medium:h-[45%]">
               <div className="grid h-full w-full content-center relative">
@@ -70,7 +70,7 @@ export default function Pra() {
           <div className="overflow-y-scroll flex flex-col h-[100%] medium:h-[90%] w-[100%] medium:w-[100%] text-[#E58E27] m-auto scrollbar-hide">
             {matchHIst?.map((_: any, index: number) => (
               <div key={index} className="p-5">
-                <MatchHist index={index} />
+                <MatchHist index={index} matche={matchHIst[index]} />
               </div>
              ))}
           </div>
