@@ -70,7 +70,8 @@ const chatSlice = createSlice({
      //    receiver:conversation.receiver
      //  });
      //}
-    }
+    },
+    
     },
   extraReducers: (builder) => {
     builder

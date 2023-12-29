@@ -128,7 +128,7 @@ const channelMessagesSlice = createSlice({
         state.error = action.error.message || 'Something went wrong !';
       })
       .addCase(joinChannel.pending, (state) => {
-        state.loading = true;
+        // state.loading = true;
       })
       .addCase(joinChannel.fulfilled, (state, action) => {
         if (action.payload != "can't join") {
@@ -136,15 +136,15 @@ const channelMessagesSlice = createSlice({
             channelName : action.payload,
             messages : [],
           })
-          state.loading = false;
+          // state.loading = false;
         }
       })
       .addCase(joinChannel.rejected, (state, action) => {
-        state.loading = false;
+        // state.loading = false;
         state.error = action.error.message || 'Something went wrong !';
       })
       .addCase(leaveChannel.pending, (state) => {
-        state.loading = true;
+        // state.loading = true;
       })
       .addCase(leaveChannel.fulfilled, (state, action) => {
         // let index = state.entity.channels.indexOf({channelName : action.payload, messages : []})
@@ -155,10 +155,10 @@ const channelMessagesSlice = createSlice({
           }
         }
         state.entity.channels.splice(index, 1);
-        state.loading = false;
+        // state.loading = false;
       })
       .addCase(leaveChannel.rejected, (state, action) => {
-        state.loading = false;
+        // state.loading = false;
         state.error = action.error.message || 'Something went wrong !';
       });
   },
