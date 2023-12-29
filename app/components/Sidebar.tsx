@@ -34,8 +34,8 @@ export default function Sidebar({onData}: Props) {
     const errorChat = useSelector((state: RootState) => state.chat.error);
     const channelError = useSelector((state:RootState) => state.channelMessages.error)
     const channelLoading = useSelector((state:RootState) => state.channelMessages.loading)
-    const loadingChannelSet = useSelector((state: RootState) => state.channel.loading);
-    const errorChannelSet = useSelector((state: RootState) => state.channel.error);
+    const loadingChannelSet = useSelector((state: RootState) => state.channel.fetchloading);
+    const errorChannelSet = useSelector((state: RootState) => state.channel.fetcherror);
     const dispatch = useDispatch<AppDispatch>();
     const entity: UserInfos | null = useSelector((state: RootState) => state.user.entity)
     const loadingSettinguser = useSelector((state: RootState) => {state.setuser.loading})
@@ -111,22 +111,22 @@ export default function Sidebar({onData}: Props) {
     //    router.push('/login')
     
     return (
-        <div id="navbar1" className="bg-[#323232] text-slate-100 flex flex-col justify-between min-h-full h-screen fixed w-12 medium:w-20 xLarge:w-32">                
+        <div id="navbar1" className="bg-[#323232] text-slate-100 flex flex-col justify-between h-screen fixed w-12 medium:w-20">                
                 <div className='flex flex-col justify-between h-[60%] '>
                     <div className="rounded-full border-2 border-[#E58E27] xLarge:p-0 h-12 medium:h-20 ">
                         <Image className='rounded-full shadow-neon-light' src={entity?.userData?.avatar || "/noBadge.png"} layout="responsive" width={30} height={30} alt="PING PONG" priority={true} />
                     </div>
-                    <div className='flex flex-col justify-between mt-10 xLarge:mt-24 h-[75%] max-h-[750px] overflow-y-auto scrollbar-none'>
-                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/profile'}><GoPerson/></Link>
-                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/rank'}><GoTrophy/></Link>
-                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/chat'}><HiOutlineChatBubbleLeftEllipsis/></Link>
-                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/channel'}><GiAchievement/></Link>
-                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/setting'}><IoSettingsOutline/></Link>
-                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/userSettings'}><IoLogoSnapchat/></Link>
-                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl xLarge:text-4xl" href={'/channelSet'}><IoDocuments/></Link>
+                    <div className='flex flex-col justify-between mt-10 xLarge:mt-24 h-[75%] min-h-[35px] max-h-[750px] overflow-y-auto scrollbar-none'>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/profile'}><GoPerson/></Link>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/rank'}><GoTrophy/></Link>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/chat'}><HiOutlineChatBubbleLeftEllipsis/></Link>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/channel'}><GiAchievement/></Link>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/setting'}><IoSettingsOutline/></Link>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/userSettings'}><IoLogoSnapchat/></Link>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/channelSet'}><IoDocuments/></Link>
                     </div>
                 </div>
-                <Link className="text-[#E58E27] mx-auto my-5 text-2xl medium:text-3xl xLarge:text-4xl grid place-items-end h-[30%]" onClick={handlelogout} href={'/login'}><BiLogOutCircle/></Link>
+                <Link className="text-[#E58E27] mx-auto my-5 text-2xl medium:text-3xl grid place-items-end h-[30%]" onClick={handlelogout} href={'/login'}><BiLogOutCircle/></Link>
             </div>
         )
 }

@@ -74,7 +74,7 @@ export default function Navbar({pageName}:Props) {
   return (
     <div className='flex justify-between medium:min-w-[400px] h-16 Large:h-24 mx-6'>
       <div className='flex w-[50%] text-[#E58E27] items-center justify-around'>
-        <h3 className='pr-3 ml-7 medium:ml-3 Large:text-2xl'>{pageName}</h3>
+        <h3 className='pr-3 ml-7 medium:ml-3 Large:text-xl'>{pageName}</h3>
         <div className='relative h-full w-full'>
           <div>
             <input maxLength={13} type='text' name={searchInput} onChange={handleSearch} className={`${hideIt ? "w-[270px]" : "hidden"} medium:block top-[18px] absolute Large:top-7 text-orange-100 pl-1 py-1 text-sm focus:outline-none Large:w-[400px] w-52 Large:text-lg medium:w-[300px] border rounded-lg bg-transparent border-[#E58E27]`}></input>
@@ -98,7 +98,7 @@ export default function Navbar({pageName}:Props) {
       </div>
       <div className='flex w-[40%] text-[#E58E27] justify-end items-center'>
         <Link href={'/'}><h1 className={`${hideIt ? "hidden medium:block" : ""} text-[#E58E27] mr-2 md:mr-8 font-sans medium:text-md font-semibold flex-none Large:text-xl`}>AREA 420</h1></Link>
-        <Link href={'/game'} className="medium:py-1 medium:px-6 Large:px-8 bg-[#E58E27] text-sm text-slate-100 rounded-full medium:rounded-sm flex-none Large:text-xl  ml-8">
+        <Link href={'/game'} className="medium:py-1 medium:px-6 Large:px-8 bg-[#E58E27] text-sm text-slate-100 rounded-full medium:rounded-sm flex-none Large:text-lg  ml-8">
           <div className='hidden medium:block'>PLAY</div>
           <div className='text-3xl rounded-full medium:hidden'><BsFillPlayCircleFill/></div>
         </Link>

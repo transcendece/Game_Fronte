@@ -33,7 +33,7 @@ export default function Pra() {
     <main className="flex flex-col justify-between items-center h-screen min-h-screen min-w-screen">
       <div className="h-16 w-full Large:h-24"><Navbar pageName="Profile" /></div>
       <div className="flex flex-col items-center medium:space-y-0 h-full gap-2 medium:flex-row xMedium:h-[90vh]  medium:gap-12 w-[410px] medium:w-[95%] medium:min-w-[1000px] medium:min-h-[950px] medium:mx-auto">
-        <div className="w-[100%] xMedium:w-[45%] medium:h-[90%] xMedium:h-[90%] Large:h-full items-center xMedium:ml-0 flex flex-col">
+        <div className="w-[100%] xMedium:w-[45%] medium:h-[90%] xMedium:h-[90%] Large:h-[90%] items-center xMedium:ml-0 flex flex-col">
           <div className="flex flex-col xMedium:flex-row w-[100%] m-auto items-center xMedium:w-full medium:h-[40%] xMedium:h-[35%] xLarge:h-[45%] Large:h-[38%] rounded-lg medium:mb-2 mx-auto">
             <div className="min-w-[30%] w-72 h-[70%] medium:h-[45%]">
               <div className="grid h-full w-full content-center relative">
@@ -47,7 +47,7 @@ export default function Pra() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col my-auto h-48 medium:h-[40%] xMedium:h-[50%] w-[70%] justify-between text-[14px] xMedium:w-[90%] medium:rounded-xl rounded-2xl min-w-[320px] Large:h-[90%] xLarge:h-[95%] xMedium:text-[16px]">
+            <div className="flex flex-col my-auto h-48 medium:h-[40%] xMedium:h-[50%] w-[70%] justify-between text-[14px] xMedium:w-[90%] medium:rounded-xl rounded-2xl min-w-[320px] Large:min-h-[250px] xLarge:h-[95%] xMedium:text-[16px]">
               
               <div className="flex xLarge:text-2xl Large:text-xl Large:p-5 xLarge:p-6 justify-between w-full p-2 medium:p-3 mx-auto bg-[#323232] rounded-2xl">
                 <div>User Name :</div>
@@ -65,7 +65,7 @@ export default function Pra() {
           </div>
           {Achievs && <Achievements noBadge="/noBadge.png" Achievs={Achievs} />}
         </div>
-        <div className=" medium:h-[90%] Large:h-full w-full medium:w-[38%] medium:min-w-[50%] bg-[#323232] flex flex-col items-center rounded-2xl">
+        <div className=" medium:h-[90%] Large:h-[95%] xLarge:h-[95%] w-full medium:w-[38%] medium:min-w-[50%] bg-[#323232] flex flex-col items-center rounded-2xl">
           <h1 className=" xLarge:text-3xl medium:pt-9 text-[#E58E27] p-5">LAST MATCH HISTORY</h1>
           <div className="overflow-y-scroll flex flex-col h-[100%] medium:h-[90%] w-[100%] medium:w-[100%] text-[#E58E27] m-auto scrollbar-hide">
             {matchHIst?.map((_: any, index: number) => (
