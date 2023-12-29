@@ -153,7 +153,7 @@ class GameClass {
             {
                 isStatic: true,
                 chamfer: {radius: 10 * this.calculateScale() },
-                render: {fillStyle: 'purple'}
+                render: {fillStyle: '#AF6915'}
             }
         )
         this.p2 = Bodies.rectangle(
@@ -164,14 +164,14 @@ class GameClass {
             {
                 isStatic: true,
                 chamfer: {radius: 10 * this.calculateScale() },
-                render: {fillStyle: 'purple'}
+                render: {fillStyle: '#AF6915'}
             }
-        )
-        this.ball = Bodies.circle(
-            this.normalise(ball.x, 0, globalWidth, 0, this.width),
-            this.normalise(ball.y, 0, globalHeight, 0, this.height),
-            10 * this.calculateScale(),
-            // {render}
+            )
+            this.ball = Bodies.circle(
+                this.normalise(ball.x, 0, globalWidth, 0, this.width),
+                this.normalise(ball.y, 0, globalHeight, 0, this.height),
+                10 * this.calculateScale(),
+                {render: {fillStyle: '#AF6915'}}
         )
         Body.setVelocity(this.ball, {x: this.normalise(this.ball.velocity.x, 0 , globalWidth, 0, this.width), y: this.normalise(this.ball.velocity.y, 0 , globalHeight, 0, this.height)})
         Composite.add(this.engine.world, [this.ball, this.p1, this.p2]);
