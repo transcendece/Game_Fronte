@@ -64,7 +64,7 @@ class GameClass {
     private boundHandleMouseMove: (event: MouseEvent) => void;
 
     constructor(element: HTMLDivElement, map: string, mod: string, gameId: string, socket?: Socket){
-        // window.addEventListener('resize', this.calculateSise);
+        // window.addEventListener('resize', this.calculateSize);
         this.state = false;
         if (socket)
             this.socket = socket
@@ -74,7 +74,7 @@ class GameClass {
         this.mod = mod;
         
         this.element = element;
-        [this.width, this.height] = this.calculateSise();
+        [this.width, this.height] = this.calculateSize();
         console.log("WIDTH: ", this.width, " HEIGHT: ", this.height);
         if (map === "ADVANCED") this.maxVelocity += 6;
         else if (map === "INTEMIDIER") this.maxVelocity += 3;
@@ -108,10 +108,17 @@ class GameClass {
     
     private handleBallOut(){
         Events.on(this.engine, "afterUpdate", ()=>{
-            if (this.ball.position.x < 0 || this.ball.position.x > this.width)
-                console.log("KHRJAT x: ", this.ball.position.x);
-            if (this.ball.position.y < 0 || this.ball.position.y > this.height)
+            // if (this.ball.position.x < 0 || this.ball.position.x > this.width)
+            if ((this.ball.position.y < 0 || this.ball.position.y > this.height) || (this.ball.position.x < 0 || this.ball.position.x > this.width)){
+                Runner.stop(this.runner);
+                //Engine.clear(this.engine);
                 console.log("KHRJAT y: ", this.ball.position.y);
+                console.log("KHRJAT x: ", this.ball.position.x);
+                Body.setPosition(this.ball, {x: this.width / 2, y: this.height / 2})
+                Body.setVelocity(this.ball, {x: -5, y: -5})
+                Runner.start(this.runner, this.engine);
+                
+            }
 
             if((this.ball.velocity.x >= -0.5 && this.ball.velocity.x <= 0.5) ||
                 (this.ball.velocity.y >= -0.5 && this.ball.velocity.y <= 0.5))
@@ -172,37 +179,29 @@ class GameClass {
         Render.run(this.render);
         Runner.run(this.runner, this.engine);
     }
-
-    public GameFinish(method: string){
-        if (method === "GAMEOVER"){}
-        else if (method === "WinOrLose"){}
-        this.element.removeEventListener('mousemove', this.boundHandleMouseMove);
-        this.destroyGame();
-        //router.back();
-    }
     
-    public updateOnLigneSizeGame(element: HTMLDivElement){
-        //stop the rendring , upadate the positions and velocity of all element
-        this.element = element;
-        [this.width, this.height] = this.calculateSise();
-        this.render = Render.create({
-            engine: this.engine,
-            element : this.element,
-            options: {
-                background: generateColor(this.map),
-                width: this.width ,
-                height: this.height,
-                wireframes: false,
-            }
-        })
-        this.generateObs();
-        this.startOnligneGame(
-            {x: this.normalise(this.p1.position.x, 0 , globalWidth, 0, this.width), y: this.normalise(this.p1.position.y, 0 , globalHeight, 0, this.height)}, 
-            {x: this.normalise(this.p2.position.x, 0 , globalWidth, 0, this.width), y: this.normalise(this.p2.position.y, 0 , globalHeight, 0, this.height)}, 
-            {x: this.normalise(this.ball.position.x, 0 , globalWidth, 0, this.width), y: this.normalise(this.ball.position.y, 0 , globalHeight, 0, this.height)}, 
-            this.Id
-        )
-    }
+    // public updateOnLigneSizeGame(element: HTMLDivElement){
+    //     //stop the rendring , upadate the positions and velocity of all element
+    //     this.element = element;
+    //     [this.width, this.height] = this.calculateSize();
+    //     this.render = Render.create({
+    //         engine: this.engine,
+    //         element : this.element,
+    //         options: {
+    //             background: generateColor(this.map),
+    //             width: this.width ,
+    //             height: this.height,
+    //             wireframes: false,
+    //         }
+    //     })
+    //     this.generateObs();
+    //     this.startOnligneGame(
+    //         {x: this.normalise(this.p1.position.x, 0 , globalWidth, 0, this.width), y: this.normalise(this.p1.position.y, 0 , globalHeight, 0, this.height)}, 
+    //         {x: this.normalise(this.p2.position.x, 0 , globalWidth, 0, this.width), y: this.normalise(this.p2.position.y, 0 , globalHeight, 0, this.height)}, 
+    //         {x: this.normalise(this.ball.position.x, 0 , globalWidth, 0, this.width), y: this.normalise(this.ball.position.y, 0 , globalHeight, 0, this.height)}, 
+    //         this.Id
+    //     )
+    // }
 
     private handleBotMovement(){
         Matter.Events.on(this.engine, "beforeUpdate", () => {
@@ -268,10 +267,33 @@ class GameClass {
     }
 
 
+    // private mouseEvents(): void {
+        
+    //     // Matter.Events.on(this.engine, "beforeUpdate", (event: any) => {
+    //         let rect = this.render.canvas.getBoundingClientRect()
+    //         let x: number = this.mouse.position.x - rect.left / 2;
+    //       let min: number = this.normalise((paddleWidth / 2), 0, globalWidth, 0, this.width);
+    //       let max: number = this.width - min;
+    //       console.log("mouse x", this.mouse.position.x, "max: ", max, "min: ", min, "element: ", this.element);
+
+    //       if (x >= min && x <= max ) {
+    //         if (this.mod === "BOT")Body.setPosition(this.p2, {x: x, y: this.p2.position.y});
+    //         else if (this.socket && this.mod === "RANDOM"){this.socket?.emit("UPDATE", {
+    //             gameId: this.gameId,
+    //             vec: {
+    //                 x: this.Id === 1 ? this.normalise(this.mouse.position.x, 0, this.width, 0, globalWidth) : this.normalise(this.width - this.mouse.position.x, 0, this.width, 0, globalWidth),
+    //                 y : this.Id === 1 ? 780: 20
+    //             }
+    //         });console.log("UPDATE FROM FRONTE:::");
+    //         }
+    //       }
+    //     // });
+    //   }
+
     private mouseEvents(): void {
         Matter.Events.on(this.engine, "beforeUpdate", (event: any) => {
           let x: number = this.mouse.position.x;
-          let min: number = this.normalise(paddleWidth / 2 - 3, 0, globalWidth, 0, this.width);
+          let min: number = this.normalise(paddleWidth / 2, 0, globalWidth, 0, this.width) - 5;
           let max: number = this.width - min + 10;
           // // console.log("mouse x", this.mouse.position.x);
 
@@ -287,6 +309,47 @@ class GameClass {
           }
         });
       }
+
+    // private mouseEvents(): void {
+    //     const paddleSpeed = 5; // Adjust this value to control the speed of the paddle
+    
+    //     Matter.Events.on(this.engine, "beforeUpdate", (event: any) => {
+    //         let rect = this.element.getBoundingClientRect();
+    //         let mouseX: number = this.mouse.position.x - rect.left;
+    //         let halfPaddleWidth = this.normalise(paddleWidth / 2, 0, globalWidth, 0, this.width);
+    //         let paddleX: number = this.p2.position.x;
+    
+    //         // Ensure the paddle stays within the canvas
+    //         if (mouseX < halfPaddleWidth) {
+    //             mouseX = halfPaddleWidth;
+    //         } else if (mouseX > this.width - halfPaddleWidth) {
+    //             mouseX = this.width - halfPaddleWidth;
+    //         }
+    //         if (this.socket && this.mod === "RANDOM") this.socket?.emit("UPDATE", {
+    //             gameId: this.gameId,
+    //             vec: {
+    //                 x: this.Id === 1 ? this.normalise(paddleX, 0, this.width, 0, globalWidth) : this.normalise(this.width - paddleX, 0, this.width, 0, globalWidth),
+    //                 y : this.Id === 1 ? 780: 20
+    //             }
+    //         });
+    
+    //         // Move the paddle towards the mouse position
+    //         if (mouseX > paddleX) {
+    //             paddleX = Math.min(paddleX + paddleSpeed, mouseX);
+    //         } else if (mouseX < paddleX) {
+    //             paddleX = Math.max(paddleX - paddleSpeed, mouseX);
+    //         }
+    
+    //         if (this.mod === "BOT") Body.setPosition(this.p2, {x: paddleX, y: this.p2.position.y});
+    //         // else if (this.socket && this.mod === "RANDOM") this.socket?.emit("UPDATE", {
+    //         //     gameId: this.gameId,
+    //         //     vec: {
+    //         //         x: this.Id === 1 ? this.normalise(paddleX, 0, this.width, 0, globalWidth) : this.normalise(this.width - paddleX, 0, this.width, 0, globalWidth),
+    //         //         y : this.Id === 1 ? 780: 20
+    //         //     }
+    //         // });
+    //     });
+    // }
     
     private calculateScale(): number {
         let scale: number = this.width / globalWidth;
@@ -295,7 +358,7 @@ class GameClass {
         return Math.min(scale, scale2);
     }
 
-    public calculateSise(): [number, number]{
+    public calculateSize(): [number, number]{
         let width: number, height: number;
         if (this.element.clientHeight > this.element.clientWidth){
             width = this.element.clientWidth;

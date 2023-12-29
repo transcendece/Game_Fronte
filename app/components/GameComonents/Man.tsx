@@ -31,11 +31,12 @@ const Man = ()=>{
 							</span>
 						</button>
 					</div>
-					<div className="relative p-6 flex-auto justify-center">
-                        <h2>Move the Mouse inside the game for play</h2>
-                        <h2>You can Play with RAndom connected User in Play With Random</h2>
-                        <h2>You can choice between 3 Mods "BEGIINER" , "INEMIDIER" And "ADVENCED"</h2>
-                        <h2>You can Play with Bot</h2>
+					<div className="relative p-6 flex flex-col justify-center items-center">
+                        <div><h2>Move the Mouse inside the game to play</h2></div>
+                        <div><h2>You can Play with RAndom connected Users when clicking on Play With Random</h2></div>
+                        <div><h2>You can choose between 3 Mods "BEGIINER" , "INEMIDIER" And "ADVENCED"</h2></div>
+                        <div><h2>You can Play with Bot, Have Fun Training ...</h2></div>
+                        <div><h2 className="text-red-500">YOU CAN ONLY INCREASE YOUR RANK BY PLAYING WITH OTHER PLAYERS -HXH-</h2></div>
 					</div>
 					<div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
 					  <button

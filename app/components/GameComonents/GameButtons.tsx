@@ -226,32 +226,42 @@ const GameButtons : React.FC<Loading> = (props) => {
 			)}
 			{(showBotGame ) && <BotComponent name={props.name} avatar={props.avatar} map={map} setBotGame={setShowBotGame}></BotComponent>}
 			{(
-				<>
-					{
-						showRandomGame && (Id === 1 ? <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score>
-						: <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score>)
-					}
-					<div ref={gameDiv} className={`flex justify-center w-[60%] h-[60%] ${!showRandomGame ? 'hidden' : ''}`}></div>
-					{
-						showRandomGame && (Id === 1 ? <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score>
-						: <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score>)
-					}
-					{ showRandomGame && game  &&  <button className="w-[200px] h-[50px] bg-black text-[white] cursor-pointer text-base m-2.5 px-5 py-2.5 rounded-[5px] border-[none] hover:bg-[#AF6915]" type="button" onClick={()=>{setShowRandomGame(false);socket.emit("EXITGAME", {gameId: game!.gameId});removeGame();}}>Cencel</button>}
-				</>
+				<div className="flex flex-col w-full h-full items-center">
+					<div className='flex sm:flex-row flex-col w-full h-full justify-center items-center'>
+						<div className="flex flex-col items-center justify-end">
+							{
+								showRandomGame && (Id === 1 ? <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score>
+								: <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score>)
+							}
+						</div>
+						<div ref={gameDiv} className={`flex justify-center w-[60%] h-[60%] ${!showRandomGame ? 'hidden' : ''}`}></div>
+						<div className="flex flex-col items-center justify-start">
+							{
+								showRandomGame && (Id === 1 ? <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score>
+								: <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score>)
+							}
+						</div>
+					</div>
+					<div >
+						{ showRandomGame && game  &&  <button className="w-[200px] h-[50px] bg-black text-[white] cursor-pointer text-base m-2.5 px-5 py-2.5 rounded-[5px] border-[none] hover:bg-[#AF6915]" type="button" onClick={()=>{setShowRandomGame(false);socket.emit("EXITGAME", {gameId: game!.gameId});removeGame();}}>Cancel</button>}
+					</div>
+				</div>
 			)}
 			{((wait) && 
-				<>
-					{/* <h2>WAITTTT</h2> */}
-					<div className="text-white red flex flex-col justify-center items-center w-full h-[70%] xMedium:h-screen">
-						<div className="m-auto flex flex-col justify-center text-xl h-[30%]">
-							<div className="absolute top-[45%] left-[42%] medium:left-[45%]">  WAITING . . .</div>
-							<div className="absolute top-[50%] left-[48%]"><PropagateLoader color={"#E58E27"} loading={wait} size={20} aria-label="Loading Spinner"/></div>
+				// <div>
+					<div className="text-white red flex flex-col justify-around items-center w-full h-[70%] xMedium:h-screen">
+						<div className="m-auto flex flex-col justify-center items-center text-xl h-[30%]">
+							<div className="top-[45%] left-[42%] medium:left-[45%] pb-5">  WAITING . . .</div>
+							<div className="top-[50%] left-[48%]"><PropagateLoader color={"#E58E27"} loading={wait} size={20} aria-label="Loading Spinner"/></div>
 						</div>
-					<button
-						className="m-auto flex flex-col w-auto h-auto bg-black text-[white] cursor-pointer text-base  px-5 py-2.5 rounded-[5px] border-[none] hover:bg-[#AF6915]"
-						type="button" onClick={()=>{setWait(false);socket.emit("EXITWAIT")}}>Cencel</button>
+						<div className='m-auto flex flex-col w-auto h-auto'>
+							<button
+								className=" bg-black text-[white] cursor-pointer text-base  px-5 py-2.5 rounded-[5px] border-[none] hover:bg-[#AF6915]"
+								type="button" onClick={()=>{setWait(false);socket.emit("EXITWAIT")}}>Cancel
+							</button>
+						</div>
 					</div>
-				</>
+				// </div>
 			)}
 			<ToastContainer
 				position="top-right"
