@@ -132,7 +132,7 @@ export default function Pra({params}: Props) {
           <div className="flex flex-col xMedium:flex-row w-[100%] items-center xMedium:w-full medium:h-[40%] xMedium:h-[35%] xLarge:h-[45%] Large:h-[38%] rounded-lg medium:mb-2 m-auto">
             <div className="min-w-[30%] w-72 h-[70%] medium:h-[45%] relative">
               <div className="grid h-full w-full content-center ">
-                {<Image className='rounded-full border-4 mx-auto w-40 h-40 xMedium:w-36 xMedium:h-36 Large:w-56 Large:h-56 border-[#E58E27]' alt='user Image' src={data?.userData?.avatar || "/noBadge.png"} height={150} width={150}/>}
+                {<Image className='rounded-full border-4 mx-auto w-40 h-40 xMedium:w-32 xMedium:h-32 Large:w-40 Large:h-40 border-[#E58E27]' alt='user Image' src={data?.userData?.avatar || "/noBadge.png"} height={150} width={150}/>}
 
                 {/* <Image className='shadow-neon-light' layout="fill" objectFit="contain" src={'/gsus.jpeg'} alt="PING PONG" /> */}
               </div>

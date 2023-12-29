@@ -40,6 +40,7 @@ export default function setting() {
   const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
   const isAuth = useSelector((state: RootState) => state.user.entity?.userData.isAuth);
   const isEnab = useSelector((state: RootState) => state.user.entity?.userData.IsEnabled);
+  const [newOne, setNewOne] = useState<string>("");
   console.log('== is Enab = ', useSelector((state: RootState) => state.user.entity?.userData.IsEnabled));
   console.log('== is Auth = ', useSelector((state: RootState) => state.user.entity?.userData.isAuth));
   
@@ -107,6 +108,7 @@ export default function setting() {
     const { name, value, type, checked, files } = e.target;
     const newUserName = document.getElementById('username') as HTMLInputElement | null
     console.log('lllllllsss = ', newUserName?.value);
+    setNewOne(newUserName?.value as string)
     
     
     if (type === 'file' && files) {
@@ -123,7 +125,7 @@ export default function setting() {
               [name]: checked,
             };
           } else if (name === 'username' && (newUserName?.value.length as number > 0)) {
-              setInputValue(value);
+              setInputValue(newUserName?.value as string);
 
                 return {
                   ...prevData,
@@ -222,6 +224,7 @@ export default function setting() {
     }
     //await handleFormDataSubmit();
     setInputValue('');
+    setNewOne('');
   }
 
   const onCloseClick = () => {
@@ -288,7 +291,7 @@ export default function setting() {
                   <div className={`${hide ? 'hidden' : 'flex'} py-4 justify-between xMedium:h-[5rem] xMedium:text-2xl Large:h-24 h-16 w-[400px] mx-auto  xMedium:min-w-[500px] rounded-3xl bg-[#323232]`}>
                       <div className="text-[#E58E27] text-xl xMedium:text-2xl m-auto">New one  </div>
                       <div className="m-auto bg-[#e28888]">
-                        <input onChange={handleChange} value={inputValue} id="username" name="username" type="text" className="border-none placeholder-slate-400 bg-[#323232] outline-0 w-[160px] text-xl xMedium:text-2xl" />
+                        <input onChange={handleChange} value={newOne} id="username" name="username" type="text" className="border-none placeholder-slate-400 bg-[#323232] outline-0 w-[160px] text-xl xMedium:text-2xl" />
                       </div>
                   </div>
                   <div className="flex py-4 justify-between xMedium:h-[5rem] xMedium:text-2xl Large:h-24 h-16 w-[400px] mx-auto  xMedium:min-w-[500px] rounded-3xl bg-[#323232]">

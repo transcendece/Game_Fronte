@@ -10,13 +10,16 @@ interface ChatHeaderProps {
   name: string;
   avatar: string;
   reciever : string;
+  convLength: number;
 }
 
-const ChatHeader = ({ name, reciever, avatar }: ChatHeaderProps) => {
+const ChatHeader = ({ name, reciever, avatar, convLength }: ChatHeaderProps) => {
 
   const router = useRouter()
   const [ShowInvite, SetShowInvite] = useState(false);
   const [invite, SetInvite] = useState<[string, string]>();
+
+  console.log('length of conversation = ', convLength);
 
   const handlePlayClick = (name : string) => {
     console.log("NEW PLAY: ", name);
@@ -76,12 +79,12 @@ const ChatHeader = ({ name, reciever, avatar }: ChatHeaderProps) => {
     <div className="border-b border-b-[#E58E27] bg-[#323232] rounded-t-lg h-20 w-full px-6 flex flex-row justify-between items-center">
       <div className="flex justify-between h-7 xMedium:h-10 space-x-1.5 w-full  ">
       {ShowInvite && invite && <GameInviteModal socket={socket} setGameInviteModal={SetShowInvite} reciever={invite[0]} sender={invite[1]}/>}
-          <div className="flex space-x-1.5 justify-around items-center">
+          {convLength ? (<div className="flex space-x-1.5 justify-around items-center">
             <img src={avatar} alt="Your Image" className=" w-11 h-11 rounded-lg border flex"/>                                           
             <div className="flex flex-col">
               <p className="text-lg font-semibold text-gray-600">{name}</p>
             </div>
-          </div>
+          </div>) : (<div></div>)}
           <button className="w-32 flex rounded-lg bg-[#E58E27] text-sm" onClick={ 
               () => {
                  handlePlayClick(name)

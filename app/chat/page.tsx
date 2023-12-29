@@ -417,7 +417,7 @@ export default function chat() {
     socket.on("NewConversation", (conv : Conversation) => {
       console.log("new conversation : ", [...selectedConv, conv]);
       
-      setSelectedConv([...selectedConv, conv])
+      setSelectedConv([conv, ...selectedConv])
       
     })
 
@@ -651,9 +651,12 @@ export default function chat() {
                   </ul>
                 </div>
                 { (<div id="id_2" className={`${showConversations ? 'hidden' : 'flex'} flex-col xMedium:block w-full h-full xMedium:w-[65%] bg-[#131313] border-2 border-[#323232] rounded-xl`}>
-                  <ChatHeader avatar={sortedConversations.find((conversation) => conversation.id === selectConvId)?.avatar as string} name={sortedConversations.find((conversation) => conversation.id === selectConvId)?.reciever as string} reciever={sortedConversations.find((conversation) => conversation.id === selectConvId)?.recieverId as string}/>
+                  <div className="flex flex-col h-full">
+                  <ChatHeader convLength={selectedConv.length} avatar={sortedConversations.find((conversation) => conversation.id === selectConvId)?.avatar as string} name={sortedConversations.find((conversation) => conversation.id === selectConvId)?.reciever as string} reciever={sortedConversations.find((conversation) => conversation.id === selectConvId)?.recieverId as string}/>
                   <ChatContent messages={selectedConv.find((conversation) => conversation.id === selectConvId)?.messages || []}/>
+                  <div className="flex-grow"></div>
                   <ChatInput onSendMessage={handleSendMessage} conversation={sortedConversations.find((conversation) => conversation.id === selectConvId) as Conversation}  senderId={sortedConversations.find((conversation) => conversation.id === selectConvId)?.senderId as string} receiverId={sortedConversations.find((conversation) => conversation.id === selectConvId)?.recieverId as string}/>
+                </div>
                 </div>)}
               </div>
               <div className="xMedium:hidden mt-4 w-full flex shadow-sm border border-[#323232] rounded-xl shadow-[#E58E27] ">

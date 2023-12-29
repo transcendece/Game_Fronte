@@ -16,6 +16,22 @@ import { socket } from './SideBar.socket';
 import { fetchChannelData } from '../Slices/channelMessagesSlice';
 import { fetchChannelSetData } from '../Slices/channelSlice';
 import { fetchUserSettings } from '../Slices/userSettingsSlice';
+import { GrGroup } from "react-icons/gr";
+import { RiUserSettingsLine } from "react-icons/ri";
+import { RiChatSettingsLine } from "react-icons/ri";
+import { LiaUserCogSolid } from "react-icons/lia";
+import { PiChats } from "react-icons/pi";
+import { RiChatSettingsFill } from "react-icons/ri";
+import { MdOutlineDisplaySettings } from "react-icons/md";
+
+
+
+
+
+
+
+
+
 
 interface Datas {
     loading: boolean;
@@ -111,7 +127,7 @@ export default function Sidebar({onData}: Props) {
     //    router.push('/login')
     
     return (
-        <div id="navbar1" className="bg-[#323232] text-slate-100 flex flex-col justify-between h-screen fixed w-12 medium:w-20">                
+        <div id="navbar1" className="bg-[#323232] text-slate-100 flex flex-col justify-between h-full fixed w-12 medium:w-20">                
                 <div className='flex flex-col justify-between h-[60%] '>
                     <div className="rounded-full border-2 border-[#E58E27] xLarge:p-0 h-12 medium:h-20 ">
                         <Image className='rounded-full shadow-neon-light' src={entity?.userData?.avatar || "/noBadge.png"} layout="responsive" width={30} height={30} alt="PING PONG" priority={true} />
@@ -120,10 +136,10 @@ export default function Sidebar({onData}: Props) {
                         <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/profile'}><GoPerson/></Link>
                         <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/rank'}><GoTrophy/></Link>
                         <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/chat'}><HiOutlineChatBubbleLeftEllipsis/></Link>
-                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/channel'}><GiAchievement/></Link>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/channel'}><PiChats/></Link>
                         <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/setting'}><IoSettingsOutline/></Link>
-                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/userSettings'}><IoLogoSnapchat/></Link>
-                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/channelSet'}><IoDocuments/></Link>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/userSettings'}><LiaUserCogSolid/></Link>
+                        <Link className="text-[#E58E27] m-auto text-2xl medium:text-3xl" href={'/channelSet'}><MdOutlineDisplaySettings/></Link>
                     </div>
                 </div>
                 <Link className="text-[#E58E27] mx-auto my-5 text-2xl medium:text-3xl grid place-items-end h-[30%]" onClick={handlelogout} href={'/login'}><BiLogOutCircle/></Link>

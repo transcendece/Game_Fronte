@@ -76,8 +76,8 @@ const ChannelSearch = () => {
         </button>
       )}
       <button
-        className="m-2 p-2 border border-[#E58E27] text-white active:bg-[#323232]
-      font-bold px-2 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+        className="m-2 py-2 px-4  border border-[#E58E27] text-white active:bg-[#323232] text-sm
+      rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
         type="button"
         onClick={() => setShowModal(true)}
       >
