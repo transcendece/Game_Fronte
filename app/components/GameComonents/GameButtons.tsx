@@ -216,7 +216,7 @@ const GameButtons : React.FC<Loading> = (props) => {
 	//   }, []);
 	
     return (
-		<div className='flex justify-center items-center w-full h-full flex-col '>
+		<div className='flex flex-col justify-center items-center w-full h-full  '>
 			{!showRandomGame && !showBotGame && !wait && (
 			<>
 					<BotButtons setShowBotGame={setShowBotGame} setMap={setMap}/>
@@ -229,17 +229,11 @@ const GameButtons : React.FC<Loading> = (props) => {
 				<div className="flex flex-col w-full h-full items-center">
 					<div className='flex sm:flex-row flex-col w-full h-full justify-center items-center'>
 						<div className="flex flex-col items-center justify-end">
-							{
-								showRandomGame && (Id === 1 ? <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score>
-								: <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score>)
-							}
+							 <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score>
 						</div>
-						<div ref={gameDiv} className={`flex justify-center w-[60%] h-[60%] ${!showRandomGame ? 'hidden' : ''}`}></div>
+						<div ref={gameDiv} className={`flex justify-center w-[60%] h-[60%]`}></div>
 						<div className="flex flex-col items-center justify-start">
-							{
-								showRandomGame && (Id === 1 ? <Score avatar={dep1[0]} name={dep1[1]} score={score[0]}></Score>
-								: <Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score>)
-							}
+							<Score avatar={dep2[0]} name={dep2[1]} score={score[1]}></Score>
 						</div>
 					</div>
 					<div >

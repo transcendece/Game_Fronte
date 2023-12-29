@@ -34,7 +34,7 @@ const BotComponent : React.FC<BotMap> = (prop) => {
                 </div>
                 <div 
                     ref={gameDiv} 
-                    className="flex w-[60%] h-[60%] justify-center bg-white">
+                    className="flex w-[60%] h-[60%] justify-center">
                 </div>
                 <div className="flex flex-col items-center justify-start">
                      <Score avatar={prop.avatar} name={prop.name} score={Infinity} />

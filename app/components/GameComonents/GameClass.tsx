@@ -497,8 +497,6 @@ class GameClass {
                             Body.set(otherBody, { restitution, friction });
                         }
                         if (otherBody === this.topWall || otherBody === this.downWall){
-                            if (otherBody === this.topWall) this.score1++;
-                            else this.score2++;
                             Body.setPosition(this.ball, { x: this.width / 2, y: this.height / 2 });
                             Body.setVelocity(this.ball, { x: this.ball.velocity.x < 0 ? 5 : -5 , y: this.ball.velocity.y > 0 ? 5:  -5});
                         }
