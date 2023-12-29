@@ -41,6 +41,8 @@ export const Action = createAsyncThunk(
    'setuser/action',
    async ({endpoint, bodyData} : {endpoint : string, bodyData : bodyData}, thunnkAPi) => {
       try {
+        console.log("endpoint : ", endpoint, " data : ", bodyData);
+        
         const response = await fetch(`http://localhost:4000/Chat/${endpoint}`, {
           method: 'POST', 
           mode: 'cors',

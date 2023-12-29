@@ -361,6 +361,7 @@ import ConversComp from "../components/chatComponents/conversComp";
 import ChatHeader from "../components/chatComponents/chatHeader";
 import ChatContent from "../components/chatComponents/chatContent";
 import ChatInput from "../components/chatComponents/chatInput";
+import { addMessage, addNewConv } from "../Slices/chatSlice";
 
 export interface Message {
   avatar: string,
@@ -417,7 +418,7 @@ export default function chat() {
     socket.on("NewConversation", (conv : Conversation) => {
       console.log("new conversation : ", [...selectedConv, conv]);
       
-      setSelectedConv([conv, ...selectedConv])
+      setSelectedConv([...selectedConv, conv])
       
     })
 
@@ -556,6 +557,7 @@ export default function chat() {
 //
     //  setSelectedConv(updatedConversations);
     if (selectConvId !== null) {
+      console.log("updated conv1 =  ", selectedConv);
       const timestamp = Date.now();
       setSelectedConv((prevConversations) =>
         prevConversations.map((conversation: any) =>
@@ -578,9 +580,9 @@ export default function chat() {
             : conversation
         )
       );
+      // dispatch(addNewConv({ Conversations: selectedConv }));
+      console.log("updated conv =  ", conversations);
     }
-    //dispatch(addMessage({ convId: String(selectConvId), message: newMessage }));
-      //console.log("updated conv =  ", selectedConv);
       
       
       // const newChatMessage: Message = {
@@ -653,7 +655,7 @@ export default function chat() {
                 { (<div id="id_2" className={`${showConversations ? 'hidden' : 'flex'} flex-col xMedium:block w-full h-full xMedium:w-[65%] bg-[#131313] border-2 border-[#323232] rounded-xl`}>
                   <div className="flex flex-col h-full">
                   <ChatHeader convLength={selectedConv.length} avatar={sortedConversations.find((conversation) => conversation.id === selectConvId)?.avatar as string} name={sortedConversations.find((conversation) => conversation.id === selectConvId)?.reciever as string} reciever={sortedConversations.find((conversation) => conversation.id === selectConvId)?.recieverId as string}/>
-                  <ChatContent messages={selectedConv.find((conversation) => conversation.id === selectConvId)?.messages || []}/>
+                  <ChatContent messages={selectedConv.find((conversation) => conversation.id === selectConvId)?.messages || []} conversation={selectedConv.find((conversation) => conversation.id === selectConvId) as Conversation}/>
                   <div className="flex-grow"></div>
                   <ChatInput onSendMessage={handleSendMessage} conversation={sortedConversations.find((conversation) => conversation.id === selectConvId) as Conversation}  senderId={sortedConversations.find((conversation) => conversation.id === selectConvId)?.senderId as string} receiverId={sortedConversations.find((conversation) => conversation.id === selectConvId)?.recieverId as string}/>
                 </div>

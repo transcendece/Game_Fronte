@@ -88,12 +88,11 @@ export default function Pra({params}: Props) {
     const username = data?.userData.username;
     if (!isFriend){
       const response = await axios.post(`http://localhost:4000/Chat/invite`, {username}, {withCredentials: true });
-      if (response.data === 200)
+      if (response.status === 200)
         setIsFriend(true);
       else{
         console.error('invite not accepted yet !');
       }
-
     }
   }
 

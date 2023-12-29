@@ -1,6 +1,7 @@
 import { createAsyncThunk ,createSlice, PayloadAction } from '@reduxjs/toolkit'
 import store from '../store/store';
 import axios from 'axios';
+import { start } from 'repl';
 
 export interface Message {
   avatar: string,
@@ -53,6 +54,15 @@ const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
+    addNewConv: (state, action: PayloadAction<{Conversation: Conversation}>) => {
+      // state.entity = action.payload.Conversations;
+      for (let index : number = 0; index < state.entity.length; index++) {
+        if (state?.entity[index]?.Conversationid === action.payload.Conversation?.Conversationid) {
+          state.entity[index].messages = action.payload.Conversation?.messages;
+          state.entity[index].timestamp = action.payload.Conversation?.timestamp;
+        }
+      }
+    },
     addMessage: (state, action: PayloadAction<{ convId: string, message: Message }>) => {
      const conversation = state.entity.find(conv => conv.Conversationid === action.payload.convId);
      if (conversation){
@@ -94,7 +104,7 @@ const chatSlice = createSlice({
 
 // export const { addInfos } = chatSlice.actions;
 export default chatSlice.reducer;
-export const { addMessage } = chatSlice.actions;
+export const { addMessage, addNewConv } = chatSlice.actions;
 // export const selectUser = (state: RootState) => state.user.user_Data
 // export const selectLoading = (state: RootState) => state.user.loading
 // export const selectError = (state: RootState) => state.user.error

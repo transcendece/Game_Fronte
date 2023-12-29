@@ -128,7 +128,7 @@ function ChannelChat() {
         <div className='w-full h-[80%] flex flex-col overflow-y-auto scrollbar-hide'>
         {channelToRender && Array.isArray(channelToRender.messages) && channelToRender.messages.map((channel, index) => (
           <div key={index} className={`flex flex-row max-w-[600px] rounded-lg p-2 m-4 text-ellipsis ${channel.sender === channelData.username ? ' bg-[#E58E27] self-start flex-start bg-opacity-50' : ' bg-[#323232] self-end justify-end bg-opacity-50'}`}>
-                <Link href={`/profile/${channel.userId}`}><p>{channel?.sender}</p></Link>
+                <Link href={channel.sender === channelData.username ? '/profile' : `/profile/${channel.userId}`}><p>{channel?.sender}</p></Link>
                 <p className='break-all'>  : {channel?.content}</p>
           </div>
         ))}
