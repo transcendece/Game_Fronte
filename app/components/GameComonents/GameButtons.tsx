@@ -225,7 +225,7 @@ const GameButtons : React.FC<Loading> = (props) => {
 			</>
 			)}
 			{(showBotGame ) && <BotComponent name={props.name} avatar={props.avatar} map={map} setBotGame={setShowBotGame}></BotComponent>}
-			{(
+			{showRandomGame && (
 				<div className="flex flex-col w-full h-full items-center">
 					<div className='flex sm:flex-row flex-col w-full h-full justify-center items-center'>
 						<div className="flex flex-col items-center justify-end">
