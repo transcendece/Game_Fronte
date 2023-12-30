@@ -24,11 +24,9 @@ type bodyData = {
 export const fetchUserSettings = createAsyncThunk('setuser/fetch',async (thunkAPI) => {
   const response = await axios.get('http://localhost:4000/Chat/userSettings', {withCredentials: true });
     if (response.status === 401){
-      console.log('Eroororororo 401');
+      console.error('Eroororororo 401');
     }
     if (response.status === 200) {
-      console.log('Data getted successfully:', response.data);
-      console.log("status = ", response.headers["set-cookies"]);
       return (response.data);
     }else {
       console.error('Data getting failed:', response.data);
@@ -41,7 +39,6 @@ export const Action = createAsyncThunk(
    'setuser/action',
    async ({endpoint, bodyData} : {endpoint : string, bodyData : bodyData}, thunnkAPi) => {
       try {
-        console.log("endpoint : ", endpoint, " data : ", bodyData);
         
         const response = await fetch(`http://localhost:4000/Chat/${endpoint}`, {
           method: 'POST', 

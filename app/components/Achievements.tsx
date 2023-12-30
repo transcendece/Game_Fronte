@@ -14,8 +14,6 @@ type Props = {
     Achievs: Achievement[] | undefined;
   };
 
-
-
 function Achievements({noBadge, Achievs}:Props) {
   return (
     <div className="xMedium:h-[60%] Large:h-full medium:h-[50%] flex  items-center medium:mt-0 flex-col justify-between rounded-2xl w-full">

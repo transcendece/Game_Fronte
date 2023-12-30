@@ -1,7 +1,5 @@
-import { createAsyncThunk ,createSlice, PayloadAction } from '@reduxjs/toolkit'
-import store from '../store/store';
+import { createAsyncThunk ,createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { start } from 'repl';
 
 export interface Message {
   avatar: string,
@@ -40,10 +38,9 @@ export const fetchChatData = createAsyncThunk("chat/fetch", async (thunkApi) => 
 
   const response = await axios.get('http://localhost:4000/Chat/user', {withCredentials: true });
   if (response.status === 401){
-    console.log('Eroororororo 401');
+    console.error('Eroororororo 401');
   }
   if (response.status === 200) {
-    console.log('chatData getted successfully:', response.data);
     return (response.data);
   }else {
     console.error('Data getting failed:', response.data);
@@ -55,7 +52,6 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     addNewConv: (state, action: PayloadAction<{Conversation: Conversation}>) => {
-      // state.entity = action.payload.Conversations;
       for (let index : number = 0; index < state.entity.length; index++) {
         if (state?.entity[index]?.Conversationid === action.payload.Conversation?.Conversationid) {
           state.entity[index].messages = action.payload.Conversation?.messages;
@@ -68,18 +64,6 @@ const chatSlice = createSlice({
      if (conversation){
       conversation.messages.push(action.payload.message);
      }
-     //if (conversation) {
-     //  conversation.messages.push({
-     //    avatar: conversation.avatar,
-     //    content: action.payload.message,
-     //    sender: conversation.sender,
-     //    isOwner: true,
-     //    senderId: 'userId',
-     //    recieverId: conversation.recieverId,
-     //    conversationId: action.payload.convId,
-     //    receiver:conversation.receiver
-     //  });
-     //}
     },
     
     },
@@ -89,7 +73,6 @@ const chatSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchChatData.fulfilled, (state, action) => {
-        // console.log('Chat data from server:', action.payload);
         state.entity = action.payload;
         if (state.entity !== undefined)
           state.loading = false;
@@ -101,11 +84,5 @@ const chatSlice = createSlice({
   },
 });
 
-
-// export const { addInfos } = chatSlice.actions;
 export default chatSlice.reducer;
 export const { addMessage, addNewConv } = chatSlice.actions;
-// export const selectUser = (state: RootState) => state.user.user_Data
-// export const selectLoading = (state: RootState) => state.user.loading
-// export const selectError = (state: RootState) => state.user.error
-

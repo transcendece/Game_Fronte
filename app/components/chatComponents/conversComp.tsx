@@ -6,14 +6,9 @@ interface chatConversProps {
 }
 
 function ConversComp({conversation}: chatConversProps) {
-    // console.log(typeof(conversation.messages))
     const content:string | undefined = conversation?.messages?.at(conversation.messages.findLastIndex((index) => {} ))?.content;
     const avatar:string | undefined = conversation?.messages?.at(conversation.messages.findLastIndex((index) => {} ))?.avatar;
     const sender:string | undefined = conversation?.messages?.at(conversation.messages.findLastIndex((index) => {} ))?.sender;
-    // console.log("senderwdjkeljdbkle")
-    // console.log(conversation)
-    // console.log("senderwdjkeljdbkle")
-    // const avatar:string | undefined = conversation.messages.at(conversation.messages.length - 1)?.avatar;
 
   return (
     <div className='flex justify-between p-2'>

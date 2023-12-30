@@ -19,11 +19,7 @@ const ChatHeader = ({ name, reciever, avatar, convLength }: ChatHeaderProps) => 
   const [ShowInvite, SetShowInvite] = useState(false);
   const [invite, SetInvite] = useState<[string, string]>();
 
-  console.log('length of conversation = ', convLength);
-
   const handlePlayClick = (name : string) => {
-    console.log("NEW PLAY: ", name);
-    //SEND THE ID OF CLIENT WITH INVIT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     socket.emit("INVITE", reciever)
   }
 
@@ -34,24 +30,11 @@ const ChatHeader = ({ name, reciever, avatar, convLength }: ChatHeaderProps) => 
     }, 500)
   }
   const popEnvite = async (res: {recieverId: string, senderId: string}) => {
-    console.log("IVITE recieved: ", res);
     SetInvite([res.recieverId, res.senderId]);
     SetShowInvite(true)
   }
 
   useEffect (() => {
-    /***
-     * INVITE send by the first client,{
-     * we send a GameInvite demande to second player
-     *    if the second player accepte
-     *        redirect to game
-     *    else
-     *      send to first client refuse
-     * }when 2em client accepte the demande 
-     */
-    // if (!socket.hasListeners("INVITE")) {
-    //   socket.on("INVITE", redirectToGame);
-    // }
     if (!socket.hasListeners("GameInvite")) {
       
       socket.on("GameInvite", popEnvite);
@@ -60,16 +43,14 @@ const ChatHeader = ({ name, reciever, avatar, convLength }: ChatHeaderProps) => 
       socket.on("EnterGame", redirectToGame)
     }
     if (!socket.hasListeners("ERROR",)) {
-      socket.on("ERROR", (res : string)=> {console.log(res);
+      socket.on("ERROR", (res : string)=> {console.error(res);
       })
     }
 
     return ()=>{
-      //socket.off all l3aybat
       socket.off("GameInvite")
       socket.off("EnterGame")
       socket.off("ERROR")
-      // socket.disconnect()
     }
    
 }, [socket, ShowInvite, invite]); 

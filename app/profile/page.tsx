@@ -38,7 +38,6 @@ export default function Pra() {
             <div className="min-w-[30%] w-72 h-[70%] medium:h-[45%]">
               <div className="grid h-full w-full content-center relative">
                 {<Image className='rounded-full border-4 mx-auto w-40 h-40 xMedium:w-32 xMedium:h-32 Large:w-40 Large:h-40 border-[#E58E27]' alt='userImage' src={dataUser?.avatar || "/noBadge.png"} height={150} width={150}/>}
-                {/* <Image className='shadow-neon-light' layout="fill" objectFit="contain" src={'/gsus.jpeg'} alt="PING PONG" /> */}
                 <div className="absolute xMedium:w-full top-36 left-52 medium:top-32 xMedium:left-12 xMedium:top-36 Large:top-44 xLarge:top-48 xLarge:left-20">
                   <Link href={"/setting"} className="flex items-end">
                     <div className=" py-2 xMedium:py-0 xMedium:px-1 text-2xl text-[#E58E27]"><FaUserEdit /></div>

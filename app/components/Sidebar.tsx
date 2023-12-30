@@ -4,8 +4,7 @@ import Link from 'next/link'
 import axios from 'axios';
 import { GoPerson, GoTrophy } from "react-icons/go";
 import { HiOutlineChatBubbleLeftEllipsis } from "react-icons/hi2";
-import { GiAchievement } from "react-icons/gi";
-import { IoBook, IoDocuments, IoLogoSnapchat, IoMaleFemale, IoMan, IoSettingsOutline } from "react-icons/io5";
+import { IoSettingsOutline } from "react-icons/io5";
 import { useRouter } from 'next/navigation';
 import { BiLogOutCircle } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,22 +15,9 @@ import { socket } from './SideBar.socket';
 import { fetchChannelData } from '../Slices/channelMessagesSlice';
 import { fetchChannelSetData } from '../Slices/channelSlice';
 import { fetchUserSettings } from '../Slices/userSettingsSlice';
-import { GrGroup } from "react-icons/gr";
-import { RiUserSettingsLine } from "react-icons/ri";
-import { RiChatSettingsLine } from "react-icons/ri";
 import { LiaUserCogSolid } from "react-icons/lia";
 import { PiChats } from "react-icons/pi";
-import { RiChatSettingsFill } from "react-icons/ri";
 import { MdOutlineDisplaySettings } from "react-icons/md";
-
-
-
-
-
-
-
-
-
 
 interface Datas {
     loading: boolean;
@@ -48,31 +34,25 @@ export default function Sidebar({onData}: Props) {
     const loadingChat = useSelector((state: RootState) => state.chat.loading);
     const errorUser = useSelector((state: RootState) => state.user.error);
     const errorChat = useSelector((state: RootState) => state.chat.error);
-    const channelError = useSelector((state:RootState) => state.channelMessages.error)
-    const channelLoading = useSelector((state:RootState) => state.channelMessages.loading)
+    const channelError = useSelector((state:RootState) => state.channelMessages.error);
+    const channelLoading = useSelector((state:RootState) => state.channelMessages.loading);
     const loadingChannelSet = useSelector((state: RootState) => state.channel.fetchloading);
     const errorChannelSet = useSelector((state: RootState) => state.channel.fetcherror);
+    const entity: UserInfos | null = useSelector((state: RootState) => state.user.entity);
+
     const dispatch = useDispatch<AppDispatch>();
-    const entity: UserInfos | null = useSelector((state: RootState) => state.user.entity)
-    const loadingSettinguser = useSelector((state: RootState) => {state.setuser.loading})
 
-    console.log('loading setting ', loadingSettinguser);
-    const errorSettinguser = useSelector((state: RootState) => {state.setuser.error})
-
-
-    
     const router = useRouter();
     
     useEffect(()=> {
         
         socket.connect();
-        console.log("trying to connect //// state: ", socket.connected);
         return ()=> {socket.disconnect()}
     }, [])
     
     useEffect(()=> {
         socket.on("ERROR", (message :string) => {
-            console.log(message);
+            console.error(message);
         })
         return ()=> {
             socket.off("ERROR")
@@ -83,7 +63,7 @@ export default function Sidebar({onData}: Props) {
     if (errorChat || errorUser || channelError || errorChannelSet) {
         router.push('/login');
     }
-    }, [errorChat, errorUser]);
+    }, [errorChat, errorUser, channelError, errorChannelSet]);
     
     useEffect(() => {
         dispatch(fetchInfos());
@@ -92,17 +72,11 @@ export default function Sidebar({onData}: Props) {
         dispatch(fetchChannelSetData());
         dispatch(fetchUserSettings());
     }, [])
-    
-    //const handleData = (data: Datas) => {
-    //    onData({ loading: loadingUser, error: errorUser });
-    //};
-    
+
     useEffect(() => {
         onData({ loading: loadingUser, error: errorUser });
     }, [loadingUser, errorUser])
     
-    // console.log('child data = ', loadingUser);
-    // console.log('child data = ', errorUser);
     const handlelogout = async () => {
         
         await axios.post('http://localhost:4000/auth/logout', {} ,{withCredentials: true})
@@ -116,16 +90,14 @@ export default function Sidebar({onData}: Props) {
             
             if (error.response && error.response.status === 401) {
                 
-                console.log(`error: `, error.response.data);
+                console.error(`error: `, error.response.data);
             }
         })
     }
     if(loadingUser || loadingChat || channelLoading || loadingChannelSet){
         return <div></div>
     }
-    //if (errorChat || errorUser)
-    //    router.push('/login')
-    
+
     return (
         <div id="navbar1" className="bg-[#323232] text-slate-100 flex flex-col justify-between h-full fixed w-12 medium:w-20">                
                 <div className='flex flex-col justify-between h-[60%] '>

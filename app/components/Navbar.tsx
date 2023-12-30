@@ -16,8 +16,6 @@ interface userr {
   username: string
 }
 
-
-
 export default function Navbar({pageName}:Props) {
   
   const usersData = [
@@ -32,7 +30,6 @@ export default function Navbar({pageName}:Props) {
   const [hideIt, setHideIt] = useState<boolean>(false);
   const [loadingCode, setLoadingCode] = useState<boolean>(false);
   const [errorCode, setErrorCode] = useState<string | null>(null);
-  const sortedUsersData = usersData.slice().sort((a, b) => a.name.localeCompare(b.name));
   const [userData, setUserData] = useState<userr[]>([]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,10 +38,8 @@ export default function Navbar({pageName}:Props) {
   };
   
   useEffect(() => {
-    console.log("nav UseEffect")
     const fetchUserData = async () => {
       try {
-        console.log("searcg input length = ", searchInput.length);
         if (searchInput.length === 0)
           setLoadingCode(false);
         if (searchInput.trim().length === 0)
@@ -52,25 +47,19 @@ export default function Navbar({pageName}:Props) {
 
         if (searchInput.trim().length > 0) {
           const response = await axios.get(`http://localhost:4000/Search/${searchInput}`, {withCredentials: true });
-          console.log('nav bar Data')
           setLoadingCode(false);
           setUserData(response.data);
         }
       } catch (error) {
-        console.log("Error nav bar")
         setLoadingCode(false);
         setErrorCode(error as string)
         console.error('Error fetching user data:', error);
       }
     };
     fetchUserData();
-   
     
   }, [searchInput]);
 
-  //let filteredUsers = searchInput ? sortedUsersData.filter((user) =>
-  //  user.name.toLowerCase().includes(searchInput.toLowerCase())
-  //)  : [];
   return (
     <div className='flex justify-between min-w-[350px] h-16 Large:h-24 mx-6'>
       <div className='flex w-[50%] text-[#E58E27] items-center justify-around'>

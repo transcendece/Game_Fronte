@@ -974,7 +974,7 @@ export const removeUserFromChannel = createAsyncThunk(
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({channelName: channelName, password: password},)
+        body: JSON.stringify({name: channelName, password: password},)
       });
       const data = await response.json();
       if (response.status === 200)

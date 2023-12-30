@@ -1,7 +1,6 @@
 import React from 'react'
 import { Message } from '@/app/chat/page';
-import { useRef, useEffect } from 'react';
-import { socket } from '../../Contexts/socket';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/app/store/store';
 import Link from 'next/link';
@@ -15,17 +14,7 @@ interface ChatContentProps {
 function ChatContent({messages, conversation}: ChatContentProps) {
   const ownerAvatar = useSelector((state:RootState) => state.user.entity?.userData.avatar);
   const dispatch = useDispatch<AppDispatch>();
-  //useEffect (() => {
-  //  socket.on('chatMessage', (newMessage: Message) => {
-  //  });
-  //  console.log("coming messages", messages)
-//
-  //  return () => {
-  //    socket.off('chatMessage');
-  //  };
-//
-  //}, [messages])
-  console.log("mouaddddd : ",conversation);
+
   useEffect(() => {
     dispatch(addNewConv({Conversation: conversation}));
   }, [conversation])

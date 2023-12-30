@@ -1,7 +1,5 @@
 import React from 'react'
 import Image from 'next/image'
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
 import { MatchHIst } from './MatchHist';
 
 type Props = {
@@ -10,10 +8,8 @@ type Props = {
 }
 
 function MCard({index, matche} : Props) {
-//   const matchHIst = useSelector((state: RootState) => state.user.entity?.matches);
-    // console.log("match history : ", matchHIst);
-    
-  return (
+
+    return (
 
         <div className='flex h-32 xMedium:h-40 w-40 m-auto'>
             <div className='flex flex-col'>

@@ -70,7 +70,7 @@ export default function  PasswordParams() {
 
     const input = (password !== '')
     console.log("boolean : ", input);
-    {input && dispatch(addPasswordToChannel({channelName,password}));}
+    {channelName && input && dispatch(addPasswordToChannel({channelName,password}));}
     console.log("kan hna");
   }
   const handleRemove = (e:any) => {
