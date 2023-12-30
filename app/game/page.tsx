@@ -15,12 +15,9 @@ export default function Game() {
   useEffect(() => {
 		// no-op if the socket is already connected
 		socket.connect();
-		console.log("HYYYYYY: ", socket.connected);
 		socket.on("CONNECTED",(res : {name: string, avatar: string, IsEnebled: boolean, IsAuth: boolean})=>{
-      console.log("CONNECTED", res);
 			setName(res.name)
 			setAvatar(res.avatar)
-      console.log("IsEnabled: ", res.IsEnebled, " IsAuth: ", res.IsAuth);
       
       if ((res.IsEnebled && res.IsAuth) || !res.IsEnebled)
         setLoading(false);
@@ -31,8 +28,6 @@ export default function Game() {
 		};
 	  }, []);
 
-  
-  console.log("Hellllllloooo ");
   if (loading){
 		return (
 			<div className="text-white flex flex-col justify-center items-center w-full h-[70%] xMedium:h-screen">

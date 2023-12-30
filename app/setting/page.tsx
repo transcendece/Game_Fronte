@@ -109,15 +109,9 @@ export default function setting() {
         );
         
         if (response.data) {
-          console.log('Image uploaded successfully:', response.data);
           dispatch(updateUserImage(response.data.url));
           const url = response.data.url;
           const serverResponse = await axios.post('http://localhost:4000/Settings/image', {url : url}, { withCredentials: true });
-          if (serverResponse.status === 200) {
-            console.log('Second request successful:', serverResponse.data);
-          } else {
-            console.error('Second request failed:', serverResponse.data);
-          }
         } else {
           console.error('Image upload failed:', response);
         }
@@ -131,11 +125,9 @@ export default function setting() {
     try {
       const response = await axios.post('http://localhost:4000/Settings/username', {...formData, username:userName}, { withCredentials: true });
   
-      console.log('API Response:', response); 
 
   
       if (response.status === 201) {
-        console.log('Data submitted successfully:', response.data);
         dispatch(updateUserNameValue(userName));
         setHide(true);
         setLoadingSubmit(false);
@@ -175,7 +167,6 @@ export default function setting() {
   }
 
   const onCloseClick = () => {
-    console.log("close Click");
     setTfaEnabled(false);
   }
 
@@ -190,7 +181,6 @@ export default function setting() {
     )
   }
   const notifySuccess = () => {
-    console.log('notify');
     toast.success('Profile updated successfuly.', {
       position:"top-right",
       autoClose: 2000,

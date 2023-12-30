@@ -31,12 +31,10 @@ function FriendsCard(props : CardData) {
         const bodyData : bodyData = {
           username : username,
         }
-        console.log(`http://localhost:4000/Chat/${endpoint}`);
         dispatch(Action({endpoint : endpoint, bodyData : bodyData}));
       }
       let myMap = new Map<string, string>();
       myMap.set("Friends","removeFriend");
-      console.log("data in userSettings : ", data);
       
     return (
         <div className="w-[80%] md:w-1/4 h-[30%] flex flex-col m-5 p-5 items-center rounded-md bg-[#323232]">

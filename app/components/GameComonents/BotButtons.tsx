@@ -26,19 +26,14 @@ const BotButtons : React.FC<BotButtonsProps> = (props) => {
     const handleMap = (value: string) => {
 		
 		setMap(value);
-		console.log("----> aaaa", value);
 
     };
 
     const Submit = ()=>{
-		console.log("SUBMIT :", "MAP: ", map);
-		
 		props.setMap(map)
 		setShowModal(false);
         props.setShowBotGame(true)
 		setMap(map);
-        
-		console.log("MAP: ", map);
 	}
 
 	return (

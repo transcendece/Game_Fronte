@@ -39,37 +39,25 @@ const GameButtons : React.FC<Loading> = (props) => {
 	const gameDiv = useRef<HTMLDivElement>(null);
     const [map, setMap] = useState<string>('BEGINNER');
     const [wait, setWait] = useState<boolean>(false);
-	const [waitmsg, setWaitMsg] = useState<string>('WAITTTTT')
     const [showBotGame, setShowBotGame] = useState(false)
     const [showRandomGame, setShowRandomGame] = useState(false)
 	const [dep1, setDep1] = useState<[string, string]>(["", ""])
 	const [dep2, setDep2] = useState<[string, string]>(["", ""])
-	// const [name, setName] = useState<string>('You')
-	// const [avatar, setAvatar] = useState<string>('http://res.cloudinary.com/dvmxfvju3/image/upload/v1700925320/wu4zkfcugvnsbykwmzpw.jpg')
 
 	const [score, setScore] = useState<[number, number]>([0, 0])
 	const [Id, setId] = useState<number>(0)
 
 	const handlePlay = async (res: {gameId: string} & Update & {avatar: [string, string], names: [string, string]}) => {
-		console.log("START");
 		setDep1([res.avatar[0], res.names[0]])
 		setDep2([res.avatar[1], res.names[1]])
 		setId(res.ID);
-		console.log("dep: ", res.avatar, res.names);
-
-		console.log("gameid : ", res.gameId);
 		setWait(false);
 		setShowRandomGame(true);
 		setTimeout(() => {
-			console.log({ adiv: gameDiv.current })
-			console.log("MAAAAAAP:::: ", map);
-
 			game = new GameClass(gameDiv.current!, map, "RANDOM", res.gameId, socket);
-			console.log("==> GAMEID CREATED: ", game.Id)
 			game.startOnligneGame(res.p1, res.p2, res.ball, res.ID);
 			game.updateScore(res.score1, res.score2);
 			setScore([res.score1, res.score2])
-			console.log({ showRandomGame })
 		}, 200)
 	};
 
@@ -79,25 +67,18 @@ const GameButtons : React.FC<Loading> = (props) => {
 		game = null;
 	}
 
-	useEffect(()=>{console.log("MAP IN: ", map);
-	}, [map])
-
 	useEffect(()=>{
-		if (!socket){
-			console.log("ID: ", socket);
+		if (!socket)
 			router.push("/profile")
-		}
 		socket.on("START", handlePlay);
 
 		socket.on("UPDATE", (res : Update)=> {
 			game?.updateState(res.p1, res.p2, res.ball);
-			// console.log("res: ", res);
 			setScore([res.score1, res.score2])
 
 			game?.updateScore(res.score1, res.score2);
 		});
 		socket.on("WinOrLose", (res:{content:  string}) => {
-			console.log("WINORLOSE", res.content);
 			removeGame();
 			if(res.content === "win")
 				notifyWin();
@@ -106,38 +87,22 @@ const GameButtons : React.FC<Loading> = (props) => {
 		} )
 
 		socket.on("GAMEOVER", ()=>{
-			console.log("GAMEOVER");
 			removeGame();
 			notifyGameOver();
 
 		})
 
 		socket.on("WAIT", (req: {map: string})=>{
-			console.log("WAITTTTTT");
 			setMap(req.map)
 			setWait(true);
 
 		})
 
-		socket.on("ERROR", (res: string) => {
-			console.log("ERROR BUTT", res);
-		})
 
 		socket.on("REDIRECT", (res: {url: string}) => {
-			// window.location.href = url;
-			console.log("REDIRECT : ", res.url);
 			router.push(res.url)
 
 		})
-
-		// socket.on("CONNECTED", (res : {name: string, avatar: string})=>{
-		// 	console.log("CONNECTED");
-			
-		// 	props.setLoading(false);
-		// 	setName(res.name)
-		// 	setAvatar(res.avatar)
-		// })
-		
 
 		const notifyGameOver = () =>{
 			toast.warn('Your Adverser Disconnected', {
@@ -181,7 +146,6 @@ const GameButtons : React.FC<Loading> = (props) => {
 		 * events: ERROR, GAMEOVER, CREATE, WAIT, UPDATE, PLAY
 		*/
 		return ()=>{
-			console.log('remove game listeners')
 			socket.off("REDIRECT")
 			socket.off("CONNECTED")
 			socket.off("CREATE");
@@ -192,28 +156,15 @@ const GameButtons : React.FC<Loading> = (props) => {
 			socket.off("GAMEOVER");
 			socket.off("WinOrLose");
 			socket.off("ERROR")
-			console.log(showRandomGame, "usestate");
 
         }
     } , [socket,map, dep1]);
 
 	useEffect(() => {
 		return () => {
-			console.log('remove game')
 			removeGame();
 		}
 	}, [])
-
-	// useEffect(() => {
-	// 	// no-op if the socket is already connected
-	// 	socket.connect();
-	// 	console.log("HYYYYYY: ", socket.connected);
-		
-
-	// 	return () => {
-	// 	  socket.disconnect();
-	// 	};
-	//   }, []);
 	
     return (
 		<div className='flex flex-col justify-center items-center w-full h-full  '>

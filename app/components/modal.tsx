@@ -21,7 +21,6 @@ const Modal = (props: ModalType) => {
     const handleChange = (event: any) => {
       setMessage(event.target.value);
   
-      console.log('value is:', event.target.value);
     };
     let alert : string = "";
     let bodyData : bodyData = {

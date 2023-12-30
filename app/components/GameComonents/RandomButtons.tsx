@@ -23,21 +23,15 @@ const RandomButtons : React.FC<RandomButtonsProps> = (props)=>{
   ];
 
     const handleMap = (value: string) => {
-		
 		setMap(value);
-		console.log("----> aaaa", value);
-
     };
 
     const Submit = ()=>{
-		console.log("SUBMIT", socket.id, "MAP: ", map);
-		
 		socket.emit("RANDOM", {
 			map: map,	
 		})
 		props.setMap(map)
 		setMap(map);
-		console.log("MAP: ", map);
 		setShowModal(false);
 	}
 
@@ -108,42 +102,3 @@ const RandomButtons : React.FC<RandomButtonsProps> = (props)=>{
 };
 
 export default RandomButtons;
-
-
-// import React, { useState } from 'react';
-// import { List, ListItem, Typography } from '@material-ui/core';
-// // import gameMode1 from '/_next/image?url=%2Fbatman.png&w=3840&q=75';
-// // import gameMode2 from './path-to-game-mode-2-image';
-// // import gameMode3 from './path-to-game-mode-3-image';
-
-// const RandomButtons = () => {
-  // const [gameMode, setGameMode] = useState("");
-
-  // // Define an array of game modes
-  // const gameModes = [
-  //   // { id: 1, name: 'Game Mode 1', image: gameMode1 },
-  //   // { id: 2, name: 'Game Mode 2', image: gameMode2 },
-  //   // { id: 3, name: 'Game Mode 3', image: gameMode3 },
-  // ];
-
-//   const handleClick = (mode: React.SetStateAction<string>) => {
-//     console.log(`Selected game mode: ${mode}`);
-//     setGameMode(mode);
-//   };
-
-//   return (
-//     <div>
-//       <Typography variant="h6">Select a game mode:</Typography>
-//       <List>
-//         {/* {gameModes.map((mode) => (
-//           <ListItem button key={mode.id} onClick={() => handleClick(mode.name)}>
-//             <img src={mode.image} alt={mode.name} />
-//           </ListItem>
-//         ))} */}
-//       </List>
-//       {gameMode && <Typography variant="h6">Selected Game Mode: {gameMode}</Typography>}
-//     </div>
-//   );
-// };
-
-// export default RandomButtons;

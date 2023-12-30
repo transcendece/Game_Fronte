@@ -41,12 +41,10 @@ const ChannelSearch = () => {
     const handleChange = async (event: any) => {
       setMessage(event.target.value);
       await getSearchData();
-      console.log('value is:', event.target.value);
     };
 
     const handlePasswordChange = async (event: any) => {
       setPassword(event.target.value);
-      console.log('value is:', event.target.value);
     };
 
     let alert : string = "";
@@ -108,8 +106,7 @@ const ChannelSearch = () => {
                                     <p>{name.name}</p>
                                     <input className={(name.isProtected === true ? "border border-black rounded bg-[#E58E27]" : "invisible")} onChange={handlePasswordChange}/>
                                     <button className="bg-[#E58E27] text-white rounded p-1" onClick={() => {
-                                      SetChannelToJoin({...name, name: name.name, isProtected: name.isProtected});
-                                      console.log('Button clicked');}}>
+                                      SetChannelToJoin({...name, name: name.name, isProtected: name.isProtected});}}>
                                       JOIN
                                       </button>
                                     {/* <button className="bg-[#E58E27] text-white rounded p-1" onClick={() => SendJoin(name)}>JOIN</button> */}

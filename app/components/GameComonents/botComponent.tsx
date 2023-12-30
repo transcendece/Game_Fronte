@@ -17,9 +17,7 @@ const BotComponent : React.FC<BotMap> = (prop) => {
     
     useEffect(() => {
         if (gameDiv && gameDiv.current)
-            { game = new GameClass(gameDiv.current, prop.map, "BOT", "BOT"); console.log("GAMECLASS"); }
-        console.log("offs: ", gameDiv.current?.offsetTop);
-        
+            game = new GameClass(gameDiv.current, prop.map, "BOT", "BOT")
         return () => {
             if (game)
                 game.destroyGame();

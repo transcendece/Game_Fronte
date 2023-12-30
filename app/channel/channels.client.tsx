@@ -31,16 +31,13 @@ function ChannelChat() {
   const [channelToRender, setChannelData] = useState<channelConversation>({ channelName: "", messages: [] });
   const [ChoosenChannel, SetChoosenChannel] = useState<string>();
   const [inputValue, setInputValue] = useState('');
-  const [redirecting, setRedirection] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   let channelData: channelNames = useSelector((state: RootState) => state.channelMessages.entity);
   const loading: boolean = useSelector((state: RootState) => state.channelMessages.loading);
   const error: string | null = useSelector((state: RootState) => state.channelMessages.error);
-  console.log('error chat = ', error);
  
 
   const handleChannelMessage = useCallback((res : channelMessages) => {
-    console.log(res);
     dispatch(addMessageToChannel(res));
     setChannelData((prevChannelData) => {
       return { ...prevChannelData, messages: [...prevChannelData.messages, res] };
@@ -60,17 +57,12 @@ function ChannelChat() {
   useEffect (() => {
       if (!socket.hasListeners("channelMessage")) {
         socket.on("channelMessage", handleChannelMessage);
-        console.log("current data : ", channelData);
       }
   }, [socket]); 
-  // useEffect(() => {
-  //   dispatch(fetchChannelData());
-  // }, [dispatch]);
- 
+  
   useEffect(() => {
     const channelToRender = channelData.channels.find(channel => channel.channelName === ChoosenChannel) || { channelName: "", messages: [] };
     setChannelData(channelToRender);
-    console.log("channel to render : ",channelToRender);
   }, [channelData, ChoosenChannel]);
   
 
@@ -90,7 +82,6 @@ function ChannelChat() {
       body: JSON.stringify({"_channel" : name})
     })
     const data : channelConversation = await response.json() as channelConversation;
-    console.log("data : ", data);
     dispatch(updateChannelMessages({ channelName: name, messages: data}));
     SetChoosenChannel(name);
   }
@@ -148,6 +139,7 @@ function ChannelChat() {
         channelName: ChoosenChannel,
       };
      socket.emit('channelMessage', newMessage);
+     setInputValue('');
   }}>
      Send
   </button>
