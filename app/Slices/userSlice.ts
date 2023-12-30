@@ -46,13 +46,8 @@ const initialState:{entity: null | UserInfos ; loading: boolean; error: null | s
   export const fetchInfos = createAsyncThunk("user/fetch", async (thunkApi) => {
 
     const response = await axios.get('http://localhost:4000/Profile', {withCredentials: true });
-    if (response.status === 401){
-      console.error('Eroororororo 401');
-    }
     if (response.status === 200) {
       return (response.data);
-    }else {
-      console.error('Data getting failed:', response.data);
     }
   } )
 

@@ -5,10 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import Modal from './channelSetModal';
 import ErrorModal from './errorModal';
 
-type ChannelAdminListProps = {
-  admins: string[];
-  channelName : string;
-};
 
 type channelParams = {
   username : string;
@@ -29,9 +25,8 @@ const ChannelAdminList: React.FC = () => {
     
 
   }
-  const [showModal, setShowModal] = useState(false);
   const error = useSelector((state: RootState) => state.channel.error);
-  if (error && showModal !== undefined) {
+  if (error) {
    return  <ErrorModal message={error} dispatch={dispatch} />;}
 
  

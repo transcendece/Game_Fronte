@@ -53,7 +53,6 @@ export default function Navbar({pageName}:Props) {
       } catch (error) {
         setLoadingCode(false);
         setErrorCode(error as string)
-        console.error('Error fetching user data:', error);
       }
     };
     fetchUserData();

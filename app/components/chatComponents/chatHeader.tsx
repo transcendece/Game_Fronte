@@ -43,7 +43,7 @@ const ChatHeader = ({ name, reciever, avatar, convLength }: ChatHeaderProps) => 
       socket.on("EnterGame", redirectToGame)
     }
     if (!socket.hasListeners("ERROR",)) {
-      socket.on("ERROR", (res : string)=> {console.error(res);
+      socket.on("ERROR", (res : string)=> {
       })
     }
 

@@ -30,12 +30,10 @@ function UserRank() {
           setUserData(response.data);
           setPending(false);
         }else {
-          console.error('Data getting failed:', response.data);
           setPending(true);
         }
 
       } catch (err) {
-        console.error(':', err)
         setPending(true)
       }
     };

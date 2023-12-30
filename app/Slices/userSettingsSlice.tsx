@@ -23,13 +23,8 @@ type bodyData = {
 
 export const fetchUserSettings = createAsyncThunk('setuser/fetch',async (thunkAPI) => {
   const response = await axios.get('http://localhost:4000/Chat/userSettings', {withCredentials: true });
-    if (response.status === 401){
-      console.error('Eroororororo 401');
-    }
     if (response.status === 200) {
       return (response.data);
-    }else {
-      console.error('Data getting failed:', response.data);
     }
   } )
 
@@ -85,7 +80,6 @@ const userSettingSlice = createSlice({
     .addCase(fetchUserSettings.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message || 'User settings error !';
-      console.error('Error:', action.error);
     })
     .addCase(Action.fulfilled, (state, action) => {
       state.loading = false;

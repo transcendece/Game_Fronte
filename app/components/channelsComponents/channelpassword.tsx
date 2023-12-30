@@ -1,6 +1,6 @@
 'use client'
 import { RootState } from '@/app/store/store';
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from './channelData';
 import { addPasswordToChannel, removePasswordFromChannel } from '@/app/Slices/channelSlice';

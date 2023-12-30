@@ -40,7 +40,6 @@ type channelConversation = {
        const responseData = await response.json();
        return responseData;
      } catch (error) {
-       console.error('Error:', error);
        throw error;
      }
     }
@@ -66,7 +65,6 @@ type channelConversation = {
        const responseData = await response.json();
        return responseData;
      } catch (error) {
-       console.error('Error:', error);
        throw error;
      }
     }
@@ -76,13 +74,8 @@ type channelConversation = {
 
    export const fetchChannelData = createAsyncThunk("channel/fetch", async (thunkApi) => {
           const response = await axios.get('http://localhost:4000/Chat/channel', {withCredentials: true });
-          if (response.status === 401){
-            console.error('Eroororororo 401');
-          }
           if (response.status === 200) {
             return (response.data);
-          }else {
-            console.error('Data getting failed:', response.data);
           }
         } )
    

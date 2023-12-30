@@ -112,11 +112,9 @@ export default function setting() {
           dispatch(updateUserImage(response.data.url));
           const url = response.data.url;
           const serverResponse = await axios.post('http://localhost:4000/Settings/image', {url : url}, { withCredentials: true });
-        } else {
-          console.error('Image upload failed:', response);
-        }
+        } 
       } catch (error) {
-        console.error('Error uploading image:', error);
+
       }
     }
   }
@@ -124,8 +122,6 @@ export default function setting() {
   const handleFormDataSubmit = async (userName:string) => {
     try {
       const response = await axios.post('http://localhost:4000/Settings/username', {...formData, username:userName}, { withCredentials: true });
-  
-
   
       if (response.status === 201) {
         dispatch(updateUserNameValue(userName));
@@ -138,9 +134,7 @@ export default function setting() {
         setLoadingCode(false);
         setCode(updatedCode);
         
-      } else {
-        console.error('Data submission failed:', response.data);
-      }
+      } 
     } catch (error) {
         setLoadingCode(false);
         setErrorCode(error as string)
@@ -159,7 +153,7 @@ export default function setting() {
     await handleImageUpload();
     const userNam = (document.getElementById('username') as HTMLInputElement).value;
     if(userNam.trim().length > 0){
-      await handleFormDataSubmit(userNam);
+      await handleFormDataSubmit(userNam.trim());
     }
     else{
       await handleFormDataSubmit(userName);

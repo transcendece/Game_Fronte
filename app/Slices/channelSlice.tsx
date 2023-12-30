@@ -365,7 +365,6 @@ export const removeUserFromChannel = createAsyncThunk(
        
         return data;
       } catch (error) {
-        console.error("Error banning user", error);
         throw error;
       }
     }

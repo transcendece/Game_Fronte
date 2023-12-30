@@ -52,7 +52,6 @@ export default function Sidebar({onData}: Props) {
     
     useEffect(()=> {
         socket.on("ERROR", (message :string) => {
-            console.error(message);
         })
         return ()=> {
             socket.off("ERROR")
@@ -81,7 +80,6 @@ export default function Sidebar({onData}: Props) {
         
         await axios.post('http://localhost:4000/auth/logout', {} ,{withCredentials: true})
         .then(response => {
-            
             if (response.status === 200) {
                 router.push('/login')
             }
@@ -89,8 +87,6 @@ export default function Sidebar({onData}: Props) {
         .catch(error => {
             
             if (error.response && error.response.status === 401) {
-                
-                console.error(`error: `, error.response.data);
             }
         })
     }

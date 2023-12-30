@@ -22,6 +22,7 @@ export interface Message {
   recieverId:string;
   isOwner: boolean;
   conversationId : string;
+  date: number;
 }
 
 export interface Conversation {
@@ -100,7 +101,8 @@ export default function chat() {
                 isOwner: data.isOwner,
                 conversationId : data.conversationId,
                 avatar: data.avatar,
-                content:data.content
+                content:data.content,
+                date: data.date
             }
             setSelectedConv((prevConversations) =>
             prevConversations.map((conversation) =>
@@ -118,7 +120,6 @@ export default function chat() {
       });
 
       socket.on('ERROR', (data: string) => {
-        console.error('error Receive !: ', data);
       });
 
       return () => {

@@ -46,7 +46,6 @@ export default function Pra({params}: Props) {
           setLoading(false);
         }
         } catch (error) {
-          console.error('Error fetching data:', error);
           setLoading(false);
           setError("Error profile not something !");
         }
@@ -66,9 +65,6 @@ export default function Pra({params}: Props) {
       const response = await axios.post(`http://localhost:4000/Chat/invite`, {username}, {withCredentials: true });
       if (response.status === 200)
         setIsFriend(true);
-      else{
-        console.error('invite not accepted yet !');
-      }
     }
   }
 

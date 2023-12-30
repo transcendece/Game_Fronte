@@ -42,7 +42,6 @@ const Modal = (props: ModalType) => {
       myMap.set("add","AddUserToChannel");
       myMap.set("admin","addAdminToChannel");
       myMap.set("mute","mute");
-      // myMap.set("Invitations","invite");
   return (
     <>
       {showButton && (

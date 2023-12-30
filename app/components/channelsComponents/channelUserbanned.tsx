@@ -19,10 +19,8 @@ const ChannelUserbanned: React.FC = () => {
   const channelName = useSelector((state: RootState) => state.channel.selectedChannel.channelName);
   const bandUsers = useSelector((state: RootState) => state.channel.selectedChannel.bandUsers);
   const error = useSelector((state: RootState) => state.channel.error);
-  const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch<AppDispatch>()
   function handleClick(_username: string, _channelName : string) {
-    // Create an object with the username
     dispatch(unBanUserFromChannel({ username: _username, channelName }));
     const bodyData : channelParams= {
       username : _username,
@@ -30,7 +28,7 @@ const ChannelUserbanned: React.FC = () => {
     };
   }
 
-  if (error && showModal !== undefined) {
+  if (error) {
    return  <ErrorModal message={error} dispatch={dispatch} />;}
  
   return (
@@ -47,7 +45,6 @@ const ChannelUserbanned: React.FC = () => {
                   <div key={index} className ='w-full h-full flex items-center justify-between flex-row  '>
                   <li >{user}</li>
                 <button className="text-red-600" onClick={() => {handleClick(user, channelName)}}>X</button>
-                  {/* <button className = "text-red-500">x</button>  */}
                   </div>
                   )
               })}

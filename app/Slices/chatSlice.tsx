@@ -10,6 +10,7 @@ export interface Message {
   recieverId:string;
   isOwner: boolean;
   conversationId: string;
+  date: number
 }
 
 export interface Conversation {
@@ -37,15 +38,11 @@ const initialState:{entity:Conversation []; loading: boolean; error: null | stri
 export const fetchChatData = createAsyncThunk("chat/fetch", async (thunkApi) => {
 
   const response = await axios.get('http://localhost:4000/Chat/user', {withCredentials: true });
-  if (response.status === 401){
-    console.error('Eroororororo 401');
-  }
+
   if (response.status === 200) {
     return (response.data);
-  }else {
-    console.error('Data getting failed:', response.data);
   }
-} )
+})
 
 const chatSlice = createSlice({
   name: 'chat',

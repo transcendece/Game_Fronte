@@ -18,7 +18,7 @@ function ConversComp({conversation}: chatConversProps) {
                 <div className='text-[#131313] font-semibold'>{sender}</div>
                 <div className='max-w-[200px] truncate'>{content}</div>
             </div>
-            <div className={`${conversation.online ? "text-green-500" : "text-red-500"} w-1/6`}>status</div>
+            <div className={`text-[#131313] w-1/6`}></div>
         </div>
     </div>
   )
