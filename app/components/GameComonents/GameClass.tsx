@@ -14,7 +14,7 @@ const paddleHeight = 20;
 let wallOptions = {
     isStatic: true,
     render: {
-        fillStyle: '#FFF',
+        fillStyle: '#AF6915',
         strokeStyle: '#000',
         lineWidth: 1,
     },
@@ -75,7 +75,6 @@ class GameClass {
         
         this.element = element;
         [this.width, this.height] = this.calculateSize();
-        console.log("WIDTH: ", this.width, " HEIGHT: ", this.height);
         if (map === "ADVANCED") this.maxVelocity += 6;
         else if (map === "INTEMIDIER") this.maxVelocity += 3;
         this.render = Render.create({
@@ -233,7 +232,7 @@ class GameClass {
             {
                 isStatic: true,
                 chamfer: {radius: 10 * this.calculateScale() },
-                render: {fillStyle: 'blue'}
+                render: {fillStyle: '#AF6915'}
             }
             
         );
@@ -245,7 +244,7 @@ class GameClass {
             {
                 isStatic: true,
                 chamfer: {radius: 10 * this.calculateScale() },
-                render: {fillStyle: 'blue'}
+                render: {fillStyle: '#AF6915'}
             }
         );
 
@@ -256,7 +255,7 @@ class GameClass {
                 friction:0,
                 inertia: Infinity,
                 render:{
-                    fillStyle: "red"
+                    fillStyle: "#AF6915"
                 }
             }
         )
@@ -386,14 +385,14 @@ class GameClass {
                     3 * this.height / 4,
                     this.normalise(100, 0, globalWidth, 0, this.width), 
                     this.normalise(10,0, globalHeight, 0, this.height), 
-                    { isStatic: true, chamfer: { radius: 5 * this.calculateScale() } , render: {fillStyle: 'red'},  label: "ADV"}
+                    { isStatic: true, chamfer: { radius: 5 * this.calculateScale() } , render: {fillStyle: '#AF6915'},  label: "ADV"}
                 ),
                 Bodies.rectangle(
                     this.width / 4, 
                     this.height / 4,
                     this.normalise(100, 0, globalWidth, 0, this.width), 
                     this.normalise(10,0, globalHeight, 0, this.height), 
-                    { isStatic: true, chamfer: { radius: 5 * this.calculateScale() } , render: {fillStyle: 'red'} , label: "ADV"}
+                    { isStatic: true, chamfer: { radius: 5 * this.calculateScale() } , render: {fillStyle: '#AF6915'} , label: "ADV"}
                 ),
             )
         else if (this.map === "INTEMIDIER")
@@ -403,7 +402,7 @@ class GameClass {
                 20 * this.calculateScale(),
                 {
                     isStatic: true,
-                    render: {fillStyle: 'blue'}
+                    render: {fillStyle: '#AF6915'}
                 }
             ), Bodies.circle(
                 3 * this.width / 4, 
@@ -411,7 +410,7 @@ class GameClass {
                 20 * this.calculateScale(), 
                 {
                     isStatic: true,
-                    render: {fillStyle: 'blue'}
+                    render: {fillStyle: '#AF6915'}
                 }
             ), Bodies.circle(
                 this.width / 4, 
@@ -419,7 +418,7 @@ class GameClass {
                 20 * this.calculateScale(),
                 {
                     isStatic: true,
-                    render: {fillStyle: 'blue'}
+                    render: {fillStyle: '#AF6915'}
                 }
             ), Bodies.circle(
                 3 * this.width / 4, 
@@ -427,7 +426,7 @@ class GameClass {
                 20 * this.calculateScale(), 
                 {
                     isStatic: true,
-                    render: {fillStyle: 'blue'}
+                    render: {fillStyle: '#AF6915'}
                 }
             ))
 
@@ -481,21 +480,22 @@ class GameClass {
                     if (Math.abs(normal.x) < Threshold){
                         const sign = Math.sign(this.ball.velocity.x);
                         const i = 0.5;
-                        Body.setVelocity(this.ball, {
-                            x: Math.min(this.ball.velocity.x + sign * i , this.maxVelocity),
-                            y : this.ball.velocity.y
-                        })
-                        const restitution = 1; // Adjust this value for desired bounciness
-                        const friction = 0; // Adjust this value for desired friction
+                        const oldVelocity : Vector = this.ball.velocity
+                        let newVelocity : Vector = { x : Math.min(this.ball.velocity.x + sign * i , this.maxVelocity), y : this.ball.velocity.y}
+                        if ( (newVelocity.x >= -0.5 && newVelocity.x <= 0.5) ||  (newVelocity.y >= -0.5 && newVelocity.y <= 0.5))
+                            {console.log("vx <-0.5, 0.5> = ", newVelocity.x);console.log("vy <-0.5, 0.5> = ", newVelocity.y);newVelocity = { x : newVelocity.x + (newVelocity.x < 0 ? -0.5: 0.5), y : this.ball.velocity.y + (newVelocity.y < 0 ? -0.5: 0.5)}}
+                        Body.setVelocity(this.ball, newVelocity)
+                        // const restitution = 1; // Adjust this value for desired bounciness
+                        // const friction = 0; // Adjust this value for desired friction
                                         
-                                // Set restitution and friction for the ball
-                        Body.set(this.ball, { restitution, friction });
+                        //         // Set restitution and friction for the ball
+                        // Body.set(this.ball, { restitution, friction });
                                 
                                 // Set restitution and friction for the other body (if it's not static)
                         const otherBody = bodyA === this.ball ? bodyB : bodyA;
-                        if (!otherBody.isStatic) {
-                            Body.set(otherBody, { restitution, friction });
-                        }
+                        // if (!otherBody.isStatic) {
+                        //     Body.set(otherBody, { restitution, friction });
+                        // }
                         if (otherBody === this.topWall || otherBody === this.downWall){
                             Body.setPosition(this.ball, { x: this.width / 2, y: this.height / 2 });
                             Body.setVelocity(this.ball, { x: this.ball.velocity.x < 0 ? 5 : -5 , y: this.ball.velocity.y > 0 ? 5:  -5});
