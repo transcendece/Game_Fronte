@@ -23,6 +23,11 @@ interface us {
     avatar: string | null;
 }
 
+type formDataType = {
+  username: string;
+  checked_: boolean;
+}
+
 export default function setting() {
 
   const [tfaEnabled, setTfaEnabled] = useState<boolean>(false);
@@ -51,7 +56,6 @@ export default function setting() {
   const [imageD, setImageD] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     username: '',
-    email: '',
     checked_: false,
   });
 
@@ -118,28 +122,14 @@ export default function setting() {
         //  ...prevData,
         //  [name]: (type === 'checkbox' && value !== '') ? checked : (name === 'username' ? prevData[name] : value),
         //}));
-        setFormData((prevData : any) => {
+        setFormData((prevData:formDataType) => {
           if (type === 'checkbox') {
             return {
               ...prevData,
               [name]: checked,
             };
-          } else if (name === 'username' && (newUserName?.value.length as number > 0)) {
-              setInputValue(newUserName?.value as string);
-
-                return {
-                  ...prevData,
-                  [name]: newUserName?.value,
-                  
-                }
-              
-          } 
-          else {
-            return {
-              ...prevData,
-              [name]: prevData[name], 
-            }
           }
+          return prevData;
       });
     }  
   }
@@ -180,16 +170,16 @@ export default function setting() {
     }
   }
 
-  const handleFormDataSubmit = async () => {
+  const handleFormDataSubmit = async (userName:string) => {
     try {
-      const response = await axios.post('http://localhost:4000/Settings/username', formData, { withCredentials: true });
+      const response = await axios.post('http://localhost:4000/Settings/username', {...formData, username:userName}, { withCredentials: true });
   
       console.log('API Response:', response); 
 
   
       if (response.status === 201) {
         console.log('Data submitted successfully:', response.data);
-        dispatch(updateUserNameValue(formData.username));
+        dispatch(updateUserNameValue(userName));
         setHide(true);
         setLoadingSubmit(false);
         document.getElementById('notifySuccess')?.click();
@@ -219,8 +209,9 @@ export default function setting() {
     setLoadingSubmit(true);
     //console.log("checked = ", formData?.checked_ );
     await handleImageUpload();
-    if (formData?.checked_ || formData?.username.trim().length > 0){
-      await handleFormDataSubmit();
+    const userNam = (document.getElementById('username') as HTMLInputElement).value;
+    if (formData?.checked_ || userNam.trim().length > 0){
+      await handleFormDataSubmit(userNam);
     }
     //await handleFormDataSubmit();
     setInputValue('');
@@ -291,7 +282,7 @@ export default function setting() {
                   <div className={`${hide ? 'hidden' : 'flex'} py-4 justify-between xMedium:h-[5rem] xMedium:text-2xl Large:h-24 h-16 w-[400px] mx-auto  xMedium:min-w-[500px] rounded-3xl bg-[#323232]`}>
                       <div className="text-[#E58E27] text-xl xMedium:text-2xl m-auto">New one  </div>
                       <div className="m-auto bg-[#e28888]">
-                        <input onChange={handleChange} value={newOne} id="username" name="username" type="text" className="border-none placeholder-slate-400 bg-[#323232] outline-0 w-[160px] text-xl xMedium:text-2xl" />
+                        <input  id="username" name="username" type="text" className="border-none placeholder-slate-400 bg-[#323232] outline-0 w-[160px] text-xl xMedium:text-2xl" />
                       </div>
                   </div>
                   <div className="flex py-4 justify-between xMedium:h-[5rem] xMedium:text-2xl Large:h-24 h-16 w-[400px] mx-auto  xMedium:min-w-[500px] rounded-3xl bg-[#323232]">
